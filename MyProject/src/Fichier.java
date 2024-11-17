@@ -1,12 +1,12 @@
 
+//Elements provenant de la librairie de dre, Metadata-Extractor
 import com.drew.imaging.ImageMetadataReader;
+import com.drew.imaging.ImageProcessingException;
 import com.drew.metadata.Directory;
 import com.drew.metadata.Metadata;
-import com.drew.metadata.exif.ExifSubIFDDirectory;
-import com.drew.metadata.exif.ExifIFD0Directory;
 import com.drew.metadata.Tag;
-import com.drew.metadata.exif.GpsDirectory;
 
+//Librairie présentent par défaut
 import java.io.File;
 import java.io.IOException;
 
@@ -16,33 +16,112 @@ public class Fichier {
     private File imageFile;
     private Metadata metadata;
 
-    private String mime;
-    private String extension;
-    private String name;
-    private String date;
-    private String mdate;
-    private String lattitude;
-    private String longitude;
-    private String model;
-    private String desc;
-    private String size;
+    private String mime; //Stock une donnée de type Mime
+    private String extension; //Stock l'extension
+    private String name; //Stock le nom du fichier
+    private String date; //Stock la date de prise de la photo
+    private String mdate; //Stock la date de modifications de la photo
+    private String lattitude; //Stock une lattitude
+    private String longitude; //Stock une longitude
+    private String model; //Stock le model de l'appareil photo
+    private String desc; // Stock la Description de l'image
+    private String size; // Stock la taille en Ko de l'image
 
-    private int height;
-    private int width;
-    private int dpix;
-    private int dpiy;
+    private int height;// Stock la hauteur en px de l'image
+    private int width; // Stock la largeur en px de l'image
+    private int dpix;// Stock la resolution en largeur en inch
+    private int dpiy;// Stock la resolution en hauteur en inch
 
-
-    public Fichier(String path) {
+    /**
+     * Cette classe représente un fichier.
+     * Elle permet de récupérer les métadonnées d'une image.
+     *
+     * @author @Gauthier Defrance
+     * @version 1.0
+     *
+     * @param path  le chemin vers le fichier sous forme d'un String
+     */
+    public Fichier(String path) throws ImageProcessingException, IOException {
         if(new File(path).exists()) {
             this.path = path;
             imageFile = new File(path);
             metadata = ImageMetadataReader.readMetadata(imageFile);
-        }
+            this.initMetadata();
+            }
     }
 
+    /**
+     * @return Le chemin vers le fichier
+     */
     public String getPath(){ return path;}
+    /**
+     * @return le fichier Image
+     */
+    public File getImageFile(){ return imageFile;}
+    /**
+     * @return Les metadate sous format brut
+     */
+    public Metadata getMetadata(){ return metadata;}
+    /**
+     * @return Le Mime
+     */
+    public String getMime(){return mime;}
+    /**
+     * @return L'extenstion
+     */
+    public String getExtension(){return extension;}
+    /**
+     * @return Le nom du fichier
+     */
+    public String getName(){return name;}
+    /**
+     * @return La date de création
+     */
+    public String getDate(){return date;}
+    /**
+     * @return La date de modification
+     */
+    public String getMDate(){return mdate;}
+    /**
+     * @return La lattitude
+     */
+    public String getLattitude(){return lattitude;}
+    /**
+     * @return La longitude
+     */
+    public String getLongitude(){return longitude;}
+    /**
+     * @return Le modèle de l'appareil photo
+     */
+    public String getModel(){return model;}
+    /**
+     * @return La description de l'image
+     */
+    public String getDesc(){return desc;}
+    /**
+     * @return Le poids de l'image en Ko
+     */
+    public String getSize(){return size;}
+    /**
+     * @return La hauteur en px
+     */
+    public int getHeight(){return height;}
+    /**
+     * @return La largeur en px
+     */
+    public int getWidth(){return width;}
+    /**
+     * @return La résolution horizontal en inch
+     */
+    public int getDpix(){return dpix;}
+    /**
+     * @return La résolution vertical en inch
+     */
+    public int getDpiy(){return dpiy;}
 
+    /**
+     *  Initialise les metadonnées
+     */
     public void initMetadata() {
         try {
             // Parcourir et stocker les métadonnées
@@ -69,7 +148,7 @@ public class Fichier {
                             break;
 
                         case "File Size":
-                            this.size = ""+Integer.parseInt(tag.getDescription())/1000+"Ko";
+                            this.size = ""+(Integer.parseInt(tag.getDescription())/1000)+"Ko";
                             break;
 
                         case "Latitude":
@@ -95,15 +174,11 @@ public class Fichier {
                             model = tag.getDescription();
                             break;
                         case "Image Description":
-                            desc = Integer.parseInt(tag.getDescription());
+                            desc = tag.getDescription();
                             break;
-
-
-
-
-
+                        default:
+                            break;
                     }
-                    tag.getDescription();
                 }
 
                 // Gérer les erreurs éventuelles
@@ -116,6 +191,28 @@ public class Fichier {
         } catch (Exception e) {
             System.err.println("Erreur lors de l'extraction des métadonnées : " + e.getMessage());
             }
+    }
+    /**
+     * @return Un string contenant toutes les metadonnées du fichier
+     */
+    public String getAllMetadata(){
+        try {
+            String text="";
+            // Parcourir toutes les directories (groupes de métadonnées)
+            for (Directory directory : metadata.getDirectories()) {
+                // Afficher le nom de la directory
+                text+="### Directory : " + directory.getName()+" ###";
+                // Parcourir tous les tags de la directory
+                for (Tag tag : directory.getTags()) {
+                    // Afficher le nom et la description du tag
+                    text+="" + tag.getTagName() + " : " + tag.getDescription();
+                }
+                return text;
+            }
+        } catch (Exception e) {
+            System.err.println("Erreur lors de l'extraction des métadonnées : " + e.getMessage());
+        }
+        return "";
     }
 
 }
