@@ -1,4 +1,4 @@
-package Test;
+package core;
 //Elements provenant de la librairie de dre, Metadata-Extractor
 import com.drew.imaging.ImageMetadataReader;
 import com.drew.imaging.ImageProcessingException;
