@@ -1,4 +1,4 @@
-
+package Test;
 //Elements provenant de la librairie de dre, Metadata-Extractor
 import com.drew.imaging.ImageMetadataReader;
 import com.drew.imaging.ImageProcessingException;
@@ -15,7 +15,6 @@ public class Fichier {
     private String path;
     private File imageFile;
     private Metadata metadata;
-
     private String mime; //Stock une donnée de type Mime
     private String extension; //Stock l'extension
     private String name; //Stock le nom du fichier
@@ -26,11 +25,10 @@ public class Fichier {
     private String model; //Stock le model de l'appareil photo
     private String desc; // Stock la Description de l'image
     private String size; // Stock la taille en Ko de l'image
-
-    private int height;// Stock la hauteur en px de l'image
-    private int width; // Stock la largeur en px de l'image
-    private int dpix;// Stock la resolution en largeur en inch
-    private int dpiy;// Stock la resolution en hauteur en inch
+    private String height;// Stock la hauteur en px de l'image
+    private String width; // Stock la largeur en px de l'image
+    private String dpix;// Stock la resolution en largeur en inch
+    private String dpiy;// Stock la resolution en hauteur en inch
 
     /**
      * Cette classe représente un fichier.
@@ -63,7 +61,7 @@ public class Fichier {
      */
     public Metadata getMetadata(){ return metadata;}
     /**
-     * @return Le Mime
+     * @return Le Type Mime
      */
     public String getMime(){return mime;}
     /**
@@ -105,19 +103,19 @@ public class Fichier {
     /**
      * @return La hauteur en px
      */
-    public int getHeight(){return height;}
+    public String getHeight(){return height;}
     /**
      * @return La largeur en px
      */
-    public int getWidth(){return width;}
+    public String getWidth(){return width;}
     /**
      * @return La résolution horizontal en inch
      */
-    public int getDpix(){return dpix;}
+    public String getDpix(){return dpix;}
     /**
      * @return La résolution vertical en inch
      */
-    public int getDpiy(){return dpiy;}
+    public String getDpiy(){return dpiy;}
 
     /**
      *  Initialise les metadonnées
@@ -129,10 +127,10 @@ public class Fichier {
                 for (Tag tag : directory.getTags()) {
                     switch (tag.getTagName()){
                         case "Image Height":
-                            this.height = Integer.parseInt(tag.getDescription());
+                            this.height = tag.getDescription();
                             break;
                         case "Image Width":
-                            this.width = Integer.parseInt(tag.getDescription());
+                            this.width = tag.getDescription();
                             break;
 
                         case "Detected MIME Type":
@@ -148,7 +146,7 @@ public class Fichier {
                             break;
 
                         case "File Size":
-                            this.size = ""+(Integer.parseInt(tag.getDescription())/1000)+"Ko";
+                            this.size = tag.getDescription();
                             break;
 
                         case "Latitude":
@@ -165,10 +163,10 @@ public class Fichier {
                             this.mdate = tag.getDescription();
                             break;
                         case "X Resolution":
-                            dpix = Integer.parseInt(tag.getDescription());
+                            dpix = tag.getDescription();
                             break;
                         case "Y Resolution":
-                            dpiy = Integer.parseInt(tag.getDescription());
+                            dpiy = tag.getDescription();
                             break;
                         case "Model":
                             model = tag.getDescription();
@@ -201,14 +199,15 @@ public class Fichier {
             // Parcourir toutes les directories (groupes de métadonnées)
             for (Directory directory : metadata.getDirectories()) {
                 // Afficher le nom de la directory
-                text+="### Directory : " + directory.getName()+" ###";
+                text+="\n### Directory : " + directory.getName()+" ###";
                 // Parcourir tous les tags de la directory
                 for (Tag tag : directory.getTags()) {
                     // Afficher le nom et la description du tag
-                    text+="" + tag.getTagName() + " : " + tag.getDescription();
+                    text+="\n" + tag.getTagName() + " : " + tag.getDescription();
                 }
-                return text;
+
             }
+            return text;
         } catch (Exception e) {
             System.err.println("Erreur lors de l'extraction des métadonnées : " + e.getMessage());
         }
