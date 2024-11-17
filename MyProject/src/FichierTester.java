@@ -5,7 +5,7 @@ import java.io.IOException;
 
 /**
  * Classe de test pour la classe fichier.
- * A appeler avec le path d'une image en particulier.
+ * Appel la classe fichier, utilisé avec un argument qui est le path vers une image.
  *
  * @author @Gauthier Defrance
  *
