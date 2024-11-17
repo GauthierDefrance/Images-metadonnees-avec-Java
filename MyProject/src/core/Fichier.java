@@ -15,6 +15,7 @@ public class Fichier {
     private String path;
     private File imageFile;
     private Metadata metadata;
+
     private String mime; //Stock une donnée de type Mime
     private String extension; //Stock l'extension
     private String name; //Stock le nom du fichier
@@ -40,12 +41,11 @@ public class Fichier {
      * @param path  le chemin vers le fichier sous forme d'un String
      */
     public Fichier(String path) throws ImageProcessingException, IOException {
-        if(new File(path).exists()) {
             this.path = path;
             imageFile = new File(path);
             metadata = ImageMetadataReader.readMetadata(imageFile);
             this.initMetadata();
-            }
+
     }
 
     /**

@@ -3,6 +3,13 @@ import com.drew.imaging.ImageProcessingException;
 
 import java.io.IOException;
 
+/**
+ * Classe de test pour la classe fichier.
+ * A appeler avec le path d'une image en particulier.
+ *
+ * @author @Gauthier Defrance
+ *
+ */
 public class FichierTester {
     public static void main(String[] args) throws ImageProcessingException, IOException {
         Fichier f = new Fichier(args[0]);
