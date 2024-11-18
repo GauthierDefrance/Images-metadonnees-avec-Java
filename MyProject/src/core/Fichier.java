@@ -10,6 +10,18 @@ import com.drew.metadata.Tag;
 import java.io.File;
 import java.io.IOException;
 
+
+
+
+
+/**
+ * Cette classe représente un fichier.
+ * Elle permet de récupérer les métadonnées d'une image.
+ *
+ * @author @Gauthier Defrance
+ *
+ * @param path  le chemin vers le fichier sous forme d'un String
+ */
 public class Fichier {
 
     private String path;
@@ -31,14 +43,10 @@ public class Fichier {
     private String dpix;// Stock la resolution en largeur en inch
     private String dpiy;// Stock la resolution en hauteur en inch
 
+
     /**
-     * Cette classe représente un fichier.
-     * Elle permet de récupérer les métadonnées d'une image.
-     *
-     * @author @Gauthier Defrance
-     * @version 1.0
-     *
-     * @param path  le chemin vers le fichier sous forme d'un String
+     * Contructeur de la classe
+     * @params path un string indiquant le chemin jusqu'au fichier image cherché
      */
     public Fichier(String path) throws ImageProcessingException, IOException {
             this.path = path;
