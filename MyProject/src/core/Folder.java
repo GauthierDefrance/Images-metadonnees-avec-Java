@@ -1,6 +1,7 @@
 package core;
 
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.io.File;
 import java.nio.file.Files;
@@ -15,6 +16,7 @@ import java.nio.file.Path;
  */
 public class Folder {
     private String path; //On garde le chemin utilisé pour créer le repertoire
+    private Path Opath;
     private File folder; //On stocke le fichier de type File
 
     /**
@@ -23,6 +25,7 @@ public class Folder {
      */
     public Folder(String path) {
         this.path = path;
+        this.Opath = Paths.get(path);
         this.folder = new File(path);
     }
 
@@ -72,6 +75,11 @@ public class Folder {
             }
         return result;
         }
+
+    public String getParent(){
+        return this.Opath.getParent().toString();
+    }
+
 }
 
 
