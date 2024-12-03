@@ -1,9 +1,8 @@
 package CLI;
 
 public class Console {
-
+    
     public static void main(String[] args) {
-
         boolean help=false; // -h --help
         boolean info=false; // -i --info
         boolean stat=false; // -s --stat
@@ -14,8 +13,8 @@ public class Console {
         boolean search=false; // -w --search
         boolean order=false; // -o --order
         boolean list=false; // -l --list
+        boolean by=false; // -b --by parameter for searchby
         boolean error=false;
-
         for (String arg : args) {
             switch (arg) {
                 case "--help": help=true;
@@ -58,6 +57,10 @@ public class Console {
                     break;
                 case "-l": list=true;
                     break;
+                case "--by": by=true;
+                    break;
+                case "-b": by=true;
+                    break;
                 default: error=true;
             } //Checking what commands has been written.
             }
@@ -70,10 +73,29 @@ public class Console {
 
 
         // --- Début traitement commandes
-        if(search&&file&&(!(   )    )      ){}
+        if(search&&file&&(!(list||snapshotcompare||snapshotsave||order   )    )      ){//Lancer la commande de recherche d'un fichier
+            if(by){} //Va afficher selon un mot clé la manière dont il va trier les fichiers
+            else{} //par défaut
+        }
 
+        if(info&&directory){} //get les infos du directory
+        if(stat&&directory){} //get les stat du directory
 
+        if(info&&file){}//get les infos du file
+        if(stat&&file){}//get les stat du file
 
+        if(directory&&list){ //afficher
+            if(order){} //va lister les fichiers selon un certains order
+            else{} // par défaut
+            }
+
+        if(snapshotsave){}//sauvegarde l'état du fichier et l'identifie via son path a une addresse donné
+
+        if(snapshotcompare){}//compare le fichier avec un path donné
+        /* Attention, si le path donné a un / au début c'est un chemin absolue donc traitement classique
+           Mais si il n'y a pas de / au début (c'est un chemin relatif),
+           alors on ajoute au path donné le chemin absolue du fichier depuis lequel est lancé la console.
+         * */
 
     }
 
