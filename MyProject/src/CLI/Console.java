@@ -18,51 +18,57 @@ public class Console {
     public Console(String[] args) {
         for(String arg : args) {
         switch (arg) {
-            case "--help": help=true;
+            case "--help": help=true; if(help) error=true;
                 break;
-            case "-h": help=true;
+            case "-h": help=true;if(help) error=true;
                 break;
-            case "-i": info=true;
+            case "-i": info=true;if(info) error=true;
                 break;
-            case "--info": info=true;
+            case "--info": info=true;if(info) error=true;
                 break;
-            case "-s": stat=true;
+            case "-s": stat=true;if(stat) error=true;
                 break;
-            case "--stat": stat=true;
+            case "--stat": stat=true;if(stat) error=true;
                 break;
-            case "--file": file=true;
+            case "--file": file=true;if(file) error=true;
                 break;
-            case "-f": file=true;
+            case "-f": file=true;if(file) error=true;
                 break;
-            case "--directory": directory=true;
+            case "--directory": directory=true;if(directory) error=true;
                 break;
-            case "-d": directory=true;
+            case "-d": directory=true;if(directory) error=true;
                 break;
-            case "--snapshotsave": snapshotsave=true;
+            case "--snapshotsave": snapshotsave=true;if(snapshotsave) error=true;
                 break;
-            case "-ss": snapshotsave=true;
+            case "-ss": snapshotsave=true;if(snapshotsave) error=true;
                 break;
-            case "-sc": snapshotcompare=true;
+            case "-sc": snapshotcompare=true;if(snapshotcompare) error=true;
                 break;
-            case "--snapshotcompare": snapshotcompare=true;
+            case "--snapshotcompare": snapshotcompare=true;if(snapshotcompare) error=true;
                 break;
-            case "--search": search=true;
+            case "--search": search=true;if(search) error=true;
                 break;
-            case "-w": search=true;
+            case "-w": search=true;if(search) error=true;
                 break;
-            case "--order": order=true;
+            case "--order": order=true;if(order) error=true;
                 break;
-            case "-o": order=true;
+            case "-o": order=true;if(order) error=true;
                 break;
-            case "--list": list=true;
+            case "--list": list=true;if(list) error=true;
                 break;
-            case "-l": list=true;
+            case "-l": list=true;if(list) error=true;
                 break;
-            case "--by": by=true;
+            case "--by": by=true;if(by) error=true;
                 break;
-            case "-b": by=true;
+            case "-b": by=true;if(by) error=true;
                 break;
-            default: error=true;
+            default:
+                if(arg.contains("-"))error=true;
+
+                // ATTENTION D'AUTRES CAS A GERER EN PLUS ICI !!!!
+
+
+
         } //Checking what commands has been written.
         }
 
@@ -73,6 +79,55 @@ public class Console {
 
 
         // --- Début traitement commandes
+
+
+        if(help){
+            System.out.println("Usage: java -jar cli.jar [options]");
+            System.out.println("\n");
+            System.out.println("Desc:");
+            System.out.println(
+                    """
+                    This scripts can :
+                        Show you informations about a File or a Folder.
+                        Show you what file and folder are inside a folder.
+                        Search a specific file from where you are using that commands.
+                        Make a save of a specific folder.
+                        Compare an old save with a current folder.
+                    """);
+            System.out.println("Options:");
+            System.out.println(
+                    """
+                        -h, --help : Show this message.
+                        -f, --file : To specify the file you want to work with (can't be used with -d or --directory).
+                        -d, --directory : To specify the directory you want to work with (can't be used with -f or --file).
+                        -i, --info : Show info about the file or directory.
+                        -s, --stat : Show statistics about the file or directory.
+                        
+                        !!!
+                        -w, --search : Show a list of images that matchs the research (must be used with ). ????? BIG QUESTIONS HERE GUYS
+                        -b, --by : Search a specific image that matches specific type (must be used with -w or --search).
+                        !!!
+                        
+                        -l, --list : Show all the images inside the folder and the folder deeper (must be used with -d or --directory). 
+                        -o, --order : Show an ordered list of images (must be used with -l or --list);
+                        -ss, --snapshotsave : Make a save of the state of a directory.
+                        -sc, --snapshotcompare : Compare a save of a directory with the current directory.
+                    
+                    """);
+            System.out.println("Exemples:");
+            System.out.println(
+                    """
+                    We have to add Exemple
+                    """);
+            System.out.println("Commons errors:");
+            System.out.println(
+                    """
+                    We have to add Exemple
+                    """);
+            System.out.println("Autors: Ammad Kennan & Defrance Gauthier.");
+
+        }
+
         if(search&&file&&(!(list||snapshotcompare||snapshotsave||order   )    )      ){//Lancer la commande de recherche d'un fichier
             if(by){} //Va afficher selon un mot clé la manière dont il va trier les fichiers
             else{} //par défaut
