@@ -9,14 +9,13 @@ import com.drew.metadata.Tag;
 //Librairie présentent par défaut
 import java.io.File;
 import java.io.IOException;
-
-
-
+import java.util.HashMap;
 
 
 /**
  * Cette classe représente un fichier.
  * Elle permet de récupérer les métadonnées d'une image.
+ * Attention pour les récuperer il faut initialiser l'objet avec la méthode : initMetadata()
  *
  * @author @Gauthier Defrance
  *
@@ -27,6 +26,8 @@ public class Fichier {
     private String path;
     private File imageFile;
     private Metadata metadata;
+
+    private HashMap<String, String> metadataMap;
 
     private String mime; //Stock une donnée de type Mime
     private String extension; //Stock l'extension
@@ -52,8 +53,6 @@ public class Fichier {
             this.path = path;
             imageFile = new File(path);
             metadata = ImageMetadataReader.readMetadata(imageFile);
-            this.initMetadata();
-
     }
 
     /**
@@ -71,59 +70,102 @@ public class Fichier {
     /**
      * @return Le Type Mime
      */
-    public String getMime(){return mime;}
+    public String getMime(){
+        if(metadataMap.containsKey("Detected MIME Type")) return metadataMap.get("Detected MIME Type");
+        return "";
+    }
     /**
      * @return L'extenstion
      */
-    public String getExtension(){return extension;}
+    public String getExtension(){
+        if(metadataMap.containsKey("Detected File Type Long Name")) return metadataMap.get("Detected MIME Type");
+        return "";
+    }
     /**
      * @return Le nom du fichier
      */
-    public String getName(){return name;}
+    public String getName(){
+        if(metadataMap.containsKey("File Name")) return metadataMap.get("Detected MIME Type");
+        return "";
+    }
     /**
      * @return La date de création
      */
-    public String getDate(){return date;}
+    public String getDate(){
+        if(metadataMap.containsKey("Date/Time")) return metadataMap.get("Detected MIME Type");
+        return "";
+    }
     /**
      * @return La date de modification
      */
-    public String getMDate(){return mdate;}
+    public String getMDate(){
+        if(metadataMap.containsKey("File Modified Date")) return metadataMap.get("Detected MIME Type");
+        return "";
+    }
     /**
      * @return La lattitude
      */
-    public String getLattitude(){return lattitude;}
+    public String getLattitude(){
+        if(metadataMap.containsKey("Latitude")) return metadataMap.get("Detected MIME Type");
+        return "";
+    }
     /**
      * @return La longitude
      */
-    public String getLongitude(){return longitude;}
+    public String getLongitude(){
+        if(metadataMap.containsKey("Longitude")) return metadataMap.get("Detected MIME Type");
+        return "";
+    }
     /**
      * @return Le modèle de l'appareil photo
      */
-    public String getModel(){return model;}
+    public String getModel(){
+        if(metadataMap.containsKey("Model")) return metadataMap.get("Detected MIME Type");
+        return "";
+    }
     /**
      * @return La description de l'image
      */
-    public String getDesc(){return desc;}
+    public String getDesc(){
+        if(metadataMap.containsKey("Image Description")) return metadataMap.get("Detected MIME Type");
+        return "";
+    }
     /**
      * @return Le poids de l'image en Ko
      */
-    public String getSize(){return size;}
+    public String getSize(){
+        if(metadataMap.containsKey("File Size")) return metadataMap.get("Detected MIME Type");
+        return "";
+    }
     /**
      * @return La hauteur en px
      */
-    public String getHeight(){return height;}
+    public String getHeight(){
+        if(metadataMap.containsKey("Image Height")) return metadataMap.get("Detected MIME Type");
+        return "";
+    }
     /**
      * @return La largeur en px
      */
-    public String getWidth(){return width;}
+    public String getWidth(){
+        if(metadataMap.containsKey("Image Width")) return metadataMap.get("Detected MIME Type");
+        return "";
+    }
     /**
      * @return La résolution horizontal en inch
      */
-    public String getDpix(){return dpix;}
+    public String getDpix(){
+        if(metadataMap.containsKey("X Resolution")) return metadataMap.get("Detected MIME Type");
+        return "";
+    }
     /**
      * @return La résolution vertical en inch
      */
-    public String getDpiy(){return dpiy;}
+    public String getDpiy(){
+        if(metadataMap.containsKey("Y Resolution")) return metadataMap.get("Detected MIME Type");
+        return "";
+
+    }
 
     /**
      *  Initialise les metadonnées
@@ -135,55 +177,20 @@ public class Fichier {
                 for (Tag tag : directory.getTags()) {
                     switch (tag.getTagName()){
                         case "Image Height":
-                            this.height = tag.getDescription();
-                            break;
                         case "Image Width":
-                            this.width = tag.getDescription();
-                            break;
-
                         case "Detected MIME Type":
-                            this.mime = tag.getDescription();
-                            break;
-
                         case "File Name":
-                            this.name = tag.getDescription();
-                            break;
-
                         case "Detected File Type Long Name":
-                            this.extension = tag.getDescription();
-                            break;
-
                         case "File Size":
-                            this.size = tag.getDescription();
-                            break;
-
                         case "Latitude":
-                            this.lattitude = tag.getDescription();
-                            break;
-
                         case "Longitude":
-                            this.longitude = tag.getDescription();
-                            break;
                         case "Date/Time":
-                            this.date = tag.getDescription();
-                            break;
                         case "File Modified Date":
-                            this.mdate = tag.getDescription();
-                            break;
                         case "X Resolution":
-                            dpix = tag.getDescription();
-                            break;
                         case "Y Resolution":
-                            dpiy = tag.getDescription();
-                            break;
                         case "Model":
-                            model = tag.getDescription();
-                            break;
                         case "Image Description":
-                            desc = tag.getDescription();
-                            break;
-                        default:
-                            break;
+                            metadataMap.put(tag.getTagName(), tag.getDescription());
                     }
                 }
 

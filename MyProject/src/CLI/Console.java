@@ -82,49 +82,6 @@ public class Console {
 
 
         if(help){
-            System.out.println("Usage: java -jar cli.jar [options]");
-            System.out.println("\n");
-            System.out.println("Desc:");
-            System.out.println(
-                    """
-                    This scripts can :
-                        Show you informations about a File or a Folder.
-                        Show you what file and folder are inside a folder.
-                        Search a specific file from where you are using that commands.
-                        Make a save of a specific folder.
-                        Compare an old save with a current folder.
-                    """);
-            System.out.println("Options:");
-            System.out.println(
-                    """
-                        -h, --help : Show this message.
-                        -f, --file : To specify the file you want to work with (can't be used with -d or --directory).
-                        -d, --directory : To specify the directory you want to work with (can't be used with -f or --file).
-                        -i, --info : Show info about the file or directory.
-                        -s, --stat : Show statistics about the file or directory.
-                        
-                        !!!
-                        -w, --search : Show a list of images that matchs the research (must be used with ). ????? BIG QUESTIONS HERE GUYS
-                        -b, --by : Search a specific image that matches specific type (must be used with -w or --search).
-                        !!!
-                        
-                        -l, --list : Show all the images inside the folder and the folder deeper (must be used with -d or --directory). 
-                        -o, --order : Show an ordered list of images (must be used with -l or --list);
-                        -ss, --snapshotsave : Make a save of the state of a directory.
-                        -sc, --snapshotcompare : Compare a save of a directory with the current directory.
-                    
-                    """);
-            System.out.println("Exemples:");
-            System.out.println(
-                    """
-                    We have to add Exemple
-                    """);
-            System.out.println("Commons errors:");
-            System.out.println(
-                    """
-                    We have to add Exemple
-                    """);
-            System.out.println("Autors: Ammad Kennan & Defrance Gauthier.");
 
         }
 
@@ -154,7 +111,41 @@ public class Console {
 
     }
 
-    public String getHelp(){}
+    /**
+     * getter renvoyant un String ou les options de la console sont décrit.
+     */
+   public String getHelp(){
+       return("""
+               Usage: java -jar cli.jar [options]
+               Desc:
+               This scripts can :
+                   Show you informations about a File or a Folder.
+                   Show you what file and folder are inside a folder.
+                   Search a specific file from where you are using that commands.
+                   Make a save of a specific folder.
+                   Compare an old save with a current folder.
+               
+               Options:
+                   -h, --help : Show this message.
+                   -f, --file : To specify the file you want to work with (can't be used with -d or --directory).
+                   -d, --directory : To specify the directory you want to work with (can't be used with -f or --file).
+                   -i, --info : Show info about the file or directory.
+                   -s, --stat : Show statistics about the file or directory.
+                   
+                   -w, --search : Show a list of images that matchs the research (must be used with ). ????? BIG QUESTIONS HERE GUYS
+                   -wb, --searchby : Search a specific image that matches specific type (must be used with -w or --search).
+                   
+                   -l, --list : Show all the images inside the folder and the folder deeper (must be used with -d or --directory). 
+                   -o, --order : Show an ordered list of images (must be used with -l or --list);
+                   -ss, --snapshotsave : Make a save of the state of a directory.
+                   -sc, --snapshotcompare : Compare a save of a directory with the current directory.
+               Exemples:
+               We have to add Exemple
+               Commons errors:
+                   We have to add Exemple
+               Autors: Ammad Kennan & Defrance Gauthier.
+               """);
+   }
 
     public String getInfoDir(){}
     public String getInfoFile(){}
@@ -167,7 +158,7 @@ public class Console {
     public String getList(){}
     public String getOrderedList(){}
 
-    public void doSnapshotSave(){}
-    public String doSnapshotCompare(){}
+    //public void doSnapshotSave(){}
+    //public String doSnapshotCompare(){}
 
 }

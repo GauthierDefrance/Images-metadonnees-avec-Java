@@ -13,6 +13,7 @@ import java.io.IOException;
 public class FichierTester {
     public static void main(String[] args) throws ImageProcessingException, IOException {
         Fichier f = new Fichier(args[0]);
+        f.initMetadata();
         System.out.println(f.getAllMetadata());
         System.out.println(f.getMime());
         System.out.println(f.getHeight());
