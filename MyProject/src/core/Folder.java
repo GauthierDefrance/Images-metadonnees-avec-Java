@@ -64,7 +64,7 @@ public class Folder {
                     if (fichier.isFile()) {
                         try {
                         Path cheminFichier = fichier.toPath();
-                        String typeMime = Files.probeContentType(cheminFichier);
+                        String typeMime = Files.probeContentType(cheminFichier); //A CHANGER SE BASE SUR L'EXTENSION PAS BIEN !!!
                         //Si le Mime indique que notre fichier est une image, alors on l'ajoute
                         if (typeMime != null && typeMime.startsWith("image/")) {
                                 result.add(fichier);
