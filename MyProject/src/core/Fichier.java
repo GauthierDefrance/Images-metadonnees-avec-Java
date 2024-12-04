@@ -221,5 +221,7 @@ public class Fichier {
         }
         return "";
     }
-
+    
+    public String getInfo() {}
+    public String getStat(){}
 }

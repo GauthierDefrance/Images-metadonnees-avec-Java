@@ -80,6 +80,13 @@ public class Folder {
         return this.Opath.getParent().toString();
     }
 
+    public String getAbsolutePath(){
+        return this.Opath.toAbsolutePath().toString();
+    }
+
+
+    public String getInfo() {}
+    public String getStat(){}
 }
 
 

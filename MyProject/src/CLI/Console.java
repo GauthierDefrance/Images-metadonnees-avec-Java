@@ -2,18 +2,18 @@ package CLI;
 
 public class Console {
 
-    boolean help=false; // -h --help
-    boolean info=false; // -i --info
-    boolean stat=false; // -s --stat
-    boolean file=false; // -f --file
-    boolean directory=false; // -d --directory
-    boolean snapshotsave=false; // -ss --snapshotsave
-    boolean snapshotcompare=false; // -sc --snapshotcompare
-    boolean search=false; // -w --search
-    boolean order=false; // -o --order
-    boolean list=false; // -l --list
-    boolean by=false; // -b --by parameter for searchby
-    boolean error=false;
+    private boolean help=false; // -h --help
+    private boolean info=false; // -i --info
+    private boolean stat=false; // -s --stat
+    private boolean file=false; // -f --file
+    private boolean directory=false; // -d --directory
+    private boolean snapshotsave=false; // -ss --snapshotsave
+    private boolean snapshotcompare=false; // -sc --snapshotcompare
+    private boolean search=false; // -w --search
+    private boolean order=false; // -o --order
+    private boolean list=false; // -l --list
+    private boolean by=false; // -b --by parameter for searchby
+    private boolean error=false;
 
     public Console(String[] args) {
         for(String arg : args) {
