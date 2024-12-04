@@ -1,5 +1,10 @@
 package CLI;
 
+import core.Folder;
+import core.Fichier;
+
+import java.io.File;
+
 public class Console {
 
     private boolean help=false; // -h --help
@@ -14,6 +19,7 @@ public class Console {
     private boolean list=false; // -l --list
     private boolean by=false; // -b --by parameter for searchby
     private boolean error=false;
+    private String path;
 
     public Console(String[] args) {
         for(String arg : args) {
@@ -147,15 +153,31 @@ public class Console {
                """);
    }
 
-    public String getInfoDir(){}
-    public String getInfoFile(){}
-    public String getStatDir(){}
-    public String getStatFile(){}
+    public String getInfoDir(){
+        Folder tmp = new Folder(path);
+        return tmp.getInfo();
+    }
+    public String getInfoFile(){
+        Fichier tmp = new Fichier(path);
+        tmp.initMetadata();
+        return tmp.getInfo();
+    }
+    public String getStatDir(){
+        Folder tmp = new Folder(path);
+        return tmp.getStat();
+    }
+    public String getStatFile(){
+        Fichier tmp = new Fichier(path);
+        tmp.initMetadata();
+        return tmp.getStat();
+    }
 
-    public String search(){}
-    public String searchby(){}
+    //public String search(){}
+    //public String searchby(){}
 
-    public String getList(){}
+    public String getList(){
+       
+    }
     public String getOrderedList(){}
 
     //public void doSnapshotSave(){}
