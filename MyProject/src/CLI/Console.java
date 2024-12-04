@@ -1,74 +1,74 @@
 package CLI;
 
 public class Console {
-    
-    public static void main(String[] args) {
-        boolean help=false; // -h --help
-        boolean info=false; // -i --info
-        boolean stat=false; // -s --stat
-        boolean file=false; // -f --file
-        boolean directory=false; // -d --directory
-        boolean snapshotsave=false; // -ss --snapshotsave
-        boolean snapshotcompare=false; // -sc --snapshotcompare
-        boolean search=false; // -w --search
-        boolean order=false; // -o --order
-        boolean list=false; // -l --list
-        boolean by=false; // -b --by parameter for searchby
-        boolean error=false;
-        for (String arg : args) {
-            switch (arg) {
-                case "--help": help=true;
-                    break;
-                case "-h": help=true;
-                    break;
-                case "-i": info=true;
-                    break;
-                case "--info": info=true;
-                    break;
-                case "-s": stat=true;
-                    break;
-                case "--stat": stat=true;
-                    break;
-                case "--file": file=true;
-                    break;
-                case "-f": file=true;
-                    break;
-                case "--directory": directory=true;
-                    break;
-                case "-d": directory=true;
-                    break;
-                case "--snapshotsave": snapshotsave=true;
-                    break;
-                case "-ss": snapshotsave=true;
-                    break;
-                case "-sc": snapshotcompare=true;
-                    break;
-                case "--snapshotcompare": snapshotcompare=true;
-                    break;
-                case "--search": search=true;
-                    break;
-                case "-w": search=true;
-                    break;
-                case "--order": order=true;
-                    break;
-                case "-o": order=true;
-                    break;
-                case "--list": list=true;
-                    break;
-                case "-l": list=true;
-                    break;
-                case "--by": by=true;
-                    break;
-                case "-b": by=true;
-                    break;
-                default: error=true;
-            } //Checking what commands has been written.
-            }
+
+    boolean help=false; // -h --help
+    boolean info=false; // -i --info
+    boolean stat=false; // -s --stat
+    boolean file=false; // -f --file
+    boolean directory=false; // -d --directory
+    boolean snapshotsave=false; // -ss --snapshotsave
+    boolean snapshotcompare=false; // -sc --snapshotcompare
+    boolean search=false; // -w --search
+    boolean order=false; // -o --order
+    boolean list=false; // -l --list
+    boolean by=false; // -b --by parameter for searchby
+    boolean error=false;
+
+    public Console(String[] args) {
+        for(String arg : args) {
+        switch (arg) {
+            case "--help": help=true;
+                break;
+            case "-h": help=true;
+                break;
+            case "-i": info=true;
+                break;
+            case "--info": info=true;
+                break;
+            case "-s": stat=true;
+                break;
+            case "--stat": stat=true;
+                break;
+            case "--file": file=true;
+                break;
+            case "-f": file=true;
+                break;
+            case "--directory": directory=true;
+                break;
+            case "-d": directory=true;
+                break;
+            case "--snapshotsave": snapshotsave=true;
+                break;
+            case "-ss": snapshotsave=true;
+                break;
+            case "-sc": snapshotcompare=true;
+                break;
+            case "--snapshotcompare": snapshotcompare=true;
+                break;
+            case "--search": search=true;
+                break;
+            case "-w": search=true;
+                break;
+            case "--order": order=true;
+                break;
+            case "-o": order=true;
+                break;
+            case "--list": list=true;
+                break;
+            case "-l": list=true;
+                break;
+            case "--by": by=true;
+                break;
+            case "-b": by=true;
+                break;
+            default: error=true;
+        } //Checking what commands has been written.
+        }
 
         // ---- gestion erreurs !
         if(error) //Afficher erreur;
         if(file && directory) //afficher erreur car les deux sont exclusif;
-
         // --- Fin traitement erreurs de base
 
 
@@ -85,9 +85,9 @@ public class Console {
         if(stat&&file){}//get les stat du file
 
         if(directory&&list){ //afficher
-            if(order){} //va lister les fichiers selon un certains order
-            else{} // par défaut
-            }
+        if(order){} //va lister les fichiers selon un certains order
+        else{} // par défaut
+    }
 
         if(snapshotsave){}//sauvegarde l'état du fichier et l'identifie via son path a une addresse donné
 
@@ -99,7 +99,20 @@ public class Console {
 
     }
 
+    public String getHelp(){}
 
+    public String getInfoDir(){}
+    public String getInfoFile(){}
+    public String getStatDir(){}
+    public String getStatFile(){}
 
+    public String search(){}
+    public String searchby(){}
+
+    public String getList(){}
+    public String getOrderedList(){}
+
+    public void doSnapshotSave(){}
+    public String doSnapshotCompare(){}
 
 }
