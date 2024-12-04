@@ -64,7 +64,7 @@ public class Folder {
                     if (fichier.isFile()) {
                         try {
                         Path cheminFichier = fichier.toPath();
-                        String typeMime = Files.probeContentType(cheminFichier); //A CHANGER SE BASE SUR L'EXTENSION PAS BIEN !!!
+                        String typeMime = Files.probeContentType(cheminFichier); //Peut ne pas fonctionner
                         //Si le Mime indique que notre fichier est une image, alors on l'ajoute
                         if (typeMime != null && typeMime.startsWith("image/")) {
                                 result.add(fichier);
@@ -85,8 +85,37 @@ public class Folder {
     }
 
 
-    public String getInfo() {}
-    public String getStat(){}
+    public String getInfo() {
+        return String.format("""
+            === %s ===
+            Last Modification : %s
+            Absolut Path : %s
+            """, Opath.getFileName(), folder.lastModified(), Opath.toAbsolutePath().toString());
+
+
+    }
+
+    public String getStat(){
+        int nbElemsTotaux = folder.listFiles().length;
+        int nbSousDossier = this.getFolders().size();
+        int nbImages = this.getImages().size();
+        int pngCompteur=0, jpgCompteur=0, webpCompteur = 0;
+        for(File image :this.getImages()){
+            if(image.getName().toString().endsWith(".png"))pngCompteur++;
+            if(image.getName().toString().endsWith(".jpg"))jpgCompteur++;
+            if(image.getName().toString().endsWith(".webp")) webpCompteur++;
+        }
+        return String.format("""
+            === %s ===
+            Number of elements : %d
+            Number of folders : %d
+            Number of images : %d
+            PNG: %d
+            JPG: %d
+            WEBP: %d
+            """, Opath.getFileName(), nbElemsTotaux, nbSousDossier, nbImages, pngCompteur, jpgCompteur, webpCompteur);
+    }
+
 }
 
 
