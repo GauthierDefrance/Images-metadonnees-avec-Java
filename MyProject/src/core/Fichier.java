@@ -169,14 +169,19 @@ public class Fichier {
 
     }
 
+
+
     /**
      *  Initialise les metadonnées
      */
+    
     public void initMetadata() {
         try {
             // Parcourir et stocker les métadonnées
             for (Directory directory : metadata.getDirectories()) {
+                System.out.println(directory);
                 for (Tag tag : directory.getTags()) {
+                    System.out.println(tag.getTagName());
                     switch (tag.getTagName()){
                         case "Image Height":
                         case "Image Width":
