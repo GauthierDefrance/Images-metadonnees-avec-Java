@@ -1,5 +1,8 @@
 package core;
 
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -90,7 +93,7 @@ public class Folder {
             === %s ===
             Last Modification : %s
             Absolut Path : %s
-            """, Opath.getFileName(), folder.lastModified(), Opath.toAbsolutePath().toString());
+            """, Opath.getFileName(), convertTimestampToReadableDate(folder.lastModified()), Opath.toAbsolutePath().toString());
 
 
     }
@@ -115,6 +118,26 @@ public class Folder {
             WEBP: %d
             """, Opath.getFileName(), nbElemsTotaux, nbSousDossier, nbImages, pngCompteur, jpgCompteur, webpCompteur);
     }
+
+    /**
+     * Convertit un timestamp (long) en une date lisible.
+     *
+     * @param timestamp Le timestamp en millisecondes sous forme de long.
+     * @return La date formatée en chaîne lisible.
+     */
+    public static String convertTimestampToReadableDate(long timestamp) {
+        // Créer un Instant à partir du timestamp
+        Instant instant = Instant.ofEpochMilli(timestamp);
+
+        // Définir le format de la date
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+                .withZone(ZoneId.systemDefault()); // Utiliser la zone horaire du système
+
+        // Retourner la date formatée
+        return formatter.format(instant);
+    }
+
+
 
 }
 
