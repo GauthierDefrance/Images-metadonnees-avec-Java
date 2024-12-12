@@ -7,7 +7,7 @@ import org.apache.commons.cli.*;
 
 import java.io.IOException;
 
-public class Console {
+public class ConsoleV2 {
 
     private boolean help;
     private boolean info;
@@ -28,11 +28,11 @@ public class Console {
     private CommandLine cmd;
 
 
-    public Console(String[] args) {
-        this.args = args;
-        this.options = new Options(); // Initialisation de l'objet options
-
+    public ConsoleV2(String[] args) {
         // Création des options
+        this.args = args;
+        Options options = new Options();
+
         options.addOption("h", "help", false, "Afficher l'aide");
         options.addOption("i", "info", false, "Afficher les informations");
         options.addOption("s", "stat", false, "Afficher les statistiques");
@@ -43,11 +43,12 @@ public class Console {
         options.addOption("w", "search", true, "Effectuer une recherche");
         options.addOption("o", "order", true, "Ordonner les résultats selon un paramètre.");
         options.addOption("l", "list", false, "Lister les éléments");
-        options.addOption("b", "by", true, "Chercher les éléments remplissant une condition.");
+        options.addOption("b", "by", true, "Cherche les élements remplissant une condition.");
 
-        this.parser = new DefaultParser(); // Initialisation du parser
+        CommandLineParser parser = new DefaultParser();
         try {
-            this.cmd = this.parser.parse(this.options, this.args); // Parsing des arguments
+            CommandLine cmd = parser.parse(options, args);
+
             // Vérification des options
             this.help = cmd.hasOption("h");
             this.info = cmd.hasOption("i");
@@ -66,6 +67,7 @@ public class Console {
             if (remainingArgs.length > 0) {
                 this.path = remainingArgs[0]; // Premier argument non associé à une option
             }
+
         } catch (ParseException e) {
             System.err.println("Erreur lors du parsing des arguments : " + e.getMessage());
             this.error = true;
@@ -73,109 +75,96 @@ public class Console {
     }
 
     private void validateRules() {
-        try {
-            // Vérification XOR : -f ou -d mais pas les deux
-            if (file && directory ) {
-                throw new IllegalArgumentException("Erreur : Vous ne pouvez pas utiliser -f et -d en même temps.");
-            } else if (!file && !directory && !info) {
-                throw new IllegalArgumentException("Erreur : Vous devez choisir soit -f soit -d.");
-            }
+        // Vérification XOR : -f ou -d mais pas les deux
+        if (file && directory) {
+            System.err.println("Erreur : Vous ne pouvez pas utiliser -f et -d en même temps.");
+            error = true;
+        } else if (!file && !directory) {
+            System.err.println("Erreur : Vous devez choisir soit -f soit -d.");
+            error = true;
+        }
 
-            // Règles pour -f
-            if (file) {
-                if (list || order || snapshotsave || snapshotcompare) {
-                    throw new IllegalArgumentException("Erreur : Les options -list, -order, -snapshotsave et -snapshotcompare ne peuvent pas être utilisées avec -f.");
-                }
+        // Règles pour -f
+        if (file) {
+            if (list || order || snapshotsave || snapshotcompare) {
+                System.err.println("Erreur : Les options -list, -order, -snapshotsave et -snapshotcompare ne peuvent pas être utilisées avec -f.");
+                error = true;
             }
+        }
 
-            // Règles pour -d
-            if (directory) {
-                if (search) {
-                    throw new IllegalArgumentException("Erreur : L'option -search ne peut pas être utilisée avec -d.");
-                }
-                if (order && !list) {
-                    throw new IllegalArgumentException("Erreur : L'option -order nécessite l'option -list.");
-                }
+        // Règles pour -d
+        if (directory) {
+            if (search) {
+                System.err.println("Erreur : L'option -search ne peut pas être utilisée avec -d.");
+                error = true;
             }
-        } catch (IllegalArgumentException e) {
-            System.err.println(e.getMessage());
-            this.error = true;
+            if (order && !list) {
+                System.err.println("Erreur : L'option -order nécessite l'option -list.");
+                error = true;
+            }
         }
     }
 
     public String execute() {
         validateRules();
         if (error) {
-            return "Veuillez corriger les erreurs dans vos options.";
+            System.out.println("Veuillez corriger les erreurs dans vos options.");
+            System.exit(1);
         }
 
+        String output = "";
+
         if (help) {
-            return getHelp();
+            output += getHelp()+"\n";
         }
 
         if (file) {
-            return executeFileMode();
-        } else if (directory) {
-            return executeDirectoryMode();
-        }
-
-        return "Aucune commande valide détectée.";
-    }
-
-    private String executeFileMode() {
-        try {
-            Fichier fichier = new Fichier(cmd.getOptionValue("f"));
-
-            fichier.initMetadata();
-
-            StringBuilder output = new StringBuilder("Mode fichier activé.\n");
+            try {
+           Fichier fichier = new Fichier(cmd.getOptionValue("f"));
+           fichier.initMetadata();
+           System.out.println("Mode fichier activé.");
 
             if (search) {
-                output.append("Recherche activée.\n");
+                System.out.println("Recherche activée.");
             }
             if (info) {
-                output.append(fichier.getInfo()).append("\n");
+
+                output += fichier.getInfo() + "\n" ;
             }
             if (stat) {
-                output.append(fichier.getStat()).append("\n");
+                output += fichier.getStat() + "\n" ;
             }
 
-            return output.toString();
-        } catch (IOException | ImageProcessingException e) {
-            return "Erreur : n'a pas pu ouvrir le fichier : " + e.getMessage();
-        }
-    }
+            } catch (IOException | ImageProcessingException e) {System.out.println("Erreur n'a pas pu ouvrir le fichier : " + e.getMessage());System.exit(1);}}
 
-    private String executeDirectoryMode() {
-        if (cmd == null) {
-            return "Erreur : les options n'ont pas été initialisées correctement.";
-        }
-        Folder folder = new Folder(cmd.getOptionValue("d"));
 
-        StringBuilder output = new StringBuilder("Mode répertoire activé.\n");
 
-        if (info) {
-            output.append(folder.getInfo()).append("\n");
-        }
-        if (stat) {
-            output.append(folder.getStat()).append("\n");
-        }
-        if (list) {
-            output.append("Liste des éléments activée.\n");
-            if (order) {
-                output.append("Ordre activé.\n");
+
+        else if (directory) {
+
+            Folder folder = new Folder(cmd.getOptionValue("d"));
+            System.out.println("Mode répertoire activé.");
+            if (info) {
+                output+= folder.getInfo() + "\n" ;
+            }
+            if (stat) {
+                output += folder.getStat() + "\n" ;
+            }
+            if (list) {
+                System.out.println("Liste des éléments activée.");
+                if (order) {
+                    System.out.println("Ordre activé.");
+                }
+            }
+            if (snapshotsave) {
+                System.out.println("Sauvegarde du snapshot activée.");
+            }
+            if (snapshotcompare) {
+                System.out.println("Comparaison des snapshots activée.");
             }
         }
-        if (snapshotsave) {
-            output.append("Sauvegarde du snapshot activée.\n");
-        }
-        if (snapshotcompare) {
-            output.append("Comparaison des snapshots activée.\n");
-        }
-
-        return output.toString();
+        return output;
     }
-
 
     public String getHelp () {
         return ("""

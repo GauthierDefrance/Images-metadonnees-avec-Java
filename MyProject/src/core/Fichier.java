@@ -3,6 +3,7 @@ package core;
 import com.drew.imaging.ImageMetadataReader;
 import com.drew.imaging.ImageProcessingException;
 import com.drew.metadata.Directory;
+
 import com.drew.metadata.Metadata;
 import com.drew.metadata.Tag;
 
@@ -19,7 +20,7 @@ import java.util.HashMap;
  *
  * @author @Gauthier Defrance
  *
- * @param path  le chemin vers le fichier sous forme d'un String
+ *
  */
 public class Fichier {
 
@@ -47,12 +48,13 @@ public class Fichier {
 
     /**
      * Contructeur de la classe
-     * @params path un string indiquant le chemin jusqu'au fichier image cherché
+     * @param path un string indiquant le chemin jusqu'au fichier image cherché
      */
     public Fichier(String path) throws ImageProcessingException, IOException {
             this.path = path;
             imageFile = new File(path);
             metadata = ImageMetadataReader.readMetadata(imageFile);
+            metadataMap = new HashMap<String,String>();
     }
 
     /**
@@ -78,91 +80,91 @@ public class Fichier {
      * @return L'extenstion
      */
     public String getExtension(){
-        if(metadataMap.containsKey("Detected File Type Long Name")) return metadataMap.get("Detected MIME Type");
+        if(metadataMap.containsKey("Detected File Type Long Name")) return metadataMap.get("Detected File Type Long Name");
         return "";
     }
     /**
      * @return Le nom du fichier
      */
     public String getName(){
-        if(metadataMap.containsKey("File Name")) return metadataMap.get("Detected MIME Type");
+        if(metadataMap.containsKey("File Name")) return metadataMap.get("File Name");
         return "";
     }
     /**
      * @return La date de création
      */
     public String getDate(){
-        if(metadataMap.containsKey("Date/Time")) return metadataMap.get("Detected MIME Type");
+        if(metadataMap.containsKey("Date/Time")) return metadataMap.get("Date/Time");
         return "";
     }
     /**
      * @return La date de modification
      */
     public String getMDate(){
-        if(metadataMap.containsKey("File Modified Date")) return metadataMap.get("Detected MIME Type");
+        if(metadataMap.containsKey("File Modified Date")) return metadataMap.get("File Modified Date");
         return "";
     }
     /**
      * @return La lattitude
      */
     public String getLattitude(){
-        if(metadataMap.containsKey("Latitude")) return metadataMap.get("Detected MIME Type");
+        if(metadataMap.containsKey("Latitude")) return metadataMap.get("Latitude");
         return "";
     }
     /**
      * @return La longitude
      */
     public String getLongitude(){
-        if(metadataMap.containsKey("Longitude")) return metadataMap.get("Detected MIME Type");
+        if(metadataMap.containsKey("Longitude")) return metadataMap.get("Longitude");
         return "";
     }
     /**
      * @return Le modèle de l'appareil photo
      */
     public String getModel(){
-        if(metadataMap.containsKey("Model")) return metadataMap.get("Detected MIME Type");
+        if(metadataMap.containsKey("Model")) return metadataMap.get("Model");
         return "";
     }
     /**
      * @return La description de l'image
      */
     public String getDesc(){
-        if(metadataMap.containsKey("Image Description")) return metadataMap.get("Detected MIME Type");
+        if(metadataMap.containsKey("Image Description")) return metadataMap.get("Image Description");
         return "";
     }
     /**
      * @return Le poids de l'image en Ko
      */
     public String getSize(){
-        if(metadataMap.containsKey("File Size")) return metadataMap.get("Detected MIME Type");
+        if(metadataMap.containsKey("File Size")) return metadataMap.get("File Size");
         return "";
     }
     /**
      * @return La hauteur en px
      */
     public String getHeight(){
-        if(metadataMap.containsKey("Image Height")) return metadataMap.get("Detected MIME Type");
+        if(metadataMap.containsKey("Image Height")) return metadataMap.get("Image Height");
         return "";
     }
     /**
      * @return La largeur en px
      */
     public String getWidth(){
-        if(metadataMap.containsKey("Image Width")) return metadataMap.get("Detected MIME Type");
+        if(metadataMap.containsKey("Image Width")) return metadataMap.get("Image Width");
         return "";
     }
     /**
      * @return La résolution horizontal en inch
      */
     public String getDpix(){
-        if(metadataMap.containsKey("X Resolution")) return metadataMap.get("Detected MIME Type");
+        if(metadataMap.containsKey("X Resolution")) return metadataMap.get("X Resolution");
         return "";
     }
     /**
      * @return La résolution vertical en inch
      */
     public String getDpiy(){
-        if(metadataMap.containsKey("Y Resolution")) return metadataMap.get("Detected MIME Type");
+        if(metadataMap.containsKey("Y Resolution")) return metadataMap.get("Y Resolution");
         return "";
 
     }
@@ -203,6 +205,7 @@ public class Fichier {
             }
         } catch (Exception e) {
             System.err.println("Erreur lors de l'extraction des métadonnées : " + e.getMessage());
+            e.printStackTrace();
             }
     }
     /**
@@ -229,6 +232,31 @@ public class Fichier {
         return "";
     }
 
-    public String getInfo() {}
-    public String getStat(){}
+    public String getInfo() {
+        return String.format("""
+        === Image Info ===
+        File Name        : %s
+        Image Height     : %s
+        Image Width      : %s
+        Latitude         : %s
+        Longitude        : %s
+        X Resolution     : %s dpi
+        Y Resolution     : %s dpi
+        Model            : %s
+        Image Description: %s
+        """,
+                getName(), getHeight(), getWidth(), getLattitude(), getLongitude(), getDpix(), getDpiy(), getModel(), getDesc());
+    }
+    public String getStat() {
+        return String.format("""
+        === File Statistics ===
+        File Name                  : %s
+        File Size                  : %s bytes
+        Detected MIME Type         : %s
+        Date/Time                  : %s
+        File Modified Date         : %s
+        Detected File Type Long Name: %s
+        """,
+                getName(), getSize(), getMime(), getDate(), getMDate(), getExtension());
+    }
 }
