@@ -174,7 +174,7 @@ public class Fichier {
     /**
      *  Initialise les metadonnées
      */
-    
+
     public void initMetadata() {
         try {
             // Parcourir et stocker les métadonnées

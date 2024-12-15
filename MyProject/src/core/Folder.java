@@ -1,5 +1,7 @@
 package core;
 
+import com.drew.imaging.ImageProcessingException;
+
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -9,6 +11,10 @@ import java.util.ArrayList;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Date;
+import java.util.Locale;
+import java.text.SimpleDateFormat;
+
 
 
 /**
@@ -52,6 +58,49 @@ public class Folder {
             }
         return result;
         }
+
+    /**
+     * Méthode récursive pour récupérer toutes les images dans le répertoire
+     * et ses sous-répertoires.
+     */
+    public ArrayList<File> getAllImages() {
+        ArrayList<File> result = new ArrayList<File>();
+        collectImages(folder, result); // Lancer la collecte à partir du répertoire de départ
+        return result;
+    }
+
+
+    /**
+     * Collecte les images à partir d'un répertoire donné et ajoute les images
+     * trouvées à la liste `result`.
+     */
+    private void collectImages(File directory, ArrayList<File> result) {
+        if (directory.isDirectory()) {
+            // Lister les fichiers et sous-dossiers dans le répertoire
+            File[] contenu = directory.listFiles();
+            if (contenu != null) {
+                for (File fichier : contenu) {
+                    if (fichier.isDirectory()) {
+                        // Si c'est un sous-dossier, on appelle récursivement la méthode
+                        collectImages(fichier, result);
+                    } else if (fichier.isFile()) {
+                        try {
+                            Path cheminFichier = fichier.toPath();
+                            String typeMime = Files.probeContentType(cheminFichier);
+                            // Si le fichier est une image, on l'ajoute à la liste
+                            if (typeMime != null && typeMime.startsWith("image/")) {
+                                result.add(fichier);
+                            }
+                        } catch (IOException e) {
+                            System.out.println("Erreur lors de l'examen du fichier : " + fichier.getAbsolutePath());
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
     /**
      * getter renvoyant une ArrayList d'objet fichier File
      * qui ont un type Mime image, ils peuvent potentiellement être traité par le programme.
@@ -88,14 +137,138 @@ public class Folder {
     }
 
 
+    public ArrayList<File> searchByTitle(String title) {
+        ArrayList<File> tmp = this.getAllImages();
+        ArrayList<File> result = new ArrayList<>();
+        for(File fichier : tmp){
+            if(fichier.getName().contains(title)){
+                result.add(fichier);
+            };
+        }
+        return result;
+    }
+
+    public ArrayList<File> searchByDate(String targetDatePart) {
+        ArrayList<File> tmp = this.getAllImages(); // Récupérer toutes les images
+        ArrayList<File> result = new ArrayList<>();
+
+        // Formater le targetDatePart pour une recherche flexible
+        for (File fichier : tmp) {
+            // Obtenir la date de dernière modification du fichier
+            long lastModifiedTimestamp = fichier.lastModified();
+            Date lastModifiedDate = new Date(lastModifiedTimestamp);
+
+            // Formater la date du fichier en chaîne
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH); // Formater la date sous "yyyy-MM-dd"
+            String fileDateString = sdf.format(lastModifiedDate);
+
+            // Vérifier si la chaîne targetDatePart est contenue dans la date du fichier
+            if (fileDateString.contains(targetDatePart)) {
+                result.add(fichier);
+            }
+        }
+        return result;
+    }
+
+    public ArrayList<File> searchByHeigth(String Heigth) throws ImageProcessingException, IOException {
+        ArrayList<File> tmp = this.getAllImages();
+        ArrayList<File> result = new ArrayList<>();
+        Fichier tmp2;
+        for(File fichier : tmp){
+            tmp2 = new Fichier(fichier.getAbsolutePath());
+            tmp2.initMetadata();
+            if(tmp2.getHeight().contains(Heigth)){
+                result.add(fichier);
+            };
+        }
+        return result;
+    }
+
+    public ArrayList<File> searchByWidth(String Width) throws ImageProcessingException, IOException {
+        ArrayList<File> tmp = this.getAllImages();
+        ArrayList<File> result = new ArrayList<>();
+        Fichier tmp2;
+        for(File fichier : tmp){
+            tmp2 = new Fichier(fichier.getAbsolutePath());
+            tmp2.initMetadata();
+            if(tmp2.getWidth().contains(Width)){
+                result.add(fichier);
+            };
+        }
+        return result;
+    }
+
+    public ArrayList<File> searchByDesc(String desc) throws ImageProcessingException, IOException {
+        ArrayList<File> tmp = this.getAllImages();
+        ArrayList<File> result = new ArrayList<>();
+        Fichier tmp2;
+        for(File fichier : tmp){
+            tmp2 = new Fichier(fichier.getAbsolutePath());
+            tmp2.initMetadata();
+            if(tmp2.getDesc().contains(desc)){
+                result.add(fichier);
+            };
+        }
+        return result;
+    }
+
+
+    public ArrayList<File> searchByMaxSize(String MaxSize) {
+        ArrayList<File> tmp = this.getAllImages();
+        ArrayList<File> result = new ArrayList<>();
+
+        // Convertir MaxSize en long
+        long maxSizeLong = 0;
+        try {
+            maxSizeLong = Long.parseLong(MaxSize);  // Convertir la chaîne en long
+        } catch (NumberFormatException e) {
+            System.out.println("Erreur lors de la conversion de MaxSize : " + e.getMessage());
+            return result; // Retourner une liste vide si la conversion échoue
+        }
+
+        for (File fichier : tmp) {
+            // Comparer la taille du fichier avec MaxSize converti
+            if (fichier.length() < maxSizeLong) {
+                result.add(fichier);
+            }
+        }
+
+        return result;
+    }
+
+    public ArrayList<File> searchByMinSize(String MinSize) {
+        ArrayList<File> tmp = this.getAllImages();
+        ArrayList<File> result = new ArrayList<>();
+
+        // Convertir MaxSize en long
+        long MinSizeLong = 0;
+        try {
+            MinSizeLong = Long.parseLong(MinSize);  // Convertir la chaîne en long
+        } catch (NumberFormatException e) {
+            System.out.println("Erreur lors de la conversion de MaxSize : " + e.getMessage());
+            return result; // Retourner une liste vide si la conversion échoue
+        }
+
+        for (File fichier : tmp) {
+            // Comparer la taille du fichier avec MaxSize converti
+            if (fichier.length() < MinSizeLong) {
+                result.add(fichier);
+            }
+        }
+
+        return result;
+    }
+
+
+
+
+
     public String getInfo() {
         return String.format("""
             === %s ===
             Last Modification : %s
             Absolut Path : %s
             """, Opath.getFileName(), convertTimestampToReadableDate(folder.lastModified()), Opath.toAbsolutePath().toString());
-
-
     }
 
     public String getStat(){

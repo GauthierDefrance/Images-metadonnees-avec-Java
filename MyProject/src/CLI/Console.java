@@ -5,6 +5,8 @@ import core.Folder;
 import core.Fichier;
 import org.apache.commons.cli.*;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.io.IOException;
 
 public class Console {
@@ -130,9 +132,6 @@ public class Console {
 
             StringBuilder output = new StringBuilder("Mode fichier activé.\n");
 
-            if (search) {
-                output.append("Recherche activée.\n");
-            }
             if (info) {
                 output.append(fichier.getInfo()).append("\n");
             }
@@ -165,7 +164,15 @@ public class Console {
             if (order) {
                 output.append("Ordre activé.\n");
             }
+            ArrayList<File> images = folder.getAllImages();
+            for (File image : images) {
+                output.append(image.getAbsolutePath()).append("\n");
+            }
         }
+        if (search) {
+            output.append("Recherche activée.\n");
+        }
+
         if (snapshotsave) {
             output.append("Sauvegarde du snapshot activée.\n");
         }
