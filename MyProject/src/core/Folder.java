@@ -137,7 +137,7 @@ public class Folder {
     }
 
 
-    public ArrayList<File> searchByTitle(String title) {
+    public ArrayList<File> searchByName(String title) {
         ArrayList<File> tmp = this.getAllImages();
         ArrayList<File> result = new ArrayList<>();
         for(File fichier : tmp){
@@ -226,8 +226,10 @@ public class Folder {
             return result; // Retourner une liste vide si la conversion échoue
         }
 
+        System.out.println(maxSizeLong);
         for (File fichier : tmp) {
             // Comparer la taille du fichier avec MaxSize converti
+            System.out.println(fichier.length());
             if (fichier.length() < maxSizeLong) {
                 result.add(fichier);
             }

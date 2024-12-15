@@ -62,7 +62,6 @@ public class Console {
             this.order = cmd.hasOption("o");
             this.list = cmd.hasOption("l");
             this.by = cmd.hasOption("b");
-
             // Récupération des arguments restants (par exemple un chemin)
             String[] remainingArgs = cmd.getArgs();
             if (remainingArgs.length > 0) {
@@ -91,9 +90,9 @@ public class Console {
             }
 
             // Règles pour -d
-            if (directory) {
+            if (file) {
                 if (search) {
-                    throw new IllegalArgumentException("Erreur : L'option -search ne peut pas être utilisée avec -d.");
+                    throw new IllegalArgumentException("Erreur : L'option -search ne peut pas être utilisée avec -f.");
                 }
                 if (order && !list) {
                     throw new IllegalArgumentException("Erreur : L'option -order nécessite l'option -list.");
@@ -105,7 +104,7 @@ public class Console {
         }
     }
 
-    public String execute() {
+    public String execute() throws ImageProcessingException, IOException {
         validateRules();
         if (error) {
             return "Veuillez corriger les erreurs dans vos options.";
@@ -145,7 +144,7 @@ public class Console {
         }
     }
 
-    private String executeDirectoryMode() {
+    private String executeDirectoryMode() throws ImageProcessingException, IOException {
         if (cmd == null) {
             return "Erreur : les options n'ont pas été initialisées correctement.";
         }
@@ -170,7 +169,75 @@ public class Console {
             }
         }
         if (search) {
+            // s'utilise ainsi : "-w Le_Texte -by desc"    permet de vérifier si "Le_Texte" est présent dans la description.
+            /* possibilités :
+            / -w texte -by name/heigth/width/desc/date/max/min
+            / Par défaut affiche du texte
+            / date s'utilise ainsi : yyyy-MM-dd   il est possible de juste écrire MM-dd ou yyyy-MM
+            / pour min et max, l'argument est en octet.
+             */
             output.append("Recherche activée.\n");
+            if (by){
+                ArrayList<File> images;
+                if (this.cmd.getOptionValue("by").equalsIgnoreCase("name")) {
+                    images = folder.searchByName(this.cmd.getOptionValue("w"));
+                    for (File image : images) {
+                        output.append(image.getAbsolutePath()).append("\n");
+                    }
+                }
+                else if (this.cmd.getOptionValue("by").equalsIgnoreCase("heigth")) {
+                    images = folder.searchByHeigth(this.cmd.getOptionValue("w"));
+                    for (File image : images) {
+                        output.append(image.getAbsolutePath()).append("\n");
+                    }
+
+                }
+                else if (this.cmd.getOptionValue("by").equalsIgnoreCase("width")) {
+                    images = folder.searchByWidth(this.cmd.getOptionValue("w"));
+                    for (File image : images) {
+                        output.append(image.getAbsolutePath()).append("\n");
+                    }
+
+                }
+                else if (this.cmd.getOptionValue("by").equalsIgnoreCase("desc")) {
+                    images = folder.searchByDesc(this.cmd.getOptionValue("w"));
+                    for (File image : images) {
+                        output.append(image.getAbsolutePath()).append("\n");
+                    }
+
+                }
+                else if (this.cmd.getOptionValue("by").equalsIgnoreCase("date")) {
+                    images = folder.searchByDate(this.cmd.getOptionValue("w"));
+                    for (File image : images) {
+                        output.append(image.getAbsolutePath()).append("\n");
+                    }
+
+                }
+                else if (this.cmd.getOptionValue("by").equalsIgnoreCase("max")) {
+                    images = folder.searchByMaxSize(this.cmd.getOptionValue("w"));
+                    for (File image : images) {
+                        output.append(image.getAbsolutePath()).append("\n");
+                    }
+
+                }
+                else if (this.cmd.getOptionValue("by").equalsIgnoreCase("min")) {
+                    images = folder.searchByMinSize(this.cmd.getOptionValue("w"));
+                    for (File image : images) {
+                        output.append(image.getAbsolutePath()).append("\n");
+                    }
+
+                }
+                else{ System.out.println("Paramètres :"+this.cmd.getOptionValue("by")+" inconnu");}
+
+            }
+            else{
+                ArrayList<File> images;
+                images = folder.searchByName(this.cmd.getOptionValue("w"));
+                for (File image : images) {
+                    output.append(image.getAbsolutePath()).append("\n");
+                }
+            }
+
         }
 
         if (snapshotsave) {
