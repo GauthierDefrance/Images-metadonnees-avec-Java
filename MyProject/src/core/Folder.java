@@ -198,6 +198,94 @@ public class Folder {
         return result;
     }
 
+    public ArrayList<File> searchByMaxHeigth(String Heigth) throws ImageProcessingException, IOException {
+        ArrayList<File> tmp = this.getAllImages();
+        ArrayList<File> result = new ArrayList<>();
+        Fichier tmp2;
+        for(File fichier : tmp) {
+            tmp2 = new Fichier(fichier.getAbsolutePath());
+            tmp2.initMetadata();
+            try {
+                // Convertir les chaînes en entiers
+                int tmp2Width = Integer.parseInt(tmp2.getHeight());
+                int widthValue = Integer.parseInt(Heigth);
+                if (tmp2Width < widthValue) {
+                    result.add(fichier);
+                }
+            } catch (Exception e) {
+                System.out.println(e + "Erreur lors du traitement de :\n" + fichier.getAbsolutePath());
+            }
+        }
+        return result;
+    }
+
+    public ArrayList<File> searchByMinHeigth(String Heigth) throws ImageProcessingException, IOException {
+        ArrayList<File> tmp = this.getAllImages();
+        ArrayList<File> result = new ArrayList<>();
+        Fichier tmp2;
+        for(File fichier : tmp) {
+            tmp2 = new Fichier(fichier.getAbsolutePath());
+            tmp2.initMetadata();
+            try {
+                // Convertir les chaînes en entiers
+                int tmp2Width = Integer.parseInt(tmp2.getHeight());
+                int widthValue = Integer.parseInt(Heigth);
+                if (tmp2Width > widthValue) {
+                    result.add(fichier);
+                }
+                ;
+            } catch (Exception e) {
+                System.out.println(e + "Erreur lors du traitement de :\n" + fichier.getAbsolutePath());
+            }
+        }
+        return result;
+    }
+
+    public ArrayList<File> searchByMaxWidth(String Width) throws ImageProcessingException, IOException {
+        ArrayList<File> tmp = this.getAllImages();
+        ArrayList<File> result = new ArrayList<>();
+        Fichier tmp2;
+        for(File fichier : tmp){
+            tmp2 = new Fichier(fichier.getAbsolutePath());
+            tmp2.initMetadata();
+            // Convertir les chaînes en entiers
+            try {
+                int tmp2Width = Integer.parseInt(tmp2.getWidth());
+                int widthValue = Integer.parseInt(Width);
+                if (tmp2Width < widthValue) {
+                    result.add(fichier);
+                }
+
+            }catch(Exception e){
+                System.out.println(e + "Erreur lors du traitement de :\n" + fichier.getAbsolutePath());
+            }
+        }
+        return result;
+    }
+
+    public ArrayList<File> searchByMinWidth(String Width) throws ImageProcessingException, IOException {
+        ArrayList<File> tmp = this.getAllImages();
+        ArrayList<File> result = new ArrayList<>();
+        Fichier tmp2;
+        for(File fichier : tmp) {
+            tmp2 = new Fichier(fichier.getAbsolutePath());
+            tmp2.initMetadata();
+            try {
+                // Convertir les chaînes en entiers
+                int tmp2Width = Integer.parseInt(tmp2.getWidth());
+                int widthValue = Integer.parseInt(Width);
+                if (tmp2Width > widthValue) {
+                    result.add(fichier);
+                }
+                ;
+            } catch (Exception e) {
+                System.out.println(e + "Erreur lors du traitement de :\n" + fichier.getAbsolutePath());
+            }
+        }
+        return result;
+    }
+
+
     public ArrayList<File> searchByDesc(String desc) throws ImageProcessingException, IOException {
         ArrayList<File> tmp = this.getAllImages();
         ArrayList<File> result = new ArrayList<>();

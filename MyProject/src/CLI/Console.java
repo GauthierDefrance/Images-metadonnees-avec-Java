@@ -105,6 +105,7 @@ public class Console {
     }
 
     public String execute() throws ImageProcessingException, IOException {
+        if (args.length == 0) {return "Aucun arguments précisé\n"+getHelp();}
         validateRules();
         if (error) {
             return "Veuillez corriger les erreurs dans vos options.";
@@ -120,7 +121,7 @@ public class Console {
             return executeDirectoryMode();
         }
 
-        return "Aucune commande valide détectée.";
+        return "Aucune commande valide détectée."+"\n"+getHelp();
     }
 
     private String executeFileMode() {
@@ -192,8 +193,38 @@ public class Console {
                     }
 
                 }
+                else if (this.cmd.getOptionValue("by").equalsIgnoreCase("maxheigth")) {
+                    images = folder.searchByMaxHeigth(this.cmd.getOptionValue("w"));
+                    for (File image : images) {
+                        output.append(image.getAbsolutePath()).append("\n");
+                    }
+
+                }
+                else if (this.cmd.getOptionValue("by").equalsIgnoreCase("minheigth")) {
+                    images = folder.searchByMinHeigth(this.cmd.getOptionValue("w"));
+                    for (File image : images) {
+                        output.append(image.getAbsolutePath()).append("\n");
+                    }
+
+                }
                 else if (this.cmd.getOptionValue("by").equalsIgnoreCase("width")) {
                     images = folder.searchByWidth(this.cmd.getOptionValue("w"));
+                    for (File image : images) {
+                        output.append(image.getAbsolutePath()).append("\n");
+                    }
+
+                }
+                else if (this.cmd.getOptionValue("by").equalsIgnoreCase("maxwidth")) {
+                    images = folder.searchByMaxWidth(this.cmd.getOptionValue("w"));
+                    for (File image : images) {
+                        try {
+                            output.append(image.getAbsolutePath()).append("\n");
+                        } catch (Exception e){System.out.println(e.getMessage()+"Erreur lors du traitement de :\n"+image.getAbsolutePath());}
+                    }
+
+                }
+                else if (this.cmd.getOptionValue("by").equalsIgnoreCase("minwidth")) {
+                    images = folder.searchByMinWidth(this.cmd.getOptionValue("w"));
                     for (File image : images) {
                         output.append(image.getAbsolutePath()).append("\n");
                     }
