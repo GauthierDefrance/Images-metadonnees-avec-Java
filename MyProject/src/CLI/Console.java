@@ -95,7 +95,7 @@ public class Console {
                     throw new IllegalArgumentException("Erreur : L'option -search ne peut pas être utilisée avec -f.");
                 }
                 if (order && !list) {
-                    throw new IllegalArgumentException("Erreur : L'option -order nécessite l'option -list.");
+                    throw new IllegalArgumentException("Erreur : L'option -order nécessite l'option -l (--list).");
                 }
             }
         } catch (IllegalArgumentException e) {
@@ -160,7 +160,7 @@ public class Console {
             output.append(folder.getStat()).append("\n");
         }
         if (list) {
-            output.append("Liste des éléments activée.\n");
+            output.append("Listage des éléments activée.\n");
             if (order) {
                 output.append("Ordre activé.\n");
             }
