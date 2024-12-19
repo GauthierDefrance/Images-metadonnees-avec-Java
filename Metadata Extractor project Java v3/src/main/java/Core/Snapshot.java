@@ -55,7 +55,7 @@ public class Snapshot {
         return readFileToString(givenPath).equals(this.snapshotSaveJsonGetter());
     }
 
-    public StringBuffer snapshotCompare2(String givenPath) throws IOException {
+    public StringBuffer snapshotCompare(String givenPath) throws IOException {
 
         StringBuffer result = new StringBuffer();
         ArrayList<Folder> list = new ArrayList<Folder>();
@@ -75,7 +75,7 @@ public class Snapshot {
             for (FolderReserialized folder : folders) {
                 StringBuffer resulttmp = new StringBuffer();
 
-                resulttmp.append("Chemin : " + folder.getAbsolutePath());
+                resulttmp.append("| Chemin : " + folder.getAbsolutePath());
                 dossier = new File(folder.getAbsolutePath());
                 if (dossier.exists()&&dossier.isDirectory()){
                     for(Folder myfolder : list){
@@ -87,8 +87,6 @@ public class Snapshot {
                         }
 
                     }
-
-
 
                 }
                 else {result.append("  ¤ "+dossier.getAbsolutePath()+" a été déplacé ou supprimé.");}
@@ -116,10 +114,10 @@ public class Snapshot {
 
         // Début vérification états des sous dossiers
         for(String tmp :folder.getFolders()){
-            if(!folders.contains(tmp)){result.append("\n  "+tmp + " a été déplacé ou supprimé");}
+            if(!folders.contains(tmp)){result.append("\n     "+tmp + " a été déplacé ou supprimé\n");}
         }
         for(String tmp :folders){
-            if(!folder.getFolders().contains(tmp)){result.append("\n  "+tmp + " a été ajouté");}
+            if(!folder.getFolders().contains(tmp)){result.append("\n     "+tmp + " a été ajouté\n");}
         }
         // Fin vérification états des sous dossiers
 
@@ -154,7 +152,7 @@ public class Snapshot {
                 StringBuffer tmp = new StringBuffer();
                 Image savedImage = savedImageMap.get(savedImagePath);
                 Image currentImage = currentImageMap.get(savedImagePath);
-                tmp.append("\n         Chemin de l'image : " + savedImage.getPath());
+                tmp.append("\n        | Chemin de l'image : " + savedImage.getPath());
                 // Comparaison des métadonnées
                 if (!savedImage.getName().equals(currentImage.getName())) {
                     tmp.append("\n         > Nom de l'image : " + savedImage.getName() + " -> " + currentImage.getName());
@@ -198,7 +196,7 @@ public class Snapshot {
                 if (!savedImage.getDpiy().equals(currentImage.getDpiy())) {
                     tmp.append("\n         > Dpiy de l'image modifiée : " + savedImage.getDpiy() + " -> " + currentImage.getDpiy());
                 }
-                if(!(("\n         Chemin de l'image : "  + savedImage.getPath()).equals(tmp.toString()))){result.append(tmp.toString());}
+                if(!(("\n        | Chemin de l'image : "  + savedImage.getPath()).equals(tmp.toString()))){result.append(tmp.toString());}
 
                 // Ajouter d'autres métadonnées à comparer si nécessaire
             } else {
