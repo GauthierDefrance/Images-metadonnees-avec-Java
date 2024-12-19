@@ -149,7 +149,6 @@ public class Folder {
      * getter renvoyant une ArrayList d'objet fichier File
      * qui ont un type Mime image, ils peuvent potentiellement être traité par le programme.
      */
-
     @JsonIgnore
     public ArrayList<File> getImages() {
         ArrayList<File> result = new ArrayList<File>();
@@ -343,7 +342,6 @@ public class Folder {
         return result;
     }
 
-
     public ArrayList<File> searchByDesc(String desc) throws ImageProcessingException, IOException {
         ArrayList<File> tmp = this.getAllImages();
         ArrayList<File> result = new ArrayList<>();
@@ -357,7 +355,6 @@ public class Folder {
         }
         return result;
     }
-
 
     public ArrayList<File> searchByMaxSize(String MaxSize) {
         ArrayList<File> tmp = this.getAllImages();
@@ -383,7 +380,6 @@ public class Folder {
 
         return result;
     }
-
 
     public ArrayList<File> searchByMinSize(String MinSize) {
         ArrayList<File> tmp = this.getAllImages();
@@ -527,23 +523,46 @@ public class Folder {
                 System.out.println("Chemin : " + folder.getAbsolutePath());
                 dossier = new File(folder.getAbsolutePath());
                 if (dossier.exists()&&dossier.isDirectory()){
-                       
+                for(Folder myfolder : list){
+                    if (myfolder.getAbsolutePath().equals(dossier.getAbsolutePath())){
+                        this.comparaisonFolder(folder,myfolder);
+                        list.remove(folder);
+                    }
+
+                }
+
+
                 }
                 else {System.out.println(dossier.getAbsolutePath()+" a été déplacé ou supprimé.");}
 
-                for(Fichier file : folder.getFiles()){
-                    System.out.println(file.getPath());
-
-                }
+                //for(Fichier file : folder.getFiles()){//System.out.println(file.getPath());}
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void comparaisonFolder(FolderReserialized folder){
-        if(folder.get)
+    public void comparaisonFolder(FolderReserialized folder, Folder myfolder){
+        if(!folder.getLastModified().equals(myfolder.getLastModification())){System.out.println("Date de mofidiciation changé :" + myfolder.getLastModification() +"->"+folder.getLastModified());}
+        if(!folder.getParent().equals(myfolder.getParent())){System.out.println("parent changé");}
+        if(!(folder.getNumberOfElements().equals(""+myfolder.getnbElemsTotaux()))){System.out.println("Le nombre d'élements a changé :" + myfolder.getnbElemsTotaux() +"->"+folder.getNumberOfElements() );}
+        if(!(folder.getNumberOfImages().equals(""+myfolder.getnbImages()))){System.out.println("Nombre d'image changé :" + myfolder.getnbImages()+ "->" + folder.getNumberOfImages());}
+        if(!(folder.getNumberOfFolders().equals(""+myfolder.getnbSousDossier()))){System.out.println("Nombre de sous dossiers changé :" + myfolder.getnbSousDossier() +"->"+ folder.getNumberOfFolders());}
 
+        ArrayList<String> folders= new ArrayList<String>();
+        for(File t :myfolder.getFolders()){folders.add(t.getAbsolutePath());}
+
+        for(String tmp :folder.getFolders()){
+            if(!folders.contains(tmp)){System.out.println(tmp + " a été déplacé ou supprimé");}
+        }
+        for(String tmp :folders){
+            if(!folder.getFolders().contains(tmp)){System.out.println(tmp + " a été ajouté");}
+        }
+
+
+        for(Fichier myfichier : folder.getFiles()){
+            if(!)
+        }
 
 
     }
