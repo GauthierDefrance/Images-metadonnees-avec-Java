@@ -97,7 +97,8 @@ public class Image {
     public void setExtension(String extension){ this.extension = extension;}
     public void setName(String name){ this.name = name;}
     public void setDate(String date){ this.date = date;}
-    public void setMdate(String mdate){ this.date = date;}
+    @JsonProperty("mdate")
+    public void setMdate(String mdate){ this.mdate = mdate;}
     @JsonProperty("model")
     public void setModel(String model){ this.model = model;}
     public void setDesc(String desc){ this.desc = desc;}
@@ -114,6 +115,7 @@ public class Image {
      * @return Le Type Mime
      */
     public String getMime(){
+        if(mime!=null) return mime;
         if(metadataMap.containsKey("Detected MIME Type")) return metadataMap.get("Detected MIME Type");
         return "";
     }
@@ -122,6 +124,7 @@ public class Image {
      */
 
     public String getExtension(){
+        if(extension!=null) return extension;
         if(metadataMap.containsKey("Detected File Type Long Name")) return metadataMap.get("Detected File Type Long Name");
         return "";
     }
@@ -130,6 +133,7 @@ public class Image {
      */
 
     public String getName(){
+        if(name!=null) return name;
         if(metadataMap.containsKey("File Name")) return metadataMap.get("File Name");
         return "";
     }
@@ -138,6 +142,7 @@ public class Image {
      */
 
     public String getDate(){
+        if(date!=null) return date;
         if(metadataMap.containsKey("Date/Time")) return metadataMap.get("Date/Time");
         return "";
     }
@@ -145,7 +150,9 @@ public class Image {
      * @return La date de modification
      */
 
+
     public String getMDate(){
+        if(mdate!=null) return mdate;
         if(metadataMap.containsKey("File Modified Date")) return metadataMap.get("File Modified Date");
         return "";
     }
@@ -154,6 +161,7 @@ public class Image {
      */
 
     public String getLattitude(){
+        if(lattitude!=null) return lattitude;
         if(metadataMap.containsKey("Latitude")) return metadataMap.get("Latitude");
         return "";
     }
@@ -162,6 +170,7 @@ public class Image {
      */
 
     public String getLongitude(){
+        if(longitude!=null) return longitude;
         if(metadataMap.containsKey("Longitude")) return metadataMap.get("Longitude");
         return "";
     }
@@ -170,6 +179,7 @@ public class Image {
      */
 
     public String getModel(){
+        if(model!=null) return model;
         if(metadataMap.containsKey("Model")) return metadataMap.get("Model");
         return "";
     }
@@ -178,6 +188,7 @@ public class Image {
      */
 
     public String getDesc(){
+        if(desc!=null) return desc;
         if(metadataMap.containsKey("Image Description")) return metadataMap.get("Image Description");
         return "";
     }
@@ -186,6 +197,7 @@ public class Image {
      */
 
     public String getSize(){
+        if(size!=null) return size;
         if(metadataMap.containsKey("File Size")) return metadataMap.get("File Size");
         return "";
     }
@@ -194,6 +206,7 @@ public class Image {
      */
 
     public String getHeight(){
+        if(height!=null) return height;
         if(metadataMap.containsKey("Image Height")) return metadataMap.get("Image Height");
         return "";
     }
@@ -202,6 +215,7 @@ public class Image {
      */
 
     public String getWidth(){
+        if(width!=null) return width;
         if(metadataMap.containsKey("Image Width")) return metadataMap.get("Image Width");
         return "";
     }
@@ -210,6 +224,7 @@ public class Image {
      */
 
     public String getDpix(){
+        if(dpix!=null) return dpix;
         if(metadataMap.containsKey("X Resolution")) return metadataMap.get("X Resolution");
         return "";
     }
@@ -218,6 +233,7 @@ public class Image {
      */
 
     public String getDpiy(){
+        if(dpiy!=null) return dpiy;
         if(metadataMap.containsKey("Y Resolution")) return metadataMap.get("Y Resolution");
         return "";
 

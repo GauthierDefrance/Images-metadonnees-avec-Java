@@ -287,7 +287,7 @@ public class Console {
         if (snapshotcompare) {
             output.append("Comparaison des snapshots activée.\n");
             System.out.println("Resultat :"+snap.snapshotBasicCompare(this.cmd.getOptionValue("sc")));
-            snap.snapshotCompare2(this.cmd.getOptionValue("sc"));
+            System.out.println(snap.snapshotCompare2(this.cmd.getOptionValue("sc")));
         }
 
         return output.toString();
