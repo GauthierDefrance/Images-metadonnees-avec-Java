@@ -21,4 +21,5 @@
 - [ ] Débute le GUI : penser l'interface (doit être user friendly !!!)
 - [ ] Faire la javadoc
 - [ ] Avoir les 2 librairies CLI et GUI
-- [ ] Faire la vidéo de présentation (1984) 
+- [ ] Faire la vidéo de présentation (1984)
+- [ ] Préparation soutenance oral
