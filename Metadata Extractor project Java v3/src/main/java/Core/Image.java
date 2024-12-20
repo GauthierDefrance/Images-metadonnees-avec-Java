@@ -28,6 +28,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
  * Attention : la méthode {@code initMetadata()} doit être appelée pour initialiser les métadonnées avant leur utilisation.
  *
  * @author Gauthier Defrance, Kenan Ammad
+ * @version 1.3 [20/12/2024]
  */
 @JsonPropertyOrder({"Nom", "Date", "Path", "Extension","Mime", "Last modification Date", "heigth", "weigth", "size","model","dpix","dpiy","lattitude","longitude","desc"})
 public class Image {
@@ -283,7 +284,7 @@ public class Image {
 
 
     /**
-     * Méthode d'initialisation des métadonnées.
+     * @apiNote Méthode d'initialisation des métadonnées.
      * Elle parcourt les groupes de métadonnées et stocke les informations pertinentes dans la carte {@code metadataMap}.
      */
     @JsonIgnore

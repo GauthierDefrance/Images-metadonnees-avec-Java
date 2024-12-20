@@ -8,6 +8,7 @@ import java.io.IOException;
  * Classe principale pour exécuter la console.
  * Cette classe est utilisée pour initialiser et exécuter les commandes en ligne de commande définies dans la classe Console.
  * @author @Gauthier Defrance @kenan ammad
+ * @version 1.3 [20/12/2024]
  */
 public class MainConsole {
 

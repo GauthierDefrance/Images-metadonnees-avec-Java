@@ -13,6 +13,7 @@ import java.util.Locale;
  * La classe SearchFolder permet d'effectuer diverses recherches dans un dossier,
  * telles que par nom, date, dimensions, description, ou taille des fichiers.
  * @author @Gauthier Defrance @kenan ammad
+ * @version 1.3 [20/12/2024]
  */
 public class SearchFolder {
     private final Folder folder; // Dossier cible pour les recherches

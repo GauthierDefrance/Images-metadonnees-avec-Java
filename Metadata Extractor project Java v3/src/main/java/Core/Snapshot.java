@@ -16,6 +16,7 @@ import java.util.HashMap;
  * La classe Snapshot permet de sauvegarder l’état d’un dossier et de ses sous-dossiers,
  * de comparer cet état avec un état précédent, et de fournir un rapport de ces différences.
  * @author @Gauthier Defrance @kenan ammad
+ * @version 1.3 [20/12/2024]
  */
 public class Snapshot {
     private Folder folder; // Le dossier associé à ce snapshot

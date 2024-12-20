@@ -23,6 +23,7 @@ import java.util.ArrayList;
  * Cette classe permet de gérer un répertoire, d'obtenir ses sous-dossiers,
  * d'examiner ses fichiers (notamment les images) et d'extraire des informations détaillées.
  * @author @Gauthier Defrance @kenan ammad
+ * @version 1.3 [20/12/2024]
  */
 @JsonPropertyOrder({"absolutePath", "Last Modification", "parent", "Number of elements", "Numbers of folders", "Numbers of images", "folders", "images"})
 public class Folder {

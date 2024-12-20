@@ -18,6 +18,7 @@ import java.io.IOException;
  * sauvegarder des états de répertoires et comparer des états sauvegardés.
  *
  * @author @Gauthier Defrance @kenan ammad
+ * @version 1.3 [20/12/2024]
  */
 public class Console {
 
