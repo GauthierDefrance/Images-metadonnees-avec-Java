@@ -229,66 +229,11 @@ public class Console {
         if (list) {
             output.append("Listage des éléments activée.\n");
             // Si l'option 'order' est activée, on indique que l'ordre est également activé
-            if (order) {
-                output.append("Ordre activé.\n");
-
-                String order = this.cmd.getOptionValue("o");
+            if(order){
                 order Order = new order(folder.getAllImages());
-                StringBuffer tmporder = new StringBuffer();
-                switch (order.toLowerCase()) {
-                    case "name":
-                        for(Image tmp : Order.orderByName()){
-                            tmporder.append(tmp.getName()).append("\n");
-                        }
-                        break;
-                    case "height":
-                        for(Image tmp : Order.orderByHeight()){
-                            tmporder.append(tmp.getName()).append("\n");
-                        }
-                        break;
-                    case "width":
-                        for(Image tmp : Order.orderByWidth()){
-                            tmporder.append(tmp.getName()).append("\n");
-                        }
-                        break;
-                    case "date":
-                        for(Image tmp : Order.orderByDate()){
-                            tmporder.append(tmp.getName()).append("\n");
-                        }
-                        break;
-                    case "size":
-                        for(Image tmp : Order.orderBySize()){
-                            tmporder.append(tmp.getName()).append("\n");
-                        }
-                        break;
-                    default:
-                        System.out.println("Paramètres :" + order + " inconnu"); // Si l'option 'by' est invalide
-                        break;
-                }
-                if (r) {
-                    output.append("=Reversed mode=");
-
-                    // Convertir le texte en tableau de chaînes
-                    String[] tab = tmporder.toString().split("\n");
-
-                    // Créer une ArrayList à partir de l'array
-                    ArrayList<String> tab2 = new ArrayList<String>();
-                    for (String s : tab) {
-                        tab2.add(s);
-                    }
-
-                    // Inverser la liste
-                    Collections.reverse(tab2); // Utilisation de Collections.reverse pour inverser la liste
-
-                    // Ajouter les éléments inversés à l'output
-                    for (String s : tab2) {
-                        output.append(s).append("\n");
-                    }
-                } else {
-                    output.append(tmporder.toString()).append("\n");
-                }
-
+                output.append(Order.OrderFile(cmd.getOptionValue("o"),r)).append("\n");
             }
+
             else {
                 // Récupération de toutes les images dans le dossier
                 ArrayList<File> images = folder.getAllImages();
@@ -298,6 +243,7 @@ public class Console {
                 }
             }
         }
+
 
         // Si l'option 'search' est activée, on effectue une recherche dans le dossier
         if (search) {
@@ -350,39 +296,45 @@ public class Console {
                         images = new ArrayList<>();
                         break;
                 }
-
-                // Pour chaque image trouvée, on ajoute son chemin absolu à la sortie
-                for (File image : images) {
-                    output.append(image.getAbsolutePath()).append("\n");
+                if(order){
+                    System.out.println("ordering !");
+                    order Order = new order(images);
+                    output.append(Order.OrderFile(cmd.getOptionValue("o"),r)).append("\n");
                 }
-            } else {
-                // Si l'option 'by' n'est pas activée, on effectue une recherche par nom
-                ArrayList<File> images = search.searchByName(this.cmd.getOptionValue("w"));
-                for (File image : images) {
-                    output.append(image.getAbsolutePath()).append("\n");
+                else{
+                    for (File image : images) {
+                        output.append(image.getAbsolutePath()).append("\n");
+                    }
+
+                }
+
+                } else {
+                    // Si l'option 'by' n'est pas activée, on effectue une recherche par nom
+                    ArrayList<File> images = search.searchByName(this.cmd.getOptionValue("w"));
+                    for (File image : images) {
+                        output.append(image.getAbsolutePath()).append("\n");
+                    }
                 }
             }
-        }
 
-        // Création d'un objet Snapshot pour la gestion des snapshots dans le dossier
-        Snapshot snap = new Snapshot(folder);
+            // Création d'un objet Snapshot pour la gestion des snapshots dans le dossier
+            Snapshot snap = new Snapshot(folder);
 
-        // Si l'option 'snapshotsave' est activée, on effectue une sauvegarde du snapshot
-        if (snapshotsave) {
-            output.append("Sauvegarde du snapshot activée.\n");
-            snap.snapshotSave(this.cmd.getOptionValue("ss"));
-        }
+            // Si l'option 'snapshotsave' est activée, on effectue une sauvegarde du snapshot
+            if (snapshotsave) {
+                output.append("Sauvegarde du snapshot activée.\n");
+                snap.snapshotSave(this.cmd.getOptionValue("ss"));
+            }
 
-        // Si l'option 'snapshotcompare' est activée, on effectue une comparaison des snapshots
-        if (snapshotcompare) {
-            output.append("=== Comparaison des snapshots activée ===\n");
-            output.append(snap.snapshotCompare(this.cmd.getOptionValue("sc")));
-        }
+            // Si l'option 'snapshotcompare' est activée, on effectue une comparaison des snapshots
+            if (snapshotcompare) {
+                output.append("=== Comparaison des snapshots activée ===\n");
+                output.append(snap.snapshotCompare(this.cmd.getOptionValue("sc")));
+            }
 
-        // Retourne le contenu accumulé dans le StringBuilder
-        return output.toString();
+            // Retourne le contenu accumulé dans le StringBuilder
+            return output.toString();
     }
-
     /**
      * Affiche l'aide détaillée pour l'utilisation de la ligne de commande.
      *
@@ -391,7 +343,7 @@ public class Console {
      *
      * @return Une chaîne de texte contenant l'aide détaillée.
      */
-    public String getHelp () {
+    public String getHelp() {
         return ("""
                     Usage: java -jar cli.jar [options]
                    ¤ Desc:
@@ -444,14 +396,5 @@ public class Console {
                    ¤ Autors: Ammad Kennan & Defrance Gauthier.
                    \s""");
     }
-
-
-
-
-
-
-
-
-
 
 }

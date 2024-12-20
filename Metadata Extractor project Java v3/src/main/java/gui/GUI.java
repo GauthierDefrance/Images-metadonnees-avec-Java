@@ -1,17 +1,21 @@
-package td9.gui;
+package gui;
 
-import td9.counters.Counter;
-
+import Core.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
+import java.util.ArrayList;
 
 public class GUI extends JFrame {
 
 	private int page = 0;
+	private ArrayList<String> lstd = new ArrayList<String>();
+	private ArrayList<String> lstf = new ArrayList<String>();
+	private ArrayList<String> lst = new ArrayList<String>();
 	private JButton help = new JButton("help ?");
 	private JButton search = new JButton("Search :");
 	private JButton pathB = new JButton("Path :");
@@ -32,11 +36,6 @@ public class GUI extends JFrame {
 	private JTextField searchT = new JTextField(50);
 	private JMenuItem quitButton = new JMenuItem("quit");
 
-
-	/**
-	 * This is the model in MVC (model-view-controller).
-	 */
-	private Counter counter;
 
 	public GUI(String title) {
 		super(title);
@@ -92,30 +91,48 @@ public class GUI extends JFrame {
 
 		up.addActionListener(new upAction());
 		down.addActionListener(new downAction());
+		pathB.addActionListener(new pathupdate());
 
-		updateTb();
+		String path= "C:\\Users\\defra\\Pictures\\Screenshots";
+
+		File file = new File(path);
+		if (file.exists()&&file.isDirectory()) {
+			Folder folder = new Folder(path);
+
+			for (File f : folder.getFolders()) {
+				lstd.add(f.getAbsolutePath());
+			}
+
+			for (File f : folder.getImages()) {
+				lstf.add(f.getAbsolutePath());
+			}
+			lst.addAll(lstd);
+			lst.addAll(lstf);
+			updateTb();
+		}
 
 
-		contentPane.add(BorderLayout.CENTER,centerPanel);
-		contentPane.add(BorderLayout.NORTH,topPanel);
-		contentPane.add(BorderLayout.SOUTH,bottomPanel);
+		contentPane.add(BorderLayout.CENTER, centerPanel);
+		contentPane.add(BorderLayout.NORTH, topPanel);
+		contentPane.add(BorderLayout.SOUTH, bottomPanel);
 		contentPane.add(BorderLayout.EAST, rightPanel);
 		contentPane.add(BorderLayout.WEST, leftPanel);
 
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		pack();
-		setSize(2000,1000);
+		setSize(2000, 1000);
 		setVisible(true);
 	}
 
 	private void updateTb() {
 		centerPanel.removeAll();
-		centerPanel.setLayout(new GridLayout(4, 8,5,5));
-		int p = page*32;
+		centerPanel.setLayout(new GridLayout(4, 8, 5, 5));
+		int p = page * 32;
 
 		for (int i = 0; i < 4; i++) {
 			for (int j = 0; j < 8; j++) {
-				tb[i][j] = new JButton("Bouton " + (p+1)); // Nom des boutons
+				if(lst.size()>p) {
+				tb[i][j] = new JButton("Bouton " + (p + 1)); // Nom des boutons
 
 				// Ajouter un MouseListener pour détecter le double-clic et le clic droit
 				tb[i][j].addMouseListener(new ClicDroitListener(menu));
@@ -123,6 +140,7 @@ public class GUI extends JFrame {
 				tb[i][j].setBackground(Color.orange);
 				/*tb[i][j].addActionListener(listener); // Ajouter le même ActionListener à chaque bouton*/
 				centerPanel.add(tb[i][j]); // Ajouter chaque bouton au panel
+				}
 				p++;
 			}
 		}
@@ -157,14 +175,14 @@ public class GUI extends JFrame {
 				JButton source = (JButton) e.getSource();
 				System.out.println("Double-clic détecté sur " + source.getText());
 			}
- 		}
+		}
 	}
 
-	private class downAction implements ActionListener {
+	private class upAction implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			if(page>0) {
+			if (page > 0) {
 				page--;
 				updateTb();
 				centerPanel.updateUI();
@@ -173,11 +191,40 @@ public class GUI extends JFrame {
 
 	}
 
-	private class upAction implements ActionListener {
+	private class downAction implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			page++;
+			if(lst.size()>((page+1) * 32)){
+				page++;
+				updateTb();
+				centerPanel.updateUI();
+			}
+		}
+
+	}
+
+	private class pathupdate implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			String path = pathT.getText();
+
+			//Création de l'objet folder à l'endroit indiqué
+			File file = new File(path);
+			if (file.exists()&&file.isDirectory()) {
+				Folder folder = new Folder(path);
+
+				for(File f : folder.getFolders()) {
+					lstd.add(f.getAbsolutePath());
+				}
+
+				for(File f : folder.getImages()) {
+					lstf.add(f.getAbsolutePath());
+				}
+
+
+			}
 			updateTb();
 			centerPanel.updateUI();
 		}
@@ -202,5 +249,4 @@ public class GUI extends JFrame {
 	public static void main(String[] args) {
 		new GUI("GUI_C4");
 	}
-
 }

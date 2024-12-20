@@ -1,6 +1,5 @@
 package CLI;
 
-import gui.GUI;
 import com.drew.imaging.ImageProcessingException;
 
 import java.io.IOException;
