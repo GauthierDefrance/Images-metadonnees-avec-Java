@@ -17,21 +17,36 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
+
+/**
+ * Classe représentant un répertoire sur le système de fichiers.
+ * Cette classe permet de gérer un répertoire, d'obtenir ses sous-dossiers,
+ * d'examiner ses fichiers (notamment les images) et d'extraire des informations détaillées.
+ */
 @JsonPropertyOrder({"absolutePath", "Last Modification", "parent", "Number of elements", "Numbers of folders", "Numbers of images", "folders", "images"})
 public class Folder {
     private String path; //On garde le chemin utilisé pour créer le repertoire
     private Path Opath;
     private File folder; //On stocke le fichier de type File
 
+    /**
+     * Constructeur de la classe Folder.
+     * Initialise le chemin du répertoire, l'objet Path et le fichier associé.
+     *
+     * @param path Le chemin du répertoire.
+     */
     public Folder(String path) {
         this.path = path;
         this.Opath = Paths.get(path);
         this.folder = new File(path);
     }
 
+
     /**
-     * getter renvoyant une ArrayList d'objet File
-     * pouvant contenir à leurs tours des fichiers.
+     * Méthode qui renvoie une liste des sous-dossiers dans le répertoire actuel.
+     * Utilise l'objet File pour lister les dossiers à l'intérieur du répertoire.
+     *
+     * @return Une ArrayList d'objets File représentant les sous-dossiers.
      */
     @JsonProperty("folders")
     public ArrayList<File> getFolders(){
@@ -51,6 +66,14 @@ public class Folder {
         return result;
     }
 
+    /**
+     * Cette méthode récupère tous les sous-dossiers du répertoire spécifié dans le constructeur,
+     * ainsi que tous les sous-sous-dossiers de manière récursive, et les retourne sous forme d'une liste.
+     * La collecte des dossiers est réalisée par la méthode privée récursive `collectFolders`.
+     *
+     * @return Une ArrayList contenant tous les sous-dossiers du répertoire courant, y compris les sous-dossiers
+     *         de sous-dossiers, etc. Le résultat peut inclure plusieurs niveaux de sous-dossiers.
+     */
     @JsonIgnore
     public ArrayList<File> getAllFolders() {
         ArrayList<File> result = new ArrayList<>();
@@ -59,8 +82,11 @@ public class Folder {
     }
 
     /**
-     * Collecte les dossiers à partir d'un répertoire donné et ajoute les dossiers
-     * trouvés à la liste `result`.
+     * Méthode privée pour collecter tous les sous-dossiers du répertoire courant et ses sous-répertoires.
+     * La méthode fonctionne de manière récursive.
+     *
+     * @param directory Le répertoire courant à examiner.
+     * @param result La liste où les sous-dossiers seront ajoutés.
      */
     private void collectFolders(File directory, ArrayList<File> result) {
         if (directory.isDirectory()) {
@@ -81,8 +107,10 @@ public class Folder {
     }
 
     /**
-     * Méthode récursive pour récupérer toutes les images dans le répertoire
-     * et ses sous-répertoires.
+     * Méthode qui renvoie une liste de tous les fichiers d'image dans le répertoire et ses sous-répertoires.
+     * La collecte est effectuée de manière récursive.
+     *
+     * @return Une ArrayList de fichiers d'images.
      */
     @JsonIgnore
     public ArrayList<File> getAllImages() {
@@ -92,8 +120,10 @@ public class Folder {
     }
 
     /**
-     * Collecte les images à partir d'un répertoire donné et ajoute les images
-     * trouvées à la liste `result`.
+     * Méthode privée pour collecter toutes les images dans le répertoire courant et ses sous-répertoires.
+     *
+     * @param directory Le répertoire à examiner.
+     * @param result La liste des fichiers d'images à remplir.
      */
     private void collectImages(File directory, ArrayList<File> result) {
         if (directory.isDirectory()) {
@@ -122,8 +152,9 @@ public class Folder {
     }
 
     /**
-     * getter renvoyant une ArrayList d'objet fichier File
-     * qui ont un type Mime image, ils peuvent potentiellement être traité par le programme.
+     * Méthode qui renvoie une liste des fichiers d'image dans le répertoire actuel (pas récursif).
+     *
+     * @return Une ArrayList d'objets File représentant les images.
      */
     @JsonIgnore
     public ArrayList<File> getImages() {
@@ -149,16 +180,33 @@ public class Folder {
         return result;
     }
 
+    /**
+     * Getter pour le répertoire parent du répertoire actuel.
+     *
+     * @return Le chemin du répertoire parent sous forme de chaîne.
+     */
     @JsonInclude
     public String getParent(){
         return this.Opath.getParent().toString();
     }
 
+    /**
+     * Getter pour le chemin absolu du répertoire.
+     *
+     * @return Le chemin absolu sous forme de chaîne.
+     */
     @JsonInclude
     public String getAbsolutePath(){
         return this.Opath.toAbsolutePath().toString();
     }
 
+    /**
+     * Retourne une liste d'objets Image en initialisant les métadonnées pour chaque image du répertoire.
+     *
+     * @return Une ArrayList d'objets Image correspondant aux images dans le répertoire.
+     * @throws ImageProcessingException Si une erreur survient lors du traitement des images.
+     * @throws IOException Si une erreur survient lors de l'accès aux fichiers.
+     */
     public ArrayList<Image> getFiles() throws ImageProcessingException, IOException {
         ArrayList<Image> result = new ArrayList<Image>();
         for (File fichier : getImages()) {
@@ -169,9 +217,19 @@ public class Folder {
         return result;
     }
 
+    /**
+     * Getter pour la dernière modification du répertoire.
+     *
+     * @return La date de dernière modification formatée.
+     */
     @JsonProperty("Last Modification")
     public String getLastModification(){return convertTimestampToReadableDate(folder.lastModified());}
 
+    /**
+     * Retourne des informations de base sur le répertoire sous forme d'une chaîne formatée.
+     *
+     * @return Une chaîne contenant des informations sur le répertoire (nom, dernière modification, chemin absolu).
+     */
     @JsonIgnore
     public String getInfo() {
         return String.format("""
@@ -180,15 +238,37 @@ public class Folder {
             Absolut Path : %s
             """, Opath.getFileName(), convertTimestampToReadableDate(folder.lastModified()), Opath.toAbsolutePath().toString());
     }
+
+    /**
+     * Getter pour le nombre total d'éléments dans le répertoire (fichiers et sous-dossiers).
+     *
+     * @return Le nombre d'éléments dans le répertoire.
+     */
     @JsonProperty("Number of elements")
     public int getnbElemsTotaux(){ return folder.listFiles().length;}
 
+    /**
+     * Getter pour le nombre de sous-dossiers dans le répertoire.
+     *
+     * @return Le nombre de sous-dossiers dans le répertoire.
+     */
     @JsonProperty("Number of folders")
     public int getnbSousDossier(){ return this.getFolders().size();}
 
+    /**
+     * Getter pour le nombre d'images dans le répertoire.
+     *
+     * @return Le nombre d'images dans le répertoire.
+     */
     @JsonProperty("Number of images")
     public int getnbImages(){ return this.getImages().size();}
 
+    /**
+     * Retourne des statistiques sur le répertoire, y compris le nombre d'éléments, de dossiers et d'images,
+     * ainsi que des comptes détaillés pour les formats PNG, JPG et WEBP.
+     *
+     * @return Une chaîne contenant les statistiques détaillées sur le répertoire.
+     */
     @JsonIgnore
     public String getStat(){
         int nbElemsTotaux = folder.listFiles().length;
@@ -212,10 +292,10 @@ public class Folder {
     }
 
     /**
-     * Convertit un timestamp (long) en une date lisible.
+     * Convertit un timestamp (long) en une date lisible au format "yyyy-MM-dd HH:mm:ss".
      *
-     * @param timestamp Le timestamp en millisecondes sous forme de long.
-     * @return La date formatée en chaîne lisible.
+     * @param timestamp Le timestamp à convertir.
+     * @return La date formatée en chaîne.
      */
     public static String convertTimestampToReadableDate(long timestamp) {
         // Créer un Instant à partir du timestamp
@@ -228,7 +308,5 @@ public class Folder {
         // Retourner la date formatée
         return formatter.format(instant);
     }
-
-
-
+    
 }

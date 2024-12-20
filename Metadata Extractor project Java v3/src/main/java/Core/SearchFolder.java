@@ -9,36 +9,53 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
+/**
+ * La classe SearchFolder permet d'effectuer diverses recherches dans un dossier,
+ * telles que par nom, date, dimensions, description, ou taille des fichiers.
+ */
 public class SearchFolder {
-    private final Folder folder;
-    public SearchFolder(Folder folder) {this.folder = folder;}
+    private final Folder folder; // Dossier cible pour les recherches
 
+    /**
+     * Constructeur de la classe SearchFolder.
+     * @param folder Le dossier dans lequel les recherches seront effectuées.
+     */
+    public SearchFolder(Folder folder) {
+        this.folder = folder;
+    }
+
+    /**
+     * Recherche les fichiers par nom.
+     * @param title La chaîne à rechercher dans les noms de fichiers.
+     * @return Une liste des fichiers correspondant au critère.
+     */
     public ArrayList<File> searchByName(String title) {
         ArrayList<File> tmp = folder.getAllImages();
         ArrayList<File> result = new ArrayList<>();
-        for(File fichier : tmp){
-            if(fichier.getName().contains(title)){
+        for (File fichier : tmp) {
+            if (fichier.getName().contains(title)) {
                 result.add(fichier);
-            };
+            }
         }
         return result;
     }
 
+    /**
+     * Recherche les fichiers par date de dernière modification.
+     * @param targetDatePart Une chaîne représentant une partie de la date (format "yyyy-MM-dd").
+     * @return Une liste des fichiers correspondant au critère.
+     */
     public ArrayList<File> searchByDate(String targetDatePart) {
-        ArrayList<File> tmp = folder.getAllImages(); // Récupérer toutes les images
+        ArrayList<File> tmp = folder.getAllImages();
         ArrayList<File> result = new ArrayList<>();
 
-        // Formater le targetDatePart pour une recherche flexible
         for (File fichier : tmp) {
-            // Obtenir la date de dernière modification du fichier
             long lastModifiedTimestamp = fichier.lastModified();
             Date lastModifiedDate = new Date(lastModifiedTimestamp);
 
-            // Formater la date du fichier en chaîne
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH); // Formater la date sous "yyyy-MM-dd"
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
             String fileDateString = sdf.format(lastModifiedDate);
 
-            // Vérifier si la chaîne targetDatePart est contenue dans la date du fichier
             if (fileDateString.contains(targetDatePart)) {
                 result.add(fichier);
             }
@@ -46,46 +63,57 @@ public class SearchFolder {
         return result;
     }
 
-    public ArrayList<File> searchByHeigth(String Heigth) throws ImageProcessingException, IOException {
+    /**
+     * Recherche les fichiers par hauteur exacte.
+     * @param height La hauteur cible des images.
+     * @return Une liste des fichiers correspondant au critère.
+     */
+    public ArrayList<File> searchByHeigth(String height) throws ImageProcessingException, IOException {
         ArrayList<File> tmp = folder.getAllImages();
         ArrayList<File> result = new ArrayList<>();
-        Image tmp2;
-        for(File fichier : tmp){
-            tmp2 = new Image(fichier.getAbsolutePath());
+        for (File fichier : tmp) {
+            Image tmp2 = new Image(fichier.getAbsolutePath());
             tmp2.initMetadata();
-            if(tmp2.getHeight().contains(Heigth)){
+            if (tmp2.getHeight().contains(height)) {
                 result.add(fichier);
-            };
+            }
         }
         return result;
     }
 
-    public ArrayList<File> searchByWidth(String Width) throws ImageProcessingException, IOException {
+    /**
+     * Recherche les fichiers par largeur exacte.
+     * @param width La largeur cible des images.
+     * @return Une liste des fichiers correspondant au critère.
+     */
+    public ArrayList<File> searchByWidth(String width) throws ImageProcessingException, IOException {
         ArrayList<File> tmp = folder.getAllImages();
         ArrayList<File> result = new ArrayList<>();
-        Image tmp2;
-        for(File fichier : tmp){
-            tmp2 = new Image(fichier.getAbsolutePath());
+        for (File fichier : tmp) {
+            Image tmp2 = new Image(fichier.getAbsolutePath());
             tmp2.initMetadata();
-            if(tmp2.getWidth().contains(Width)){
+            if (tmp2.getWidth().contains(width)) {
                 result.add(fichier);
-            };
+            }
         }
         return result;
     }
 
-    public ArrayList<File> searchByMaxHeigth(String Heigth) throws ImageProcessingException, IOException {
+    /**
+     * Recherche les fichiers par hauteur maximale.
+     * @param height La hauteur maximale des images.
+     * @return Une liste des fichiers correspondant au critère.
+     */
+    public ArrayList<File> searchByMaxHeigth(String height) throws ImageProcessingException, IOException {
         ArrayList<File> tmp = folder.getAllImages();
         ArrayList<File> result = new ArrayList<>();
-        Image tmp2;
-        for(File fichier : tmp) {
-            tmp2 = new Image(fichier.getAbsolutePath());
+        for (File fichier : tmp) {
+            Image tmp2 = new Image(fichier.getAbsolutePath());
             tmp2.initMetadata();
             try {
-                // Convertir les chaînes en entiers
-                int tmp2Width = Integer.parseInt(tmp2.getHeight());
-                int widthValue = Integer.parseInt(Heigth);
-                if (tmp2Width < widthValue) {
+                int tmpHeight = Integer.parseInt(tmp2.getHeight());
+                int heightValue = Integer.parseInt(height);
+                if (tmpHeight < heightValue) {
                     result.add(fichier);
                 }
             } catch (Exception e) {
@@ -95,21 +123,23 @@ public class SearchFolder {
         return result;
     }
 
-    public ArrayList<File> searchByMinHeigth(String Heigth) throws ImageProcessingException, IOException {
+    /**
+     * Recherche les fichiers par hauteur minimale.
+     * @param height La hauteur minimale des images.
+     * @return Une liste des fichiers correspondant au critère.
+     */
+    public ArrayList<File> searchByMinHeigth(String height) throws ImageProcessingException, IOException {
         ArrayList<File> tmp = folder.getAllImages();
         ArrayList<File> result = new ArrayList<>();
-        Image tmp2;
-        for(File fichier : tmp) {
-            tmp2 = new Image(fichier.getAbsolutePath());
+        for (File fichier : tmp) {
+            Image tmp2 = new Image(fichier.getAbsolutePath());
             tmp2.initMetadata();
             try {
-                // Convertir les chaînes en entiers
-                int tmp2Width = Integer.parseInt(tmp2.getHeight());
-                int widthValue = Integer.parseInt(Heigth);
-                if (tmp2Width > widthValue) {
+                int tmpHeight = Integer.parseInt(tmp2.getHeight());
+                int heightValue = Integer.parseInt(height);
+                if (tmpHeight > heightValue) {
                     result.add(fichier);
                 }
-                ;
             } catch (Exception e) {
                 System.out.println(e + "Erreur lors du traitement de :\n" + fichier.getAbsolutePath());
             }
@@ -117,43 +147,23 @@ public class SearchFolder {
         return result;
     }
 
-    public ArrayList<File> searchByMaxWidth(String Width) throws ImageProcessingException, IOException {
+    /**
+     * Recherche les fichiers par largeur maximale.
+     * @param width La largeur maximale des images.
+     * @return Une liste des fichiers correspondant au critère.
+     */
+    public ArrayList<File> searchByMaxWidth(String width) throws ImageProcessingException, IOException {
         ArrayList<File> tmp = folder.getAllImages();
         ArrayList<File> result = new ArrayList<>();
-        Image tmp2;
-        for(File fichier : tmp){
-            tmp2 = new Image(fichier.getAbsolutePath());
-            tmp2.initMetadata();
-            // Convertir les chaînes en entiers
-            try {
-                int tmp2Width = Integer.parseInt(tmp2.getWidth());
-                int widthValue = Integer.parseInt(Width);
-                if (tmp2Width < widthValue) {
-                    result.add(fichier);
-                }
-
-            }catch(Exception e){
-                System.out.println(e + "Erreur lors du traitement de :\n" + fichier.getAbsolutePath());
-            }
-        }
-        return result;
-    }
-
-    public ArrayList<File> searchByMinWidth(String Width) throws ImageProcessingException, IOException {
-        ArrayList<File> tmp = folder.getAllImages();
-        ArrayList<File> result = new ArrayList<>();
-        Image tmp2;
-        for(File fichier : tmp) {
-            tmp2 = new Image(fichier.getAbsolutePath());
+        for (File fichier : tmp) {
+            Image tmp2 = new Image(fichier.getAbsolutePath());
             tmp2.initMetadata();
             try {
-                // Convertir les chaînes en entiers
-                int tmp2Width = Integer.parseInt(tmp2.getWidth());
-                int widthValue = Integer.parseInt(Width);
-                if (tmp2Width > widthValue) {
+                int tmpWidth = Integer.parseInt(tmp2.getWidth());
+                int widthValue = Integer.parseInt(width);
+                if (tmpWidth < widthValue) {
                     result.add(fichier);
                 }
-                ;
             } catch (Exception e) {
                 System.out.println(e + "Erreur lors du traitement de :\n" + fichier.getAbsolutePath());
             }
@@ -161,37 +171,66 @@ public class SearchFolder {
         return result;
     }
 
+    /**
+     * Recherche les fichiers par largeur minimale.
+     * @param width La largeur minimale des images.
+     * @return Une liste des fichiers correspondant au critère.
+     */
+    public ArrayList<File> searchByMinWidth(String width) throws ImageProcessingException, IOException {
+        ArrayList<File> tmp = folder.getAllImages();
+        ArrayList<File> result = new ArrayList<>();
+        for (File fichier : tmp) {
+            Image tmp2 = new Image(fichier.getAbsolutePath());
+            tmp2.initMetadata();
+            try {
+                int tmpWidth = Integer.parseInt(tmp2.getWidth());
+                int widthValue = Integer.parseInt(width);
+                if (tmpWidth > widthValue) {
+                    result.add(fichier);
+                }
+            } catch (Exception e) {
+                System.out.println(e + "Erreur lors du traitement de :\n" + fichier.getAbsolutePath());
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Recherche les fichiers par description.
+     * @param desc La description cible des images.
+     * @return Une liste des fichiers correspondant au critère.
+     */
     public ArrayList<File> searchByDesc(String desc) throws ImageProcessingException, IOException {
         ArrayList<File> tmp = folder.getAllImages();
         ArrayList<File> result = new ArrayList<>();
-        Image tmp2;
-        for(File fichier : tmp){
-            tmp2 = new Image(fichier.getAbsolutePath());
+        for (File fichier : tmp) {
+            Image tmp2 = new Image(fichier.getAbsolutePath());
             tmp2.initMetadata();
-            if(tmp2.getDesc().contains(desc)){
+            if (tmp2.getDesc().contains(desc)) {
                 result.add(fichier);
-            };
+            }
         }
         return result;
     }
 
-    public ArrayList<File> searchByMaxSize(String MaxSize) {
+    /**
+     * Recherche les fichiers par taille maximale.
+     * @param maxSize La taille maximale en octets.
+     * @return Une liste des fichiers correspondant au critère.
+     */
+    public ArrayList<File> searchByMaxSize(String maxSize) {
         ArrayList<File> tmp = folder.getAllImages();
         ArrayList<File> result = new ArrayList<>();
 
-        // Convertir MaxSize en long
-        long maxSizeLong = 0;
+        long maxSizeLong;
         try {
-            maxSizeLong = Long.parseLong(MaxSize);  // Convertir la chaîne en long
+            maxSizeLong = Long.parseLong(maxSize);
         } catch (NumberFormatException e) {
-            System.out.println("Erreur lors de la conversion de MaxSize : " + e.getMessage());
-            return result; // Retourner une liste vide si la conversion échoue
+            System.out.println("Erreur lors de la conversion de maxSize : " + e.getMessage());
+            return result;
         }
 
-        System.out.println(maxSizeLong);
         for (File fichier : tmp) {
-            // Comparer la taille du fichier avec MaxSize converti
-            System.out.println(fichier.length());
             if (fichier.length() < maxSizeLong) {
                 result.add(fichier);
             }
@@ -200,27 +239,29 @@ public class SearchFolder {
         return result;
     }
 
-    public ArrayList<File> searchByMinSize(String MinSize) {
+    /**
+     * Recherche les fichiers par taille minimale.
+     * @param minSize La taille minimale en octets.
+     * @return Une liste des fichiers correspondant au critère.
+     */
+    public ArrayList<File> searchByMinSize(String minSize) {
         ArrayList<File> tmp = folder.getAllImages();
-        ArrayList<File> result = new ArrayList<File>();
+        ArrayList<File> result = new ArrayList<>();
 
-        // Convertir MaxSize en long
-        long MinSizeLong = 0;
+        long minSizeLong;
         try {
-            MinSizeLong = Long.parseLong(MinSize);  // Convertir la chaîne en long
+            minSizeLong = Long.parseLong(minSize);
         } catch (NumberFormatException e) {
-            System.out.println("Erreur lors de la conversion de MaxSize : " + e.getMessage());
-            return result; // Retourner une liste vide si la conversion échoue
+            System.out.println("Erreur lors de la conversion de minSize : " + e.getMessage());
+            return result;
         }
 
         for (File fichier : tmp) {
-            // Comparer la taille du fichier avec MaxSize converti
-            if (fichier.length() < MinSizeLong) {
+            if (fichier.length() > minSizeLong) {
                 result.add(fichier);
             }
         }
 
         return result;
     }
-
 }

@@ -1,72 +1,70 @@
 package Core;
 
-//Elements provenant de la librairie de dre, Metadata-Extractor
-import com.adobe.internal.xmp.XMPException;
-import com.adobe.internal.xmp.impl.xpath.XMPPath;
+// Importation des éléments provenant de la bibliothèque Metadata-Extractor
 import com.drew.imaging.ImageMetadataReader;
 import com.drew.imaging.ImageProcessingException;
 import com.drew.metadata.Directory;
-import com.adobe.internal.xmp.XMPMeta;
 
 import com.drew.metadata.Metadata;
 import com.drew.metadata.Tag;
 
-//Librairie présentent par défaut
+// Importation des bibliothèques standards
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+// Importation des bibliothèques tierces
 import com.drew.metadata.xmp.XmpDirectory;
-import com.drew.metadata.xmp.XmpReader;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 /**
- * Cette classe représente un fichier.
- * Elle permet de récupérer les métadonnées d'une image.
- * Attention pour les récuperer il faut initialiser l'objet avec la méthode : initMetadata()
+ * La classe Image représente un fichier image et fournit des méthodes pour accéder et manipuler ses métadonnées.
+ * Elle utilise la bibliothèque Metadata-Extractor pour extraire ces informations.
  *
- * @author @Gauthier Defrance @kenan ammad
+ * Attention : la méthode {@code initMetadata()} doit être appelée pour initialiser les métadonnées avant leur utilisation.
  *
- *
+ * @author Gauthier Defrance, Kenan Ammad
  */
 @JsonPropertyOrder({"Nom", "Date", "Path", "Extension","Mime", "Last modification Date", "heigth", "weigth", "size","model","dpix","dpiy","lattitude","longitude","desc"})
 public class Image {
 
-    private String path;
-    private File imageFile;
-    private Metadata metadata;
+    private String path; // Chemin absolu du fichier image
+    private File imageFile; // Objet représentant le fichier image
+    private Metadata metadata; // Métadonnées brutes de l'image
 
-    private HashMap<String, String> metadataMap;
+    private HashMap<String, String> metadataMap; // Carte contenant les métadonnées extraites sous forme clé-valeur
 
-    private String mime; //Stock une donnée de type Mime
-    private String extension; //Stock l'extension
-    private String name; //Stock le nom du fichier
-    private String date; //Stock la date de prise de la photo
-    private String mdate; //Stock la date de modifications de la photo
-    private String lattitude; //Stock une lattitude
-    private String longitude; //Stock une longitude
-    private String model; //Stock le model de l'appareil photo
-    private String desc; // Stock la Description de l'image
-    private String size; // Stock la taille en Ko de l'image
-    private String height;// Stock la hauteur en px de l'image
-    private String width; // Stock la largeur en px de l'image
-    private String dpix;// Stock la resolution en largeur en inch
-    private String dpiy;// Stock la resolution en hauteur en inch
+    private String mime; // Type MIME de l'image
+    private String extension; // Extension du fichier
+    private String name; // Nom du fichier
+    private String date; // Date de prise de l'image
+    private String mdate; // Date de dernière modification
+    private String lattitude; // Latitude de la localisation (si disponible)
+    private String longitude; // Longitude de la localisation (si disponible)
+    private String model; // Modèle de l'appareil photo
+    private String desc; // Description de l'image
+    private String size; // Taille du fichier en Ko
+    private String height; // Hauteur de l'image en pixels
+    private String width; // Largeur de l'image en pixels
+    private String dpix; // Résolution horizontale en dpi
+    private String dpiy; // Résolution verticale en dpi
 
 
     /**
-     * Contructeur de la classe
-     * @param path un string indiquant le chemin jusqu'au fichier image cherché
+     * Constructeur par défaut qui initialise la carte des métadonnées.
      */
     public Image(){ metadataMap = new HashMap<String,String>();}
+
+    /**
+     * Constructeur paramétré.
+     * @param path Chemin absolu vers le fichier image
+     * @throws ImageProcessingException Si une erreur survient lors de l'extraction des métadonnées
+     * @throws IOException Si une erreur survient lors de la lecture du fichier
+     */
     public Image(String path) throws ImageProcessingException, IOException {
         this.path = path;
         imageFile = new File(path);
@@ -75,24 +73,27 @@ public class Image {
     }
 
     /**
-     * @return Le chemin vers le fichier
+     * Retourne le chemin absolu de l'image.
+     * @return Chemin sous forme de chaîne
      */
-
     public String getPath(){ return path;}
 
     /**
-     * @return le fichier Image
+     * Retourne l'objet {@link File} associé au fichier image.
+     * @return Objet File
      */
     @JsonIgnore
     public File getImageFile(){ return imageFile;}
 
     /**
-     * @return Les metadate sous format brut
+     * Retourne les métadonnées brutes de l'image.
+     * @return Objet Metadata contenant les informations brutes
      */
     @JsonIgnore
     public Metadata getMetadata(){ return metadata;}
 
 
+    // Méthodes "setter" pour définir les valeurs des champs privés (Sert pour la déserialisation depuis le JSON)
     public void setMime(String mime){ this.mime = mime;}
     public void setExtension(String extension){ this.extension = extension;}
     public void setName(String name){ this.name = name;}
@@ -112,137 +113,178 @@ public class Image {
 
 
     /**
-     * @return Le Type Mime
+     * Retourne le type MIME de l'image.
+     *
+     * @return Le type MIME si défini, sinon une tentative est effectuée pour le récupérer
+     *         depuis la métadonnée "Detected MIME Type". Si aucun n'est disponible, retourne une chaîne vide.
      */
-    public String getMime(){
-        if(mime!=null) return mime;
-        if(metadataMap.containsKey("Detected MIME Type")) return metadataMap.get("Detected MIME Type");
+    public String getMime() {
+        if (mime != null) return mime;
+        if (metadataMap.containsKey("Detected MIME Type")) return metadataMap.get("Detected MIME Type");
         return "";
     }
-    /**
-     * @return L'extenstion
-     */
 
-    public String getExtension(){
-        if(extension!=null) return extension;
-        if(metadataMap.containsKey("Detected File Type Long Name")) return metadataMap.get("Detected File Type Long Name");
+    /**
+     * Retourne l'extension du fichier.
+     *
+     * @return L'extension si définie, sinon une tentative est effectuée pour la récupérer
+     *         depuis la métadonnée "Detected File Type Long Name". Si aucun n'est disponible, retourne une chaîne vide.
+     */
+    public String getExtension() {
+        if (extension != null) return extension;
+        if (metadataMap.containsKey("Detected File Type Long Name")) return metadataMap.get("Detected File Type Long Name");
         return "";
     }
-    /**
-     * @return Le nom du fichier
-     */
 
-    public String getName(){
-        if(name!=null) return name;
-        if(metadataMap.containsKey("File Name")) return metadataMap.get("File Name");
+    /**
+     * Retourne le nom du fichier.
+     *
+     * @return Le nom du fichier si défini, sinon une tentative est effectuée pour le récupérer
+     *         depuis la métadonnée "File Name". Si aucun n'est disponible, retourne une chaîne vide.
+     */
+    public String getName() {
+        if (name != null) return name;
+        if (metadataMap.containsKey("File Name")) return metadataMap.get("File Name");
         return "";
     }
-    /**
-     * @return La date de création
-     */
 
-    public String getDate(){
-        if(date!=null) return date;
-        if(metadataMap.containsKey("Date/Time")) return metadataMap.get("Date/Time");
+    /**
+     * Retourne la date de création de l'image.
+     *
+     * @return La date de création si définie, sinon une tentative est effectuée pour la récupérer
+     *         depuis la métadonnée "Date/Time". Si aucun n'est disponible, retourne une chaîne vide.
+     */
+    public String getDate() {
+        if (date != null) return date;
+        if (metadataMap.containsKey("Date/Time")) return metadataMap.get("Date/Time");
         return "";
     }
+
     /**
-     * @return La date de modification
+     * Retourne la date de modification du fichier.
+     *
+     * @return La date de modification si définie, sinon une tentative est effectuée pour la récupérer
+     *         depuis la métadonnée "File Modified Date". Si aucun n'est disponible, retourne une chaîne vide.
      */
-
-
-    public String getMDate(){
-        if(mdate!=null) return mdate;
-        if(metadataMap.containsKey("File Modified Date")) return metadataMap.get("File Modified Date");
+    public String getMDate() {
+        if (mdate != null) return mdate;
+        if (metadataMap.containsKey("File Modified Date")) return metadataMap.get("File Modified Date");
         return "";
     }
-    /**
-     * @return La lattitude
-     */
 
-    public String getLattitude(){
-        if(lattitude!=null) return lattitude;
-        if(metadataMap.containsKey("Latitude")) return metadataMap.get("Latitude");
+    /**
+     * Retourne la latitude où l'image a été prise.
+     *
+     * @return La latitude si définie, sinon une tentative est effectuée pour la récupérer
+     *         depuis la métadonnée "Latitude". Si aucun n'est disponible, retourne une chaîne vide.
+     */
+    public String getLattitude() {
+        if (lattitude != null) return lattitude;
+        if (metadataMap.containsKey("Latitude")) return metadataMap.get("Latitude");
         return "";
     }
-    /**
-     * @return La longitude
-     */
 
-    public String getLongitude(){
-        if(longitude!=null) return longitude;
-        if(metadataMap.containsKey("Longitude")) return metadataMap.get("Longitude");
+    /**
+     * Retourne la longitude où l'image a été prise.
+     *
+     * @return La longitude si définie, sinon une tentative est effectuée pour la récupérer
+     *         depuis la métadonnée "Longitude". Si aucun n'est disponible, retourne une chaîne vide.
+     */
+    public String getLongitude() {
+        if (longitude != null) return longitude;
+        if (metadataMap.containsKey("Longitude")) return metadataMap.get("Longitude");
         return "";
     }
-    /**
-     * @return Le modèle de l'appareil photo
-     */
 
-    public String getModel(){
-        if(model!=null) return model;
-        if(metadataMap.containsKey("Model")) return metadataMap.get("Model");
+    /**
+     * Retourne le modèle de l'appareil photo ayant pris l'image.
+     *
+     * @return Le modèle de l'appareil photo si défini, sinon une tentative est effectuée pour le récupérer
+     *         depuis la métadonnée "Model". Si aucun n'est disponible, retourne une chaîne vide.
+     */
+    public String getModel() {
+        if (model != null) return model;
+        if (metadataMap.containsKey("Model")) return metadataMap.get("Model");
         return "";
     }
-    /**
-     * @return La description de l'image
-     */
 
-    public String getDesc(){
-        if(desc!=null) return desc;
-        if(metadataMap.containsKey("Image Description")) return metadataMap.get("Image Description");
+    /**
+     * Retourne la description de l'image.
+     *
+     * @return La description si définie, sinon une tentative est effectuée pour la récupérer
+     *         depuis la métadonnée "Image Description". Si aucun n'est disponible, retourne une chaîne vide.
+     */
+    public String getDesc() {
+        if (desc != null) return desc;
+        if (metadataMap.containsKey("Image Description")) return metadataMap.get("Image Description");
         return "";
     }
-    /**
-     * @return Le poids de l'image en Ko
-     */
 
-    public String getSize(){
-        if(size!=null) return size;
-        if(metadataMap.containsKey("File Size")) return metadataMap.get("File Size");
+    /**
+     * Retourne le poids du fichier en Ko.
+     *
+     * @return Le poids du fichier si défini, sinon une tentative est effectuée pour le récupérer
+     *         depuis la métadonnée "File Size". Si aucun n'est disponible, retourne une chaîne vide.
+     */
+    public String getSize() {
+        if (size != null) return size;
+        if (metadataMap.containsKey("File Size")) return metadataMap.get("File Size");
         return "";
     }
-    /**
-     * @return La hauteur en px
-     */
 
-    public String getHeight(){
-        if(height!=null) return height;
-        if(metadataMap.containsKey("Image Height")) return metadataMap.get("Image Height");
+    /**
+     * Retourne la hauteur de l'image en pixels.
+     *
+     * @return La hauteur en pixels si définie, sinon une tentative est effectuée pour la récupérer
+     *         depuis la métadonnée "Image Height". Si aucun n'est disponible, retourne une chaîne vide.
+     */
+    public String getHeight() {
+        if (height != null) return height;
+        if (metadataMap.containsKey("Image Height")) return metadataMap.get("Image Height");
         return "";
     }
-    /**
-     * @return La largeur en px
-     */
 
-    public String getWidth(){
-        if(width!=null) return width;
-        if(metadataMap.containsKey("Image Width")) return metadataMap.get("Image Width");
+    /**
+     * Retourne la largeur de l'image en pixels.
+     *
+     * @return La largeur en pixels si définie, sinon une tentative est effectuée pour la récupérer
+     *         depuis la métadonnée "Image Width". Si aucun n'est disponible, retourne une chaîne vide.
+     */
+    public String getWidth() {
+        if (width != null) return width;
+        if (metadataMap.containsKey("Image Width")) return metadataMap.get("Image Width");
         return "";
     }
-    /**
-     * @return La résolution horizontal en inch
-     */
 
-    public String getDpix(){
-        if(dpix!=null) return dpix;
-        if(metadataMap.containsKey("X Resolution")) return metadataMap.get("X Resolution");
+    /**
+     * Retourne la résolution horizontale de l'image en pouces.
+     *
+     * @return La résolution horizontale si définie, sinon une tentative est effectuée pour la récupérer
+     *         depuis la métadonnée "X Resolution". Si aucun n'est disponible, retourne une chaîne vide.
+     */
+    public String getDpix() {
+        if (dpix != null) return dpix;
+        if (metadataMap.containsKey("X Resolution")) return metadataMap.get("X Resolution");
         return "";
     }
+
     /**
-     * @return La résolution vertical en inch
+     * Retourne la résolution verticale de l'image en pouces.
+     *
+     * @return La résolution verticale si définie, sinon une tentative est effectuée pour la récupérer
+     *         depuis la métadonnée "Y Resolution". Si aucun n'est disponible, retourne une chaîne vide.
      */
-
-    public String getDpiy(){
-        if(dpiy!=null) return dpiy;
-        if(metadataMap.containsKey("Y Resolution")) return metadataMap.get("Y Resolution");
+    public String getDpiy() {
+        if (dpiy != null) return dpiy;
+        if (metadataMap.containsKey("Y Resolution")) return metadataMap.get("Y Resolution");
         return "";
-
     }
 
 
 
     /**
-     *  Initialise les metadonnées
+     * Méthode d'initialisation des métadonnées.
+     * Elle parcourt les groupes de métadonnées et stocke les informations pertinentes dans la carte {@code metadataMap}.
      */
     @JsonIgnore
     public void initMetadata() {
@@ -285,45 +327,71 @@ public class Image {
      * @return Un string contenant toutes les metadonnées du fichier
      */
 
+    /**
+     * Retourne toutes les métadonnées sous forme de chaîne formatée.
+     * Cette méthode parcourt toutes les directories (groupes de métadonnées) et leurs tags
+     * pour extraire et afficher les informations sur chaque tag.
+     *
+     * @return Une chaîne contenant toutes les métadonnées, formatée avec le nom de la directory et des tags.
+     *         Si une exception survient, retourne une chaîne vide.
+     */
     @JsonIgnore
     public String getAllMetadata(){
         try {
-            String text="";
-            // Parcourir toutes les directories (groupes de métadonnées)
+            String text = "";
+            // Parcours de toutes les directories (groupes de métadonnées)
             for (Directory directory : metadata.getDirectories()) {
-                // Afficher le nom de la directory
-                text+="\n### Directory : " + directory.getName()+" ###";
-                // Parcourir tous les tags de la directory
+                // Ajout du nom de la directory au texte
+                text += "\n### Directory : " + directory.getName() + " ###";
+                // Parcours de tous les tags de la directory
                 for (Tag tag : directory.getTags()) {
-                    // Afficher le nom et la description du tag
-                    text+="\n" + tag.getTagName() + " : " + tag.getDescription();
+                    // Ajout du nom et de la description de chaque tag au texte
+                    text += "\n" + tag.getTagName() + " : " + tag.getDescription();
                 }
-
             }
-            return text;
+            return text; // Retourne toutes les métadonnées extraites
         } catch (Exception e) {
+            // Si une exception est lancée pendant l'extraction, l'erreur est affichée
             System.err.println("Erreur lors de l'extraction des métadonnées : " + e.getMessage());
         }
-        return "";
+        return ""; // Retourne une chaîne vide en cas d'erreur
     }
 
+    /**
+     * Retourne les propriétés XMP sous forme de chaîne formatée.
+     * Cette méthode parcourt les directories pour extraire les propriétés XMP spécifiques
+     * et les affiche sous forme de clé/valeur.
+     *
+     * @return Une chaîne contenant les propriétés XMP, ou une chaîne vide si aucune propriété XMP n'est trouvée.
+     */
     @JsonIgnore
     public String getXmp(){
-        String result ="";
+        String result = "";
         XmpDirectory dir = new XmpDirectory();
+        // Parcours de toutes les directories pour trouver celles qui sont de type XmpDirectory
         for (Directory directory : metadata.getDirectories()) {
-            if(directory instanceof XmpDirectory) {
-                Map<String,String> lastdir =  ((XmpDirectory) directory).getXmpProperties();
-                for(String key: lastdir.keySet()){
-                    result += key + lastdir.get(key) + "\n";
+            if (directory instanceof XmpDirectory) {
+                // Extraction des propriétés XMP sous forme de clé/valeur
+                Map<String, String> lastdir = ((XmpDirectory) directory).getXmpProperties();
+                for (String key : lastdir.keySet()) {
+                    result += key + lastdir.get(key) + "\n"; // Ajout de chaque propriété XMP au résultat
                 }
             }
         }
-        if (result!=""){return "=== Xmp ===\n"+result;}
-        return "";
+        // Si des propriétés XMP ont été trouvées, on les retourne, sinon on retourne une chaîne vide
+        if (!result.isEmpty()) {
+            return "=== Xmp ===\n" + result;
+        }
+        return ""; // Retourne une chaîne vide si aucune propriété XMP n'est trouvée
     }
 
-
+    /**
+     * Retourne les informations de base sur l'image sous forme de chaîne formatée,
+     * y compris des informations comme le nom du fichier, la taille, les dimensions, la latitude, la longitude, etc.
+     * Ajoute également les informations XMP à la fin de l'affichage.
+     *
+     * @return Une chaîne contenant les informations sur l'image.
+     */
     @JsonIgnore
     public String getInfo() {
         return String.format("""
@@ -338,9 +406,16 @@ public class Image {
         Model            : %s
         Image Description: %s
         """,
-                getName(), getHeight(), getWidth(), getLattitude(), getLongitude(), getDpix(), getDpiy(), getModel(), getDesc())+getXmp();
+                getName(), getHeight(), getWidth(), getLattitude(), getLongitude(), getDpix(), getDpiy(), getModel(), getDesc())
+                + getXmp(); // Ajoute les informations XMP à la fin
     }
 
+    /**
+     * Retourne les statistiques du fichier sous forme de chaîne formatée,
+     * incluant des informations sur le nom du fichier, sa taille, le type MIME, la date de création, etc.
+     *
+     * @return Une chaîne contenant les statistiques du fichier.
+     */
     @JsonIgnore
     public String getStat() {
         return String.format("""
@@ -352,6 +427,7 @@ public class Image {
         File Modified Date         : %s
         Detected File Type Long Name: %s
         """,
-                getName(), getSize(), getMime(), getDate(), getMDate(), getExtension());
+                getName(), getSize(), getMime(), getDate(), getMDate(), getExtension()); // Affiche les statistiques du fichier
     }
+
 }

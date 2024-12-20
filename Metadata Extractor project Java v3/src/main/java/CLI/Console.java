@@ -14,11 +14,14 @@ import java.io.IOException;
 /**
  * Classe Console
  *
- * @author @Gauthier Defrance @kenan ammad
+ * Cette classe gère l'exécution des commandes en ligne de commande pour manipuler des fichiers et répertoires, effectuer des recherches,
+ * sauvegarder des états de répertoires et comparer des états sauvegardés.
  *
+ * @author @Gauthier Defrance @kenan ammad
  */
 public class Console {
 
+    // Variables représentant les différentes options de la ligne de commande
     private boolean help;
     private boolean info;
     private boolean stat;
@@ -31,13 +34,20 @@ public class Console {
     private boolean list;
     private boolean by;
     private boolean error;
+
     private String path;
     private String[] args;
     private Options options;
     private CommandLineParser parser;
     private CommandLine cmd;
 
-
+    /**
+     * Constructeur de la classe Console.
+     *
+     * Ce constructeur initialise les options de la ligne de commande, les analyse et stocke les résultats dans les variables appropriées.
+     *
+     * @param args Les arguments passés en ligne de commande.
+     */
     public Console(String[] args) {
         this.args = args;
         this.options = new Options(); // Initialisation de l'objet options
@@ -81,8 +91,13 @@ public class Console {
         }
     }
 
+    /**
+     * Cette méthode valide les règles d'utilisation des options de la ligne de commande.
+     * Elle vérifie les combinaisons d'options invalides et lance des exceptions si nécessaire.
+     */
     private void validateRules() {
         try {
+            if(help){return;}
             // Vérification XOR : -f ou -d mais pas les deux
             if (file && directory ) {
                 throw new IllegalArgumentException("Erreur : Vous ne pouvez pas utiliser -f et -d en même temps.");
@@ -112,6 +127,16 @@ public class Console {
         }
     }
 
+    /**
+     * Exécute les commandes selon les options sélectionnées en ligne de commande.
+     *
+     * Cette méthode exécute l'action correspondant aux options passées par l'utilisateur.
+     * Elle peut gérer le mode fichier ou répertoire et renvoie une chaîne de texte pour afficher les résultats ou les erreurs.
+     *
+     * @return Une chaîne de texte indiquant le résultat ou une erreur.
+     * @throws ImageProcessingException En cas d'erreur de traitement d'image.
+     * @throws IOException En cas d'erreur d'entrée/sortie.
+     */
     public String execute() throws ImageProcessingException, IOException {
         if (args.length == 0) {return "Aucun arguments précisé\n"+getHelp();}
         validateRules();
@@ -132,6 +157,14 @@ public class Console {
         return "Aucune commande valide détectée."+"\n"+getHelp();
     }
 
+    /**
+     * Exécute les commandes pour le mode fichier.
+     *
+     * Cette méthode gère les actions qui doivent être effectuées sur un fichier spécifié,
+     * telles que l'affichage des informations ou des statistiques sur le fichier.
+     *
+     * @return Une chaîne de texte avec les résultats des actions effectuées sur le fichier.
+     */
     private String executeFileMode() {
         try {
             Image fichier = new Image(cmd.getOptionValue("f"));
@@ -153,176 +186,197 @@ public class Console {
         }
     }
 
+    /**
+     * Exécute les commandes pour le mode répertoire.
+     *
+     * Cette méthode gère les actions à effectuer sur un répertoire spécifié,
+     * telles que l'affichage des informations, des statistiques, ou la recherche d'images.
+     *
+     * @return Une chaîne de texte avec les résultats des actions effectuées sur le répertoire.
+     * @throws ImageProcessingException En cas d'erreur de traitement d'image.
+     * @throws IOException En cas d'erreur d'entrée/sortie.
+     */
     private String executeDirectoryMode() throws ImageProcessingException, IOException {
+        // Vérification si l'objet cmd n'est pas initialisé correctement
         if (cmd == null) {
-            return "Erreur : les options n'ont pas été initialisées correctement.";
+            return "Erreur : les options n'ont pas été initialisées correctement."; // Message d'erreur si cmd est nul
         }
+
+        // Création d'un objet Folder en utilisant l'option "d" passée en ligne de commande
         Folder folder = new Folder(cmd.getOptionValue("d"));
 
+        // Utilisation de StringBuilder pour accumuler les résultats à afficher
         StringBuilder output = new StringBuilder("Mode répertoire activé.\n");
 
+        // Si l'option 'info' est activée, on ajoute les informations du dossier à la sortie
         if (info) {
             output.append(folder.getInfo()).append("\n");
         }
+
+        // Si l'option 'stat' est activée, on ajoute les statistiques du dossier à la sortie
         if (stat) {
             output.append(folder.getStat()).append("\n");
         }
+
+        // Si l'option 'list' est activée, on effectue un listing des éléments du dossier
         if (list) {
             output.append("Listage des éléments activée.\n");
+            // Si l'option 'order' est activée, on indique que l'ordre est également activé
             if (order) {
                 output.append("Ordre activé.\n");
             }
+
+            // Récupération de toutes les images dans le dossier
             ArrayList<File> images = folder.getAllImages();
+            // Ajout de chaque image au résultat, en affichant son chemin absolu
             for (File image : images) {
                 output.append(image.getAbsolutePath()).append("\n");
             }
         }
+
+        // Si l'option 'search' est activée, on effectue une recherche dans le dossier
         if (search) {
-            SearchFolder search = new SearchFolder(folder);
-            // s'utilise ainsi : "-w Le_Texte -by desc"    permet de vérifier si "Le_Texte" est présent dans la description.
-            /* possibilités :
-            / -w texte -by name/heigth/width/desc/date/max/min
-            / Par défaut affiche du texte
-            / date s'utilise ainsi : yyyy-MM-dd   il est possible de juste écrire MM-dd ou yyyy-MM
-            / pour min et max, l'argument est en octet.
-             */
+            SearchFolder search = new SearchFolder(folder); // Création d'un objet de recherche pour le dossier
             output.append("Recherche activée.\n");
-            if (by){
+
+            // Si l'option 'by' est activée, on effectue la recherche en fonction des critères spécifiés
+            if (by) {
                 ArrayList<File> images;
-                if (this.cmd.getOptionValue("by").equalsIgnoreCase("name")) {
-                    images = search.searchByName(this.cmd.getOptionValue("w"));
-                    for (File image : images) {
-                        output.append(image.getAbsolutePath()).append("\n");
-                    }
-                }
-                else if (this.cmd.getOptionValue("by").equalsIgnoreCase("heigth")) {
-                    images = search.searchByHeigth(this.cmd.getOptionValue("w"));
-                    for (File image : images) {
-                        output.append(image.getAbsolutePath()).append("\n");
-                    }
+                // On vérifie la valeur de l'option 'by' pour déterminer quel critère de recherche utiliser
+                String searchBy = this.cmd.getOptionValue("by");
+                String searchText = this.cmd.getOptionValue("w");
 
+                switch (searchBy.toLowerCase()) {
+                    case "name":
+                        images = search.searchByName(searchText);
+                        break;
+                    case "heigth":
+                        images = search.searchByHeigth(searchText);
+                        break;
+                    case "maxheigth":
+                        images = search.searchByMaxHeigth(searchText);
+                        break;
+                    case "minheigth":
+                        images = search.searchByMinHeigth(searchText);
+                        break;
+                    case "width":
+                        images = search.searchByWidth(searchText);
+                        break;
+                    case "maxwidth":
+                        images = search.searchByMaxWidth(searchText);
+                        break;
+                    case "minwidth":
+                        images = search.searchByMinWidth(searchText);
+                        break;
+                    case "desc":
+                        images = search.searchByDesc(searchText);
+                        break;
+                    case "date":
+                        images = search.searchByDate(searchText);
+                        break;
+                    case "max":
+                        images = search.searchByMaxSize(searchText);
+                        break;
+                    case "min":
+                        images = search.searchByMinSize(searchText);
+                        break;
+                    default:
+                        System.out.println("Paramètres :" + searchBy + " inconnu"); // Si l'option 'by' est invalide
+                        images = new ArrayList<>();
+                        break;
                 }
-                else if (this.cmd.getOptionValue("by").equalsIgnoreCase("maxheigth")) {
-                    images = search.searchByMaxHeigth(this.cmd.getOptionValue("w"));
-                    for (File image : images) {
-                        output.append(image.getAbsolutePath()).append("\n");
-                    }
 
+                // Pour chaque image trouvée, on ajoute son chemin absolu à la sortie
+                for (File image : images) {
+                    output.append(image.getAbsolutePath()).append("\n");
                 }
-                else if (this.cmd.getOptionValue("by").equalsIgnoreCase("minheigth")) {
-                    images = search.searchByMinHeigth(this.cmd.getOptionValue("w"));
-                    for (File image : images) {
-                        output.append(image.getAbsolutePath()).append("\n");
-                    }
-
-                }
-                else if (this.cmd.getOptionValue("by").equalsIgnoreCase("width")) {
-                    images = search.searchByWidth(this.cmd.getOptionValue("w"));
-                    for (File image : images) {
-                        output.append(image.getAbsolutePath()).append("\n");
-                    }
-
-                }
-                else if (this.cmd.getOptionValue("by").equalsIgnoreCase("maxwidth")) {
-                    images = search.searchByMaxWidth(this.cmd.getOptionValue("w"));
-                    for (File image : images) {
-                        try {
-                            output.append(image.getAbsolutePath()).append("\n");
-                        } catch (Exception e){System.out.println(e.getMessage()+"Erreur lors du traitement de :\n"+image.getAbsolutePath());}
-                    }
-
-                }
-                else if (this.cmd.getOptionValue("by").equalsIgnoreCase("minwidth")) {
-                    images = search.searchByMinWidth(this.cmd.getOptionValue("w"));
-                    for (File image : images) {
-                        output.append(image.getAbsolutePath()).append("\n");
-                    }
-
-                }
-                else if (this.cmd.getOptionValue("by").equalsIgnoreCase("desc")) {
-                    images = search.searchByDesc(this.cmd.getOptionValue("w"));
-                    for (File image : images) {
-                        output.append(image.getAbsolutePath()).append("\n");
-                    }
-
-                }
-                else if (this.cmd.getOptionValue("by").equalsIgnoreCase("date")) {
-                    images = search.searchByDate(this.cmd.getOptionValue("w"));
-                    for (File image : images) {
-                        output.append(image.getAbsolutePath()).append("\n");
-                    }
-
-                }
-                else if (this.cmd.getOptionValue("by").equalsIgnoreCase("max")) {
-                    images = search.searchByMaxSize(this.cmd.getOptionValue("w"));
-                    for (File image : images) {
-                        output.append(image.getAbsolutePath()).append("\n");
-                    }
-
-                }
-                else if (this.cmd.getOptionValue("by").equalsIgnoreCase("min")) {
-                    images = search.searchByMinSize(this.cmd.getOptionValue("w"));
-                    for (File image : images) {
-                        output.append(image.getAbsolutePath()).append("\n");
-                    }
-
-                }
-                else{ System.out.println("Paramètres :"+this.cmd.getOptionValue("by")+" inconnu");}
-
-            }
-            else{
-                ArrayList<File> images;
-                images = search.searchByName(this.cmd.getOptionValue("w"));
+            } else {
+                // Si l'option 'by' n'est pas activée, on effectue une recherche par nom
+                ArrayList<File> images = search.searchByName(this.cmd.getOptionValue("w"));
                 for (File image : images) {
                     output.append(image.getAbsolutePath()).append("\n");
                 }
             }
-
         }
+
+        // Création d'un objet Snapshot pour la gestion des snapshots dans le dossier
         Snapshot snap = new Snapshot(folder);
+
+        // Si l'option 'snapshotsave' est activée, on effectue une sauvegarde du snapshot
         if (snapshotsave) {
             output.append("Sauvegarde du snapshot activée.\n");
             snap.snapshotSave(this.cmd.getOptionValue("ss"));
         }
+
+        // Si l'option 'snapshotcompare' est activée, on effectue une comparaison des snapshots
         if (snapshotcompare) {
             output.append("=== Comparaison des snapshots activée ===\n");
             output.append(snap.snapshotCompare(this.cmd.getOptionValue("sc")));
         }
 
+        // Retourne le contenu accumulé dans le StringBuilder
         return output.toString();
     }
 
-
+    /**
+     * Affiche l'aide détaillée pour l'utilisation de la ligne de commande.
+     *
+     * Cette méthode retourne une chaîne de texte avec une description des options disponibles
+     * et des exemples d'utilisation.
+     *
+     * @return Une chaîne de texte contenant l'aide détaillée.
+     */
     public String getHelp () {
         return ("""
                     Usage: java -jar cli.jar [options]
-                    Desc:
-                    This scripts can :
+                   ¤ Desc:
+                    > This scripts can :
                         Show you informations about a File or a Folder.
                         Show you what file and folder are inside a folder.
                         Search a specific file from where you are using that commands.
                         Make a save of a specific folder.
                         Compare an old save with a current folder.
                    \s
-                    Options:
+                   ¤ Options:
                         -h, --help : Show this message.
                         -f, --file : To specify the file you want to work with (can't be used with -d or --directory).
                         -d, --directory : To specify the directory you want to work with (can't be used with -f or --file).
                         -i, --info : Show info about the file or directory.
                         -s, --stat : Show statistics about the file or directory.
                    \s
-                        -w, --search : Show a list of images that matchs the research (must be used with ). ????? BIG QUESTIONS HERE GUYS
-                        -wb, --searchby : Search a specific image that matches specific type (must be used with -w or --search).
+                        -w, --search : Show a list of images that have the parameter in their name (must be used with directory).
+                        -b, --by : Search a specific image that matches specific type (must be used with -w or --search).
+                             Valid parameters for by are : { name, heigth, maxheigth, minheigth, width, maxwidth, minwidth, desc, date, max, min }
+                             date has to be used in this format yyyy-MM-DD.
                    \s
                         -l, --list : Show all the images inside the folder and the folder deeper (must be used with -d or --directory).\s
-                        -o, --order : Show an ordered list of images (must be used with -l or --list);
+                        -o, --order : Show an ordered list of images (must be used with -l or --list). NOT IMPLEMENTED YET.
                         -ss, --snapshotsave : Make a save of the state of a directory.
                         -sc, --snapshotcompare : Compare a save of a directory with the current directory.
-                    Exemples:
-                    We have to add Exemple
-                    Commons errors:
-                        We have to add Exemple
-                    Autors: Ammad Kennan & Defrance Gauthier.
+                   ¤ Exemples:
+                        -h : show this message. If used with anything below, only the message will show.
+                       \s
+                        -f path\\to\\my\\file.png -i : show infos about the file
+                        -f path\\to\\my\\file.png -s : show stats about the file
+                        -d path\\to\\my\\folder -i : show infos about the folder
+                        -d path\\to\\my\\folder -s : show stats about the folder
+                        -f path\\to\\my\\file.png -s -i : show stats & info about the file
+                        -d path\\to\\my\\folder -i -s : show stats & info about the folder
+                       \s
+                        -d path\\to\\my\\folder -l : show all the images inside the folder and all the sub-folders.
+                       \s
+                        -d path\\to\\my\\folder -w NameOfTheFileISearch : show all the image that matches the search (by name)
+                        -d path\\to\\my\\folder -w Name -b parameters : If it's a valid parameters (listed before) will show all\s
+                                                                        the images that matches the search.
+                       \s
+                        -d path\\to\\my\\folder -ss path\\to\\my\\save\\mySave.json : will make a snapshot at a specific place of the given -d folder.
+                        -d path\\to\\my\\folder -sc path\\to\\my\\save\\mySave.json : will compare a saved snapshot with the given -d folder.
+                   ¤ Commons errors:
+                        -f path\\to\\my\\file.png -d path\\to\\my\\folder : Will crash, they can't be used together.
+                        -d, -f, -w, -b, -ss, -sc : All take parameters. The programs won't start if you don't give any parameters to them.
+                        -l, -w, -b -sc, -ss : Can only be used with -d.
+                        -b : Need to be used with -w
+                   ¤ Autors: Ammad Kennan & Defrance Gauthier.
                    \s""");
     }
 
