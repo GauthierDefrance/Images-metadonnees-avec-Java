@@ -11,10 +11,12 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class GUI extends JFrame {
 
-	private int page = 0;
+	private int page = 1;
+	private int searchSelector= 0;
 	private ArrayList<String> lstd = new ArrayList<String>();
 	private ArrayList<String> lstf = new ArrayList<String>();
 	private ArrayList<String> lst = new ArrayList<String>();
@@ -222,6 +224,7 @@ public class GUI extends JFrame {
 		public void mousePressed(MouseEvent e) {
 			if (e.getClickCount() == 2) {  // Double-clic détecté
 				pathT.setText(path);
+				page = 0;
 				pathupdate();
 			}
 			centerPanel.updateUI();
@@ -248,15 +251,64 @@ public class GUI extends JFrame {
 		public void actionPerformed(ActionEvent e) {
 			String path = pathT.getText();//donne le path actuel
 			File file = new File(path);
-			if (file.exists()&&file.isDirectory()) {
+			if (file.exists() && file.isDirectory()) {
 				Folder folder = new Folder(path);
+				SearchFolder chercheur = new SearchFolder(folder);
+				ArrayList<File> images = new ArrayList<File>();
+				try {
+					switch (searchSelector) {
+						case 1:
+							images = chercheur.searchByName(searchT.getText());
+							break;
+						case 2:
+							images = chercheur.searchByHeigth(searchT.getText());
+							break;
+						case 3:
+							images = chercheur.searchByMaxHeigth(searchT.getText());
+							break;
+						case 4:
+							images = chercheur.searchByMinHeigth(searchT.getText());
+							break;
+						case 5:
+							images = chercheur.searchByWidth(searchT.getText());
+							break;
+						case 6:
+							images = chercheur.searchByMaxWidth(searchT.getText());
+							break;
+						case 7:
+							images = chercheur.searchByMinWidth(searchT.getText());
+							break;
+						case 8:
+							images = chercheur.searchByDesc(searchT.getText());
+							break;
+						case 9:
+							images = chercheur.searchByDate(searchT.getText());
+							break;
+						case 10:
+							images = chercheur.searchByMaxSize(searchT.getText());
+							break;
+						case 11:
+							images = chercheur.searchByMinSize(searchT.getText());
+							break;
+						default:
+							images = chercheur.searchByName(searchT.getText());
+							break;
+					}
+					lst.clear();
+					lstf.clear();
+					lstd.clear();
 
-
+					for (File f : images) {
+						lst.add(f.getAbsolutePath());
+					}
+				} catch (Exception ex) {
+					System.out.println(ex);
+				}
+				updateTb();
+				centerPanel.updateUI();
 			}
-			updateTb();
-			centerPanel.updateUI();
-		}
 
+		}
 	}
 
 	private class downAction implements ActionListener {
