@@ -1,5 +1,6 @@
 package CLI;
 
+import gui.GUI;
 import com.drew.imaging.ImageProcessingException;
 
 import java.io.IOException;
@@ -23,6 +24,7 @@ public class MainConsole {
      */
     public static void main(String[] args) throws ImageProcessingException, IOException {
         // Crée une instance de la classe Console avec les arguments passés en ligne de commande
+
         Console console = new Console(args);
 
         // Exécute les commandes de la console et affiche le résultat dans la console

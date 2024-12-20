@@ -1,6 +1,5 @@
-package td9.gui;
+package gui;
 
-import td9.counters.Counter;
 
 import javax.swing.*;
 import java.awt.*;
@@ -27,7 +26,6 @@ public class GUI extends JFrame {
 	/**
 	 * This is the model in MVC (model-view-controller).
 	 */
-	private Counter counter;
 
 	public GUI(String title) {
 		super(title);
@@ -38,9 +36,6 @@ public class GUI extends JFrame {
 
 	private void init() {
 		BorderLayout border = new BorderLayout();
-
-		JFrame frame = new JFrame("Tableau de boutons avec Menu et Double-Clic");
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 
 		JPanel rightPanel = new JPanel();

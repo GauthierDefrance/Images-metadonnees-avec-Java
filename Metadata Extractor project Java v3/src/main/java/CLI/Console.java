@@ -5,11 +5,14 @@ import Core.Snapshot;
 import com.drew.imaging.ImageProcessingException;
 import Core.Folder;
 import Core.Image;
+import Core.order;
+
 import org.apache.commons.cli.*;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.io.IOException;
+import java.util.Collections;
 
 /**
  * Classe Console
@@ -35,6 +38,7 @@ public class Console {
     private boolean list;
     private boolean by;
     private boolean error;
+    private boolean r;
 
     private String path;
     private String[] args;
@@ -63,6 +67,7 @@ public class Console {
         options.addOption("sc", "snapshotcompare", true, "Comparer les snapshots");
         options.addOption("w", "search", true, "Effectuer une recherche");
         options.addOption("o", "order", true, "Ordonner les résultats selon un paramètre.");
+        options.addOption("r", "reversed", false, "Inverse l'ordre des fichiers.");
         options.addOption("l", "list", false, "Lister les éléments");
         options.addOption("b", "by", true, "Chercher les éléments remplissant une condition.");
 
@@ -81,6 +86,7 @@ public class Console {
             this.order = cmd.hasOption("o");
             this.list = cmd.hasOption("l");
             this.by = cmd.hasOption("b");
+            this.r = cmd.hasOption("r");
             // Récupération des arguments restants (par exemple un chemin)
             String[] remainingArgs = cmd.getArgs();
             if (remainingArgs.length > 0) {
@@ -225,13 +231,71 @@ public class Console {
             // Si l'option 'order' est activée, on indique que l'ordre est également activé
             if (order) {
                 output.append("Ordre activé.\n");
-            }
 
-            // Récupération de toutes les images dans le dossier
-            ArrayList<File> images = folder.getAllImages();
-            // Ajout de chaque image au résultat, en affichant son chemin absolu
-            for (File image : images) {
-                output.append(image.getAbsolutePath()).append("\n");
+                String order = this.cmd.getOptionValue("o");
+                order Order = new order(folder.getAllImages());
+                StringBuffer tmporder = new StringBuffer();
+                switch (order.toLowerCase()) {
+                    case "name":
+                        for(Image tmp : Order.orderByName()){
+                            tmporder.append(tmp.getName()).append("\n");
+                        }
+                        break;
+                    case "height":
+                        for(Image tmp : Order.orderByHeight()){
+                            tmporder.append(tmp.getName()).append("\n");
+                        }
+                        break;
+                    case "width":
+                        for(Image tmp : Order.orderByWidth()){
+                            tmporder.append(tmp.getName()).append("\n");
+                        }
+                        break;
+                    case "date":
+                        for(Image tmp : Order.orderByDate()){
+                            tmporder.append(tmp.getName()).append("\n");
+                        }
+                        break;
+                    case "size":
+                        for(Image tmp : Order.orderBySize()){
+                            tmporder.append(tmp.getName()).append("\n");
+                        }
+                        break;
+                    default:
+                        System.out.println("Paramètres :" + order + " inconnu"); // Si l'option 'by' est invalide
+                        break;
+                }
+                if (r) {
+                    output.append("=Reversed mode=");
+
+                    // Convertir le texte en tableau de chaînes
+                    String[] tab = tmporder.toString().split("\n");
+
+                    // Créer une ArrayList à partir de l'array
+                    ArrayList<String> tab2 = new ArrayList<String>();
+                    for (String s : tab) {
+                        tab2.add(s);
+                    }
+
+                    // Inverser la liste
+                    Collections.reverse(tab2); // Utilisation de Collections.reverse pour inverser la liste
+
+                    // Ajouter les éléments inversés à l'output
+                    for (String s : tab2) {
+                        output.append(s).append("\n");
+                    }
+                } else {
+                    output.append(tmporder.toString()).append("\n");
+                }
+
+            }
+            else {
+                // Récupération de toutes les images dans le dossier
+                ArrayList<File> images = folder.getAllImages();
+                // Ajout de chaque image au résultat, en affichant son chemin absolu
+                for (File image : images) {
+                    output.append(image.getAbsolutePath()).append("\n");
+                }
             }
         }
 
@@ -251,7 +315,7 @@ public class Console {
                     case "name":
                         images = search.searchByName(searchText);
                         break;
-                    case "heigth":
+                    case "height":
                         images = search.searchByHeigth(searchText);
                         break;
                     case "maxheigth":

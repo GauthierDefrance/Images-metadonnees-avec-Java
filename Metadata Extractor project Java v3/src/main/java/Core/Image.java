@@ -11,7 +11,16 @@ import com.drew.metadata.Tag;
 // Importation des bibliothèques standards
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.text.SimpleDateFormat;
+import java.time.OffsetDateTime;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 // Importation des bibliothèques tierces
@@ -170,6 +179,32 @@ public class Image {
     public String getMDate() {
         if (mdate != null) return mdate;
         if (metadataMap.containsKey("File Modified Date")) return metadataMap.get("File Modified Date");
+        return "";
+    }
+
+    /**
+     * Retourne la date de modification du fichier sous un format plus simple pour la comparaison.
+     *
+     * @return La date de modification si définie, sinon une tentative est effectuée pour la récupérer
+     *         depuis la métadonnée "File Modified Date". Sia ucun n'est disponible, retourne une chaîne vide.
+     */
+    public String getMdateOtherFormat() {
+        Path filePath = Paths.get(getPath());
+        try {
+            // Obtenir les attributs du fichier
+            BasicFileAttributes attrs = Files.readAttributes(filePath, BasicFileAttributes.class);
+
+            // Obtenir la dernière date de modification
+            long lastModified = attrs.lastModifiedTime().toMillis();
+
+            // Formater la date
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+            String formattedDate = sdf.format(lastModified);
+
+            return formattedDate;
+        } catch (Exception e) {
+            System.err.println("Erreur lors de l'accès au fichier : " + e.getMessage());
+        }
         return "";
     }
 
