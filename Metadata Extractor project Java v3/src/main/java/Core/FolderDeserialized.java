@@ -8,6 +8,7 @@ import java.util.HashMap;
 /**
  * La classe FolderDeserialized représente un dossier désérialisé à partir de JSON.
  * Elle contient des informations sur les sous-dossiers, les fichiers, et les métadonnées du dossier.
+ * @author @Gauthier Defrance @kenan ammad
  */
 public class FolderDeserialized {
     private ArrayList<String> folders; // Liste des chemins des sous-dossiers

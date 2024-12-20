@@ -22,6 +22,7 @@ import java.util.ArrayList;
  * Classe représentant un répertoire sur le système de fichiers.
  * Cette classe permet de gérer un répertoire, d'obtenir ses sous-dossiers,
  * d'examiner ses fichiers (notamment les images) et d'extraire des informations détaillées.
+ * @author @Gauthier Defrance @kenan ammad
  */
 @JsonPropertyOrder({"absolutePath", "Last Modification", "parent", "Number of elements", "Numbers of folders", "Numbers of images", "folders", "images"})
 public class Folder {
@@ -308,5 +309,5 @@ public class Folder {
         // Retourner la date formatée
         return formatter.format(instant);
     }
-    
+
 }
