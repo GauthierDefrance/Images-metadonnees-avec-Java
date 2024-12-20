@@ -10,9 +10,18 @@
 - [X] Faire une classe fichier (qui permet d'extraire les métadonnées d'une image)
 - [X] Facilité l'accès aux métadonnées pertinente
 - [X] Faire une classe dossier
-- [ ] Renvoyer des HashMap au lieu des ArrayList dans la classe dossier.
-- [ ] Stocker les métadonnées pertinente dans une Hashmap ? (économie de RAM)
-- [ ] Finir getInfo/getStat sur fichier et dossier  
-- [ ] Avancer sur le CLI : être capable de gérer des commandes de base
-- [ ] Débute le GUI : penser l'interface (doit être user friendly !!!) 
+- [X] Renvoyer des HashMap au lieu des ArrayList dans la classe dossier.
+- [X] Stocker les métadonnées pertinente dans une Hashmap ? (économie de RAM)
+- [X] Avoir un --help fonctionnel
+- [X] Finir getInfo/getStat sur fichier et dossier  
+- [X] Avancer sur le CLI : être capable de gérer des commandes de base
+- [X] Etre capable de chercher des images dans un répertoire
+- [X] Etre capable de lister toutes les images d'un répertoire
+- [X] Etre capable d'effectuer une sauvegarde au format JSON de notre repertoire
+- [X] Etre capable de Deserialiser la sauvegarder JSON du repertoire
+- [ ] Comparer des repertoires en indiquant les modifications apporté    
+- [ ] Ajouter la fonctionnalité à list : order
+- [ ] Débute le GUI : penser l'interface (doit être user friendly !!!)
+- [ ] Faire la javadoc
+- [ ] Avoir les 2 librairies CLI et GUI
 - [ ] Faire la vidéo de présentation (1984) 
