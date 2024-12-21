@@ -19,10 +19,13 @@ public class GUI extends JFrame {
 
 	private int page = 0;
 	private int searchSelector= 0;
+	private String orderSelector = "";
+	private Boolean orderBool = Boolean.FALSE;
 	private ArrayList<String> lstd = new ArrayList<String>();
 	private ArrayList<String> lstf = new ArrayList<String>();
 	private ArrayList<String> lst = new ArrayList<String>();
 	private JButton help = new JButton("help ?");
+	private JButton order = new JButton("Order:");
 	private JButton search = new JButton("Search :");
 	private JButton pathB = new JButton("Path :");
 	private JButton pathB2 = new JButton("←");
@@ -60,7 +63,9 @@ public class GUI extends JFrame {
 		JPanel leftPanel = new JPanel();
 		JMenuBar toptopPanel = new JMenuBar();
 		JMenu menuParametres = new JMenu("Menu SearchBy ...");
+		JMenu orderByParametres = new JMenu("Menu OrderBy ...");
 		ButtonGroup buttonGroup = new ButtonGroup();
+		ButtonGroup buttonGroup2 = new ButtonGroup();
 		JPanel topbottomPanel = new JPanel();
 		JPanel topPanel = new JPanel();
 		JPanel bottomPanel = new JPanel();
@@ -83,6 +88,13 @@ public class GUI extends JFrame {
 
 		toptopPanel.add(parametres);
 		parametres.add(menuParametres);
+		parametres.add(orderByParametres);
+
+		JRadioButtonMenuItem item1or = new JRadioButtonMenuItem("Name");
+		JRadioButtonMenuItem item2or = new JRadioButtonMenuItem("Heigth");
+		JRadioButtonMenuItem item3or = new JRadioButtonMenuItem("Width");
+		JRadioButtonMenuItem item4or = new JRadioButtonMenuItem("Date");
+		JRadioButtonMenuItem item5or = new JRadioButtonMenuItem("Size");
 
 		JRadioButtonMenuItem item1 = new JRadioButtonMenuItem("Name");
 		JRadioButtonMenuItem item2 = new JRadioButtonMenuItem("Heigth");
@@ -96,9 +108,19 @@ public class GUI extends JFrame {
 		JRadioButtonMenuItem item10 = new JRadioButtonMenuItem("MaxSize");
 		JRadioButtonMenuItem item11 = new JRadioButtonMenuItem("MinSize");
 
+		orderByParametres.add(order);
+		buttonGroup2.add(item1or);
+		orderByParametres.add(item1or);
+		buttonGroup2.add(item2or);
+		orderByParametres.add(item2or);
+		buttonGroup2.add(item3or);
+		orderByParametres.add(item3or);
+		buttonGroup2.add(item4or);
+		orderByParametres.add(item4or);
+		buttonGroup2.add(item5or);
+		orderByParametres.add(item5or);
 
-		toptopPanel.add(parametres);
-		parametres.add(menuParametres);
+
 		buttonGroup.add(item1);
 		menuParametres.add(item1);
 		buttonGroup.add(item2);
@@ -134,6 +156,12 @@ public class GUI extends JFrame {
 		rightPanel.setLayout(new GridLayout(2, 1));
 		rightPanel.add(up);
 		rightPanel.add(down);
+
+		item1or.addActionListener(new orderSelectorB("name"));
+		item2or.addActionListener(new orderSelectorB("height"));
+		item3or.addActionListener(new orderSelectorB("width"));
+		item4or.addActionListener(new orderSelectorB("date"));
+		item5or.addActionListener(new orderSelectorB("size"));
 
 		item1.addActionListener(new searchSelectorB(1));
 		item2.addActionListener(new searchSelectorB(2));
@@ -291,6 +319,22 @@ public class GUI extends JFrame {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			searchSelector = this.selector;
+			updateTb();
+			centerPanel.updateUI();
+		}
+
+	}
+
+	private class orderSelectorB implements ActionListener {
+		private String order;
+
+		public orderSelectorB(String order) {
+			this.order = order;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			orderSelector = this.order;
 			updateTb();
 			centerPanel.updateUI();
 		}
