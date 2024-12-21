@@ -69,6 +69,7 @@ public class SearchFolder {
      * Recherche les fichiers par hauteur exacte.
      * @param height La hauteur cible des images.
      * @return Une liste des fichiers correspondant au critère.
+     * @throws java.io.IOException, IOException
      */
     public ArrayList<File> searchByHeigth(String height) throws ImageProcessingException, IOException {
         ArrayList<File> tmp = folder.getAllImages();
@@ -87,6 +88,7 @@ public class SearchFolder {
      * Recherche les fichiers par largeur exacte.
      * @param width La largeur cible des images.
      * @return Une liste des fichiers correspondant au critère.
+     * @throws ImageProcessingException, IOException
      */
     public ArrayList<File> searchByWidth(String width) throws ImageProcessingException, IOException {
         ArrayList<File> tmp = folder.getAllImages();
@@ -105,6 +107,7 @@ public class SearchFolder {
      * Recherche les fichiers par hauteur maximale.
      * @param height La hauteur maximale des images.
      * @return Une liste des fichiers correspondant au critère.
+     * @throws ImageProcessingException, IOException
      */
     public ArrayList<File> searchByMaxHeigth(String height) throws ImageProcessingException, IOException {
         ArrayList<File> tmp = folder.getAllImages();
@@ -129,6 +132,7 @@ public class SearchFolder {
      * Recherche les fichiers par hauteur minimale.
      * @param height La hauteur minimale des images.
      * @return Une liste des fichiers correspondant au critère.
+     * @throws ImageProcessingException, IOException
      */
     public ArrayList<File> searchByMinHeigth(String height) throws ImageProcessingException, IOException {
         ArrayList<File> tmp = folder.getAllImages();
@@ -153,6 +157,7 @@ public class SearchFolder {
      * Recherche les fichiers par largeur maximale.
      * @param width La largeur maximale des images.
      * @return Une liste des fichiers correspondant au critère.
+     * @throws ImageProcessingException, IOException
      */
     public ArrayList<File> searchByMaxWidth(String width) throws ImageProcessingException, IOException {
         ArrayList<File> tmp = folder.getAllImages();
@@ -177,6 +182,7 @@ public class SearchFolder {
      * Recherche les fichiers par largeur minimale.
      * @param width La largeur minimale des images.
      * @return Une liste des fichiers correspondant au critère.
+     * @throws ImageProcessingException, IOException
      */
     public ArrayList<File> searchByMinWidth(String width) throws ImageProcessingException, IOException {
         ArrayList<File> tmp = folder.getAllImages();
@@ -201,6 +207,7 @@ public class SearchFolder {
      * Recherche les fichiers par description.
      * @param desc La description cible des images.
      * @return Une liste des fichiers correspondant au critère.
+     * @throws ImageProcessingException, IOException
      */
     public ArrayList<File> searchByDesc(String desc) throws ImageProcessingException, IOException {
         ArrayList<File> tmp = folder.getAllImages();

@@ -1,0 +1,1 @@
+typeSearchIndex = [{"l":"All Classes and Interfaces","u":"allclasses-index.html"},{"p":"Core","l":"Folder"},{"p":"Core","l":"FolderDeserialized"},{"p":"Core","l":"Image"},{"p":"Core","l":"order"},{"p":"Core","l":"SearchFolder"},{"p":"Core","l":"Snapshot"}];updateSearchResults();

@@ -104,20 +104,58 @@ public class Image {
 
 
     // Méthodes "setter" pour définir les valeurs des champs privés (Sert pour la déserialisation depuis le JSON)
+
+    /**
+     *Permet de set le Mime.
+     * @param 
+      */
     public void setMime(String mime){ this.mime = mime;}
+    /*
+
+     */
     public void setExtension(String extension){ this.extension = extension;}
+    /*
+
+     */
     public void setName(String name){ this.name = name;}
+    /*
+
+     */
     public void setDate(String date){ this.date = date;}
+    /*
+
+     */
     @JsonProperty("mdate")
     public void setMdate(String mdate){ this.mdate = mdate;}
+    /*
+
+     */
     @JsonProperty("model")
     public void setModel(String model){ this.model = model;}
+    /*
+
+     */
     public void setDesc(String desc){ this.desc = desc;}
+    /*
+
+     */
     @JsonProperty("size")
     public void setSize(String size){ this.size = size;}
+    /*
+
+     */
     public void setHeight(String height){ this.height = height;}
+    /*
+
+     */
     public void setWidth(String width){ this.width = width;}
+    /*
+
+     */
     public void setDpix(String dpix){ this.dpix = dpix;}
+    /*
+
+     */
     public void setDpiy(String dpiy){ this.dpiy = dpiy;}
 
 
@@ -257,7 +295,7 @@ public class Image {
     }
 
     /**
-     * Retourne le poids du fichier en Ko.
+     * Retourne le poids du fichier en Octets.
      *
      * @return Le poids du fichier si défini, sinon une tentative est effectuée pour le récupérer
      *         depuis la métadonnée "File Size". Si aucun n'est disponible, retourne une chaîne vide.
@@ -319,6 +357,7 @@ public class Image {
 
 
     /**
+     * Initialise les métadonnées de l'image. L'objet est inutile sans passer par ça.
      * @apiNote Méthode d'initialisation des métadonnées.
      * Elle parcourt les groupes de métadonnées et stocke les informations pertinentes dans la carte {@code metadataMap}.
      */
