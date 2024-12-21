@@ -20,6 +20,8 @@ import java.util.ArrayList;
 
 public class GUI extends JFrame {
 
+	private JPanel rPanel = new JPanel();
+
 	private  BufferedImage image_zoom;
 	private double zoomFactor = 1.0; // Facteur de zoom initial
 	private int page = 0;
@@ -36,10 +38,7 @@ public class GUI extends JFrame {
 	private JButton pathB2 = new JButton("←");
 	private JButton up = new JButton("↑");
 	private JButton down = new JButton("↓");
-	private JButton zoomIn = new JButton("+");
-	private JButton zoomOut = new JButton("-");
 
-	private JFrame popup1 = new JFrame("popup1");
 	private JFrame popup2 = new JFrame("popup2");
 	private JLabel imgLabel;
 
@@ -69,14 +68,13 @@ public class GUI extends JFrame {
 	}
 
 	private void init() {
+
 		BorderLayout border = new BorderLayout();
-		BorderLayout border1 = new BorderLayout();
 		JPanel rightPanel = new JPanel();
 		JPanel leftPanel = new JPanel();
 		JPanel topbottomPanel = new JPanel();
 		JPanel topPanel = new JPanel();
 		JPanel bottomPanel = new JPanel();
-		JPanel rightPanelpopup = new JPanel();
 
 		JMenuBar toptopPanel = new JMenuBar();
 		JMenu menuParametres = new JMenu("Menu SearchBy ...");
@@ -95,12 +93,8 @@ public class GUI extends JFrame {
 		Container contentPane = getContentPane();
 		contentPane.setLayout(border);
 
-		popup1.setLayout(border1);
-		popup1.add(BorderLayout.EAST,rightPanelpopup);
-
 		topPanel.setLayout(new GridLayout(2, 1));
 		rightPanel.setLayout(new GridLayout(2, 1));
-		rightPanelpopup.setLayout(new GridLayout(2, 1));
 		topPanel.add(toptopPanel);
 		topPanel.add(topbottomPanel);
 		topbottomPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
@@ -176,10 +170,6 @@ public class GUI extends JFrame {
 		rightPanel.add(up);
 		rightPanel.add(down);
 
-		rightPanelpopup.add(zoomIn);
-		rightPanelpopup.add(zoomOut);
-
-
 		itemorBOOL.addActionListener(new orderReverse());
 		item1or.addActionListener(new orderSelectorB("name"));
 		item2or.addActionListener(new orderSelectorB("height"));
@@ -200,8 +190,6 @@ public class GUI extends JFrame {
 		item11.addActionListener(new searchSelectorB(11));
 		up.addActionListener(new upAction());
 		down.addActionListener(new downAction());
-		zoomIn.addActionListener(new zoom_In());
-		zoomOut.addActionListener(new zoom_Out());
 		pathB.addActionListener(new ppathupdate());
 		pathB2.addActionListener(new pathremonter());
 		search.addActionListener(new searchf());
@@ -235,8 +223,6 @@ public class GUI extends JFrame {
 
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		pack();
-		popup1.setLocationRelativeTo(null);
-		popup1.setSize(720, 480);
 		setLocationRelativeTo(null);
 		setSize(720, 480);
 		setVisible(true);
@@ -597,11 +583,26 @@ public class GUI extends JFrame {
 
 	private void popupImg(String path){
 		try {
+			JButton zoomIn = new JButton("+");
+			JButton zoomOut = new JButton("-");
+			zoomIn.addActionListener(new zoom_In());
+			zoomOut.addActionListener(new zoom_Out());
+			JFrame popup = new JFrame("popup");
+			JPanel rightPanelpopup = new JPanel();
+			popup.setLayout(new BorderLayout());
+			popup.add(BorderLayout.EAST,rightPanelpopup);
+			rightPanelpopup.setLayout(new GridLayout(2, 1));
+			rightPanelpopup.add(zoomIn);
+			rightPanelpopup.add(zoomOut);
+
 			image_zoom = ImageIO.read(new File(path));
 			imgLabel = new JLabel(new ImageIcon(image_zoom));
-			popup1.add(BorderLayout.CENTER, imgLabel);
+
+			popup.setSize(720, 480);
+			popup.add(BorderLayout.CENTER, imgLabel);
 			imgLabel.updateUI();
-			popup1.setVisible(true);
+			popup.setLocationRelativeTo(null);
+			popup.setVisible(true);
 		} catch (Exception ex) {
 			System.out.println(ex);
 			}
