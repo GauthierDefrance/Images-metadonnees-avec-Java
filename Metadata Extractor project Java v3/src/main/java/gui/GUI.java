@@ -65,6 +65,7 @@ public class GUI extends JFrame {
 
 	private void init() {
 		BorderLayout border = new BorderLayout();
+		BorderLayout border1 = new BorderLayout();
 		JPanel rightPanel = new JPanel();
 		JPanel leftPanel = new JPanel();
 		JPanel topbottomPanel = new JPanel();
@@ -89,7 +90,7 @@ public class GUI extends JFrame {
 		Container contentPane = getContentPane();
 		contentPane.setLayout(border);
 
-		popup1.setLayout(border);
+		popup1.setLayout(border1);
 		popup1.add(BorderLayout.EAST,rightPanelpopup);
 
 		topPanel.setLayout(new GridLayout(2, 1));
@@ -229,6 +230,9 @@ public class GUI extends JFrame {
 
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		pack();
+		popup1.setLocationRelativeTo(null);
+		popup1.setSize(720, 480);
+		setLocationRelativeTo(null);
 		setSize(720, 480);
 		setVisible(true);
 	}
@@ -559,7 +563,10 @@ public class GUI extends JFrame {
 		@Override
 		public void mousePressed(MouseEvent e) {
 			if (e.getClickCount() == 2) {  // Double-clic détecté
-				//JOptionPane.showMessageDialog(popup1, "Vous avez double-cliqué sur le bouton !");
+				JPanel img = new JPanel();
+
+
+				popup1.add(BorderLayout.CENTER,img);
 				popup1.setVisible(true);
 			}
 		}
