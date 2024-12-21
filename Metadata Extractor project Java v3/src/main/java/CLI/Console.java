@@ -12,7 +12,6 @@ import org.apache.commons.cli.*;
 import java.io.File;
 import java.util.ArrayList;
 import java.io.IOException;
-import java.util.Collections;
 
 /**
  * Classe Console
@@ -231,7 +230,9 @@ public class Console {
             // Si l'option 'order' est activée, on indique que l'ordre est également activé
             if(order){
                 order Order = new order(folder.getAllImages());
-                output.append(Order.OrderFile(cmd.getOptionValue("o"),r)).append("\n");
+                for(File elem : Order.OrderFile(cmd.getOptionValue("o"),r)){
+                    output.append(elem.getAbsolutePath()).append("\n");
+                }
             }
 
             else {
@@ -299,7 +300,9 @@ public class Console {
                 if(order){
                     System.out.println("ordering !");
                     order Order = new order(images);
-                    output.append(Order.OrderFile(cmd.getOptionValue("o"),r)).append("\n");
+                    for (File elem : Order.OrderFile(cmd.getOptionValue("o"),r)){
+                        output.append(elem.getAbsolutePath()).append("\n");
+                    }
                 }
                 else{
                     for (File image : images) {
@@ -367,7 +370,9 @@ public class Console {
                              date has to be used in this format yyyy-MM-DD.
                    \s
                         -l, --list : Show all the images inside the folder and the folder deeper (must be used with -d or --directory).\s
-                        -o, --order : Show an ordered list of images (must be used with -l or --list). NOT IMPLEMENTED YET.
+                        -o, --order : Show an ordered list of images (must be used with -l or --list).
+                                      Take the following parameters: {name, height, width, size, date}
+                    \s
                         -ss, --snapshotsave : Make a save of the state of a directory.
                         -sc, --snapshotcompare : Compare a save of a directory with the current directory.
                    ¤ Exemples:
@@ -386,8 +391,14 @@ public class Console {
                         -d path\\to\\my\\folder -w Name -b parameters : If it's a valid parameters (listed before) will show all\s
                                                                         the images that matches the search.
                        \s
+                        -d path\\to\\my\\folder -o parameters : If it's a valid parameters (listed before) will show all\s
+                                                                     the images that matches the search.\s
+                        -d path\\to\\my\\folder -w Name -b parameters -o parameters : It can also be used with the search and search by.
+                       \s
                         -d path\\to\\my\\folder -ss path\\to\\my\\save\\mySave.json : will make a snapshot at a specific place of the given -d folder.
                         -d path\\to\\my\\folder -sc path\\to\\my\\save\\mySave.json : will compare a saved snapshot with the given -d folder.
+                       \s
+                       \s
                    ¤ Commons errors:
                         -f path\\to\\my\\file.png -d path\\to\\my\\folder : Will crash, they can't be used together.
                         -d, -f, -w, -b, -ss, -sc : All take parameters. The programs won't start if you don't give any parameters to them.

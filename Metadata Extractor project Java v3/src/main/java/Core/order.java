@@ -12,6 +12,8 @@ import java.util.Comparator;
  * selon différents critères comme le nom, la taille, la date, la hauteur ou la largeur de l'image.
  * Elle fournit aussi une méthode pour afficher le classement des images sous forme de chaîne de caractères,
  * avec la possibilité d'afficher l'ordre inversé.
+ * @author @Gauthier Defrance @kenan ammad
+ * @version 1.4 [21/12/2024]
  */
 public class order {
 
@@ -53,7 +55,7 @@ public class order {
      * @return La liste des images triée par taille.
      */
     public ArrayList<Image> orderBySize() {
-        Collections.sort(ImageList, Comparator.comparing(Image::getSize));
+        Collections.sort(ImageList, Comparator.comparingInt(image -> Integer.parseInt(image.getSize())));
         return ImageList;
     }
 
@@ -73,7 +75,7 @@ public class order {
      * @return La liste des images triée par hauteur.
      */
     public ArrayList<Image> orderByHeight() {
-        Collections.sort(ImageList, Comparator.comparing(Image::getHeight));
+        Collections.sort(ImageList, Comparator.comparingInt(image -> Integer.parseInt(image.getHeight())));
         return ImageList;
     }
 
@@ -83,7 +85,7 @@ public class order {
      * @return La liste des images triée par largeur.
      */
     public ArrayList<Image> orderByWidth() {
-        Collections.sort(ImageList, Comparator.comparing(Image::getWidth));
+        Collections.sort(ImageList, Comparator.comparingInt(image -> Integer.parseInt(image.getWidth())));
         return ImageList;
     }
 
@@ -95,35 +97,33 @@ public class order {
      * @param r Si {@code true}, la liste des images sera retournée dans l'ordre inversé.
      * @return Une chaîne de caractères représentant l'ordre des images selon le critère spécifié.
      */
-    public String OrderFile(String order, Boolean r) {
-        StringBuffer output = new StringBuffer();
-        StringBuffer tmporder = new StringBuffer();
-
+    public ArrayList<File> OrderFile(String order, Boolean r) {
+        ArrayList<File> tmporder = new ArrayList<File>();
         // Tri des images selon le critère spécifié
         switch (order.toLowerCase()) {
             case "name":
                 for (Image tmp : orderByName()) {
-                    tmporder.append(tmp.getName()).append("\n");
+                    tmporder.add(new File(tmp.getPath()));
                 }
                 break;
             case "height":
                 for (Image tmp : orderByHeight()) {
-                    tmporder.append(tmp.getName()).append("\n");
+                    tmporder.add(new File(tmp.getPath()));
                 }
                 break;
             case "width":
                 for (Image tmp : orderByWidth()) {
-                    tmporder.append(tmp.getName()).append("\n");
+                    tmporder.add(new File(tmp.getPath()));
                 }
                 break;
             case "date":
                 for (Image tmp : orderByDate()) {
-                    tmporder.append(tmp.getName()).append("\n");
+                    tmporder.add(new File(tmp.getPath()));
                 }
                 break;
             case "size":
                 for (Image tmp : orderBySize()) {
-                    tmporder.append(tmp.getName()).append("\n");
+                    tmporder.add(new File(tmp.getPath()));
                 }
                 break;
             default:
@@ -133,29 +133,11 @@ public class order {
 
         // Si l'option 'r' est activée, inverser l'ordre
         if (r) {
-            output.append("=Reversed mode=");
-
-            // Convertir le texte en tableau de chaînes
-            String[] tab = tmporder.toString().split("\n");
-
-            // Créer une ArrayList à partir de l'array
-            ArrayList<String> tab2 = new ArrayList<String>();
-            for (String s : tab) {
-                tab2.add(s);
-            }
-
             // Inverser la liste
-            Collections.reverse(tab2); // Utilisation de Collections.reverse pour inverser la liste
-
-            // Ajouter les éléments inversés à l'output
-            for (String s : tab2) {
-                output.append(s).append("\n");
-            }
-        } else {
-            output.append(tmporder.toString()).append("\n");
+            Collections.reverse(tmporder); // Utilisation de Collections.reverse pour inverser la liste
         }
 
         // Retourner l'ordre sous forme de chaîne de caractères
-        return output.toString();
+        return tmporder;
     }
 }

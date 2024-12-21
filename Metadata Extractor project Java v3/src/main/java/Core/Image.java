@@ -16,11 +16,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.text.SimpleDateFormat;
-import java.time.OffsetDateTime;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 // Importation des bibliothèques tierces
@@ -107,54 +103,54 @@ public class Image {
 
     /**
      *Permet de set le Mime.
-     * @param 
+     * @param mime un String indiquant le Mime de l'image
       */
     public void setMime(String mime){ this.mime = mime;}
-    /*
-
+    /**
+    * @param extension un String indiquant l'extension de l'image.
      */
     public void setExtension(String extension){ this.extension = extension;}
-    /*
-
+    /**
+     * @param name un String indiquant le nom de l'image
      */
     public void setName(String name){ this.name = name;}
-    /*
-
+    /**
+     * @param date un String indiquant la date de l'image
      */
     public void setDate(String date){ this.date = date;}
-    /*
-
+    /**
+     * @param mdate un String indiquant la dernière date de modification de l'image
      */
     @JsonProperty("mdate")
     public void setMdate(String mdate){ this.mdate = mdate;}
-    /*
-
+    /**
+     * @param model un String indiquant le model de l'appareil photo ayant pris l'image
      */
     @JsonProperty("model")
     public void setModel(String model){ this.model = model;}
-    /*
-
+    /**
+     * @param desc un String indiquant la description de l'image
      */
     public void setDesc(String desc){ this.desc = desc;}
-    /*
-
+    /**
+     * @param size un String indiquant la taille en octet de l'image
      */
     @JsonProperty("size")
     public void setSize(String size){ this.size = size;}
-    /*
-
+    /**
+     * @param height un String indiquant la taille de l'image en pixels
      */
     public void setHeight(String height){ this.height = height;}
-    /*
-
+    /**
+     * @param width un String indiquant la largeur de l'image en pixels
      */
     public void setWidth(String width){ this.width = width;}
-    /*
-
+    /**
+     * @param dpix un String indiquant la résolution horizontal de l'image en pouce
      */
     public void setDpix(String dpix){ this.dpix = dpix;}
-    /*
-
+    /**
+     * @param dpiy un String indiquant la résolution horizontal de l'image en pouce
      */
     public void setDpiy(String dpiy){ this.dpiy = dpiy;}
 
@@ -358,7 +354,7 @@ public class Image {
 
     /**
      * Initialise les métadonnées de l'image. L'objet est inutile sans passer par ça.
-     * @apiNote Méthode d'initialisation des métadonnées.
+     * Méthode d'initialisation des métadonnées.
      * Elle parcourt les groupes de métadonnées et stocke les informations pertinentes dans la carte {@code metadataMap}.
      */
     @JsonIgnore
@@ -370,10 +366,12 @@ public class Image {
                     switch (tag.getTagName()){
                         case "Image Height":
                         case "Image Width":
+                        case "File Size":
+                            metadataMap.put(tag.getTagName(), tag.getDescription().replaceAll("[^0-9]", ""));
+                            break;
                         case "Detected MIME Type":
                         case "File Name":
                         case "Detected File Type Long Name":
-                        case "File Size":
                         case "Latitude":
                         case "Longitude":
                         case "Date/Time":

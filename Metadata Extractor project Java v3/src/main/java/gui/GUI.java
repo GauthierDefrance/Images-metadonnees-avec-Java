@@ -1,6 +1,7 @@
 package gui;
 
 import Core.*;
+import com.drew.imaging.ImageProcessingException;
 import com.sun.tools.javac.Main;
 
 import javax.swing.*;
@@ -13,13 +14,13 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class GUI extends JFrame {
 
+	private double zoomFactor = 1.0; // Facteur de zoom initial
 	private int page = 0;
 	private int searchSelector= 0;
-	private String orderSelector = "";
+	private String orderSelector = "name";
 	private Boolean orderBool = Boolean.FALSE;
 	private ArrayList<String> lstd = new ArrayList<String>();
 	private ArrayList<String> lstf = new ArrayList<String>();
@@ -31,6 +32,11 @@ public class GUI extends JFrame {
 	private JButton pathB2 = new JButton("←");
 	private JButton up = new JButton("↑");
 	private JButton down = new JButton("↓");
+	private JButton zoomIn = new JButton("+");
+	private JButton zoomOut = new JButton("-");
+
+	private JFrame popup1 = new JFrame("popup1");
+	private JFrame popup2 = new JFrame("popup2");
 
 	private JButton[][] tb = new JButton[4][8];
 	private JPanel centerPanel = new JPanel();
@@ -61,14 +67,16 @@ public class GUI extends JFrame {
 		BorderLayout border = new BorderLayout();
 		JPanel rightPanel = new JPanel();
 		JPanel leftPanel = new JPanel();
+		JPanel topbottomPanel = new JPanel();
+		JPanel topPanel = new JPanel();
+		JPanel bottomPanel = new JPanel();
+		JPanel rightPanelpopup = new JPanel();
+
 		JMenuBar toptopPanel = new JMenuBar();
 		JMenu menuParametres = new JMenu("Menu SearchBy ...");
 		JMenu orderByParametres = new JMenu("Menu OrderBy ...");
 		ButtonGroup buttonGroup = new ButtonGroup();
 		ButtonGroup buttonGroup2 = new ButtonGroup();
-		JPanel topbottomPanel = new JPanel();
-		JPanel topPanel = new JPanel();
-		JPanel bottomPanel = new JPanel();
 
 		centerPanel.setBorder(BorderFactory.createLineBorder(Color.black));
 		centerPanel.setBackground(Color.ORANGE);
@@ -81,7 +89,12 @@ public class GUI extends JFrame {
 		Container contentPane = getContentPane();
 		contentPane.setLayout(border);
 
+		popup1.setLayout(border);
+		popup1.add(BorderLayout.EAST,rightPanelpopup);
+
 		topPanel.setLayout(new GridLayout(2, 1));
+		rightPanel.setLayout(new GridLayout(2, 1));
+		rightPanelpopup.setLayout(new GridLayout(2, 1));
 		topPanel.add(toptopPanel);
 		topPanel.add(topbottomPanel);
 		topbottomPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
@@ -90,15 +103,12 @@ public class GUI extends JFrame {
 		parametres.add(menuParametres);
 		parametres.add(orderByParametres);
 
-
 		JRadioButtonMenuItem itemorBOOL = new JRadioButtonMenuItem("reverse");
-
 		JRadioButtonMenuItem item1or = new JRadioButtonMenuItem("Name");
 		JRadioButtonMenuItem item2or = new JRadioButtonMenuItem("Heigth");
 		JRadioButtonMenuItem item3or = new JRadioButtonMenuItem("Width");
 		JRadioButtonMenuItem item4or = new JRadioButtonMenuItem("Date");
 		JRadioButtonMenuItem item5or = new JRadioButtonMenuItem("Size");
-
 		JRadioButtonMenuItem item1 = new JRadioButtonMenuItem("Name");
 		JRadioButtonMenuItem item2 = new JRadioButtonMenuItem("Heigth");
 		JRadioButtonMenuItem item3 = new JRadioButtonMenuItem("MaxHeigth");
@@ -157,9 +167,11 @@ public class GUI extends JFrame {
 		topbottomPanel.add(pathT);
 		menu.add(option1);
 		menu.add(option2);
-		rightPanel.setLayout(new GridLayout(2, 1));
 		rightPanel.add(up);
 		rightPanel.add(down);
+
+		rightPanelpopup.add(zoomIn);
+		rightPanelpopup.add(zoomOut);
 
 
 		itemorBOOL.addActionListener(new orderReverse());
@@ -182,6 +194,8 @@ public class GUI extends JFrame {
 		item11.addActionListener(new searchSelectorB(11));
 		up.addActionListener(new upAction());
 		down.addActionListener(new downAction());
+		zoomIn.addActionListener(new zoom_In());
+		zoomOut.addActionListener(new zoom_Out());
 		pathB.addActionListener(new ppathupdate());
 		pathB2.addActionListener(new pathremonter());
 		search.addActionListener(new searchf());
@@ -247,6 +261,7 @@ public class GUI extends JFrame {
 						Image img = icon2.getImage();
 						Image scaledImg = img.getScaledInstance(150, 150, Image.SCALE_SMOOTH);
 						tb[i][j].setIcon(new ImageIcon(scaledImg));
+						tb[i][j].addMouseListener(new DoubleClicListenerF(lst.get(p)));
 					}
 					// Ajouter un MouseListener pour détecter le double-clic et le clic droit
 					tb[i][j].addMouseListener(new ClicDroitListener(menu));
@@ -386,6 +401,7 @@ public class GUI extends JFrame {
 					for (File f : images) {
 						lst.add(f.getAbsolutePath());
 					}
+					lstf.addAll(lst);
 				} catch (Exception ex) {
 					System.out.println(ex);
 				}
@@ -414,9 +430,25 @@ public class GUI extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			try {
+				ArrayList<File> tmp = new ArrayList<File>();
+				for (String elem : lstf) {
+					tmp.add(new File(elem));
+				}
+				order OrderObj = new order(tmp);
+				ArrayList<File> result = OrderObj.OrderFile(orderSelector, orderBool);
+				lst.clear();
+				lstd.clear();
+				for(File f : result) {
+					lst.add(f.getAbsolutePath());
+				}
+				updateTb();
+				centerPanel.updateUI();
+			} catch (Exception ex) {
+				System.out.println(ex);
+			}
 
 		}
-
 	}
 
 	private class orderReverse implements ActionListener {
@@ -459,6 +491,28 @@ public class GUI extends JFrame {
 
 	}
 
+	// Méthode pour effectuer un zoom avant
+	private class zoom_In implements ActionListener {
+
+		public void actionPerformed(ActionEvent e) {
+			zoomFactor += 0.1;
+			if (zoomFactor > 3.0) {
+				zoomFactor = 3.0; // Limiter le zoom maximum
+			}
+		}
+	}
+
+	// Méthode pour effectuer un zoom arrière
+	private class zoom_Out implements ActionListener {
+
+		public void actionPerformed(ActionEvent e) {
+			zoomFactor -= 0.1;
+			if (zoomFactor < 0.2) {
+				zoomFactor = 0.2; // Limiter le zoom minimum
+			}
+		}
+	}
+
 	// Classe privée pour gérer le clic droit et afficher le JPopupMenu
 	private class ClicDroitListener extends MouseAdapter {
 		private final JPopupMenu menu;
@@ -492,6 +546,22 @@ public class GUI extends JFrame {
 				pathupdate();
 			}
 			centerPanel.updateUI();
+		}
+	}
+
+	private class DoubleClicListenerF extends MouseAdapter {
+		private String path;
+
+		public DoubleClicListenerF(String path) {
+			this.path = path;
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+			if (e.getClickCount() == 2) {  // Double-clic détecté
+				//JOptionPane.showMessageDialog(popup1, "Vous avez double-cliqué sur le bouton !");
+				popup1.setVisible(true);
+			}
 		}
 	}
 
