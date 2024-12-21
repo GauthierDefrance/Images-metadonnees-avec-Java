@@ -4,19 +4,23 @@ import Core.*;
 import com.drew.imaging.ImageProcessingException;
 import com.sun.tools.javac.Main;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
 public class GUI extends JFrame {
 
+	private  BufferedImage image_zoom;
 	private double zoomFactor = 1.0; // Facteur de zoom initial
 	private int page = 0;
 	private int searchSelector= 0;
@@ -37,6 +41,7 @@ public class GUI extends JFrame {
 
 	private JFrame popup1 = new JFrame("popup1");
 	private JFrame popup2 = new JFrame("popup2");
+	private JLabel imgLabel;
 
 	private JButton[][] tb = new JButton[4][8];
 	private JPanel centerPanel = new JPanel();
@@ -501,8 +506,18 @@ public class GUI extends JFrame {
 		public void actionPerformed(ActionEvent e) {
 			zoomFactor += 0.1;
 			if (zoomFactor > 3.0) {
-				zoomFactor = 3.0; // Limiter le zoom maximum
+				zoomFactor = 6.0; // Limiter le zoom maximum
 			}
+			// Met à jour l'image en fonction du facteur de zoom
+			int newWidth = (int) (image_zoom.getWidth() * zoomFactor);
+			int newHeight = (int) (image_zoom.getHeight() * zoomFactor);
+
+			// Redimensionner l'image selon le zoom
+			Image resizedImage =image_zoom.getScaledInstance(newWidth,newHeight,image_zoom.SCALE_SMOOTH);
+
+			// Mettre à jour l'ImageIcon du JLabel avec la nouvelle image redimensionnée
+			imgLabel.setIcon(new ImageIcon(resizedImage));
+			imgLabel.updateUI();
 		}
 	}
 
@@ -512,8 +527,18 @@ public class GUI extends JFrame {
 		public void actionPerformed(ActionEvent e) {
 			zoomFactor -= 0.1;
 			if (zoomFactor < 0.2) {
-				zoomFactor = 0.2; // Limiter le zoom minimum
+				zoomFactor = 0.1; // Limiter le zoom minimum
 			}
+			// Met à jour l'image en fonction du facteur de zoom
+			int newWidth = (int) (image_zoom.getWidth() * zoomFactor);
+			int newHeight = (int) (image_zoom.getHeight() * zoomFactor);
+
+			// Redimensionner l'image selon le zoom
+			Image resizedImage =image_zoom.getScaledInstance(newWidth,newHeight,image_zoom.SCALE_SMOOTH);
+
+			// Mettre à jour l'ImageIcon du JLabel avec la nouvelle image redimensionnée
+			imgLabel.setIcon(new ImageIcon(resizedImage));
+			imgLabel.updateUI();
 		}
 	}
 
@@ -563,13 +588,24 @@ public class GUI extends JFrame {
 		@Override
 		public void mousePressed(MouseEvent e) {
 			if (e.getClickCount() == 2) {  // Double-clic détecté
-				JPanel img = new JPanel();
+				popupImg(path);
 
-
-				popup1.add(BorderLayout.CENTER,img);
-				popup1.setVisible(true);
 			}
 		}
+	}
+
+
+	private void popupImg(String path){
+		try {
+			image_zoom = ImageIO.read(new File(path));
+			imgLabel = new JLabel(new ImageIcon(image_zoom));
+			popup1.add(BorderLayout.CENTER, imgLabel);
+			imgLabel.updateUI();
+			popup1.setVisible(true);
+		} catch (Exception ex) {
+			System.out.println(ex);
+			}
+
 	}
 
 	private class QuitAction implements ActionListener {
