@@ -90,6 +90,9 @@ public class GUI extends JFrame {
 		parametres.add(menuParametres);
 		parametres.add(orderByParametres);
 
+
+		JRadioButtonMenuItem itemorBOOL = new JRadioButtonMenuItem("reverse");
+
 		JRadioButtonMenuItem item1or = new JRadioButtonMenuItem("Name");
 		JRadioButtonMenuItem item2or = new JRadioButtonMenuItem("Heigth");
 		JRadioButtonMenuItem item3or = new JRadioButtonMenuItem("Width");
@@ -109,6 +112,7 @@ public class GUI extends JFrame {
 		JRadioButtonMenuItem item11 = new JRadioButtonMenuItem("MinSize");
 
 		orderByParametres.add(order);
+		orderByParametres.add(itemorBOOL);
 		buttonGroup2.add(item1or);
 		orderByParametres.add(item1or);
 		buttonGroup2.add(item2or);
@@ -157,6 +161,8 @@ public class GUI extends JFrame {
 		rightPanel.add(up);
 		rightPanel.add(down);
 
+
+		itemorBOOL.addActionListener(new orderReverse());
 		item1or.addActionListener(new orderSelectorB("name"));
 		item2or.addActionListener(new orderSelectorB("height"));
 		item3or.addActionListener(new orderSelectorB("width"));
@@ -179,6 +185,7 @@ public class GUI extends JFrame {
 		pathB.addActionListener(new ppathupdate());
 		pathB2.addActionListener(new pathremonter());
 		search.addActionListener(new searchf());
+		order.addActionListener(new orderf());
 
 		String path =System.getProperty("user.dir"); //Renvoit l'endroit depuis ou est lancé le répertoire
 		pathT.setText(path);
@@ -319,24 +326,6 @@ public class GUI extends JFrame {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			searchSelector = this.selector;
-			updateTb();
-			centerPanel.updateUI();
-		}
-
-	}
-
-	private class orderSelectorB implements ActionListener {
-		private String order;
-
-		public orderSelectorB(String order) {
-			this.order = order;
-		}
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			orderSelector = this.order;
-			updateTb();
-			centerPanel.updateUI();
 		}
 
 	}
@@ -405,6 +394,43 @@ public class GUI extends JFrame {
 			}
 
 		}
+	}
+
+	private class orderSelectorB implements ActionListener {
+		private String order;
+
+		public orderSelectorB(String order) {
+			this.order = order;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			orderSelector = this.order;
+		}
+
+	}
+
+	private class orderf implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+
+		}
+
+	}
+
+	private class orderReverse implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if (orderBool) {
+				orderBool = Boolean.FALSE;
+			}
+			else {
+				orderBool = Boolean.TRUE;
+			}
+		}
+
 	}
 
 	private class upAction implements ActionListener {
