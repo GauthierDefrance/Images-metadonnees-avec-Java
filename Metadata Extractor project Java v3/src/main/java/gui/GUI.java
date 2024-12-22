@@ -38,8 +38,8 @@ public class GUI extends JFrame {
 	public GUI(String title) {
 		super(title);
 		init();
-
-		ImageIcon icon = new ImageIcon(".\\src\\main\\resources\\icon.png");
+		// ImageIcon icon = new ImageIcon(getClass().getResource("/icons/icon.png"));
+		ImageIcon icon = new ImageIcon(getClass().getResource("/icons/icon.png")); // Pour le JAR
 		this.setIconImage(icon.getImage());
 	}
 
@@ -53,21 +53,21 @@ public class GUI extends JFrame {
 
 		JMenuBar toptopPanel = new JMenuBar();
 
-		JMenu parametres = new JMenu("Parametres");
+		JMenu parametres = new JMenu("Paramètres");
 		JMenu menuSearchByParametres = new JMenu("Menu SearchBy ...");
 		JMenu menuOrderByParametres = new JMenu("Menu OrderBy ...");
 		JMenu menuSnapchotParametres = new JMenu("Menu Snapchot ...");
-		JMenuItem quitButton = new JMenuItem("quit");
+		JMenuItem quitButton = new JMenuItem("Quit");
 
-		JButton help = new JButton("help ?");
+		JButton help = new JButton("Help ?");
 		JButton order = new JButton("Order:");
 		JButton search = new JButton("Search :");
 		JButton pathButton = new JButton("Path :");
 		JButton pathParent = new JButton("←");
 		JButton up = new JButton("↑");
 		JButton down = new JButton("↓");
-		JButton snapchotSaveButton = new JButton("snapchotSave:");
-		JButton snapchotCompareButton = new JButton("snapchotConpare:");
+		JButton snapchotSaveButton = new JButton("Snapchot Save:");
+		JButton snapchotCompareButton = new JButton("Snapchot Compare:");
 		ButtonGroup buttonGroup = new ButtonGroup();
 		ButtonGroup buttonGroup2 = new ButtonGroup();
 
@@ -108,27 +108,29 @@ public class GUI extends JFrame {
 		parametres.addSeparator();
 		parametres.add(quitButton);
 
-		JRadioButtonMenuItem itemorBOOL = new JRadioButtonMenuItem("reverse");
+		JRadioButtonMenuItem itemorBOOL = new JRadioButtonMenuItem("Reverse");
 		JRadioButtonMenuItem item1or = new JRadioButtonMenuItem("Name");
-		JRadioButtonMenuItem item2or = new JRadioButtonMenuItem("Heigth");
+		JRadioButtonMenuItem item2or = new JRadioButtonMenuItem("Height");
 		JRadioButtonMenuItem item3or = new JRadioButtonMenuItem("Width");
 		JRadioButtonMenuItem item4or = new JRadioButtonMenuItem("Date");
 		JRadioButtonMenuItem item5or = new JRadioButtonMenuItem("Size");
 		JRadioButtonMenuItem item1 = new JRadioButtonMenuItem("Name");
-		JRadioButtonMenuItem item2 = new JRadioButtonMenuItem("Heigth");
-		JRadioButtonMenuItem item3 = new JRadioButtonMenuItem("MaxHeigth");
-		JRadioButtonMenuItem item4 = new JRadioButtonMenuItem("MinHeigth");
+		JRadioButtonMenuItem item2 = new JRadioButtonMenuItem("Height");
+		JRadioButtonMenuItem item3 = new JRadioButtonMenuItem("Max Height");
+		JRadioButtonMenuItem item4 = new JRadioButtonMenuItem("Min Height");
 		JRadioButtonMenuItem item5 = new JRadioButtonMenuItem("Width");
-		JRadioButtonMenuItem item6 = new JRadioButtonMenuItem("MaxWidth");
-		JRadioButtonMenuItem item7 = new JRadioButtonMenuItem("MinWidth");
+		JRadioButtonMenuItem item6 = new JRadioButtonMenuItem("Max Width");
+		JRadioButtonMenuItem item7 = new JRadioButtonMenuItem("Min Width");
 		JRadioButtonMenuItem item8 = new JRadioButtonMenuItem("Desc");
 		JRadioButtonMenuItem item9 = new JRadioButtonMenuItem("Date");
-		JRadioButtonMenuItem item10 = new JRadioButtonMenuItem("MaxSize");
-		JRadioButtonMenuItem item11 = new JRadioButtonMenuItem("MinSize");
+		JRadioButtonMenuItem item10 = new JRadioButtonMenuItem("Max Size");
+		JRadioButtonMenuItem item11 = new JRadioButtonMenuItem("Min Size");
 
 
 		menuOrderByParametres.add(order);
+		menuOrderByParametres.addSeparator();
 		menuOrderByParametres.add(itemorBOOL);
+		menuOrderByParametres.addSeparator();
 		buttonGroup2.add(item1or);
 		menuOrderByParametres.add(item1or);
 		buttonGroup2.add(item2or);
@@ -245,7 +247,7 @@ public class GUI extends JFrame {
 					tb[i][j].setVerticalTextPosition(SwingConstants.BOTTOM);  // Texte en bas
 
 					if (!(lstd.size() <= p)) {
-						ImageIcon icon1 = new ImageIcon(".\\src\\main\\resources\\icon.png");
+						ImageIcon icon1 = new ImageIcon(getClass().getResource("/icons/icon.png")); // A modifier par .\\icon.png lors de la transfo en librairie
 						Image img = icon1.getImage();
 						Image scaledImg = img.getScaledInstance(150, 150, Image.SCALE_SMOOTH);
 						tb[i][j].setIcon(new ImageIcon(scaledImg));
@@ -490,13 +492,48 @@ public class GUI extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			String path = snapchotSaveT.getText();
-			File file = new File(path);
-			if (file.exists() && file.isDirectory()) {
-				Folder folder = new Folder(path);
+			try {
+				String currentPath = pathT.getText();
+				String givenPath = snapchotSaveT.getText();
+
+				File file = new File(currentPath);
+				File file2 = new File(givenPath);
+				File parentFile2 = file2.getParentFile();
+
+				if (givenPath.endsWith(".json") && file.exists() && file.isDirectory() && parentFile2.exists() && parentFile2.isDirectory() ) {
+					Folder folder = new Folder(currentPath);
+					Snapshot snap = new Snapshot(folder);
+					snap.snapshotSave(givenPath);
+					JOptionPane.showMessageDialog(null,"Le fichier json contenant la snapshot de:"+currentPath+"\nA été sauvegardé à l'endroit :"+givenPath);
+				}
+			} catch (Exception ex) {
+				System.out.println(ex);
+				JOptionPane.showMessageDialog(null,"Erreur lors de la sauvegarde du fichier.");
 			}
 		}
+	}
 
+	private class snapchotCompareD implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			try {
+				String currentPath = pathT.getText();
+				String givenPath = snapchotCompareT.getText();
+
+				File file = new File(currentPath);
+				File file2 = new File(givenPath);
+
+				if (givenPath.endsWith(".json") && file.exists() && file.isDirectory() && file2.exists()) {
+					Folder folder = new Folder(currentPath);
+					Snapshot snap = new Snapshot(folder);
+					new MetaDataImage(snap.snapshotCompare(givenPath).toString());
+				}
+			} catch (Exception ex) {
+				System.out.println(ex);
+				JOptionPane.showMessageDialog(null,"Erreur lors de la comparaison du fichier.");
+			}
+		}
 	}
 
 	private class stats implements ActionListener {
@@ -518,7 +555,7 @@ public class GUI extends JFrame {
 					image.initMetadata();
 					affiche = image.getStat();
 				}
-				JOptionPane.showMessageDialog(new JFrame("popup"), affiche);
+				JOptionPane.showMessageDialog(null, affiche);
 			} catch (Exception error) {
 				System.out.println(error);
 			}

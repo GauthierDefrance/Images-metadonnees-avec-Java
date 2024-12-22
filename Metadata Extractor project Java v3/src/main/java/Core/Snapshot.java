@@ -131,6 +131,7 @@ public class Snapshot {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        if(result.toString().equals("")) { result.append("¤ Aucun modification apporté au fichier :"+folder.getAbsolutePath()+" et à ses sous fichiers." ); }
         return result;
     }
 
