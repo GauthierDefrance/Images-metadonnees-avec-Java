@@ -43,6 +43,8 @@ public class GUI extends JFrame {
 	private JMenu parametres = new JMenu("Parametres");
 	private JTextField pathT = new JTextField(50);
 	private JTextField searchT = new JTextField(50);
+	private JTextField snapchotSave = new JTextField(50);
+	private JTextField snapchotCompare = new JTextField(50);
 	private JMenuItem quitButton = new JMenuItem("quit");
 
 
@@ -69,6 +71,7 @@ public class GUI extends JFrame {
 		JMenuBar toptopPanel = new JMenuBar();
 		JMenu menuParametres = new JMenu("Menu SearchBy ...");
 		JMenu orderByParametres = new JMenu("Menu OrderBy ...");
+		JMenu menuSnapchotParametres = new JMenu("Menu Snapchot ...");
 		ButtonGroup buttonGroup = new ButtonGroup();
 		ButtonGroup buttonGroup2 = new ButtonGroup();
 
@@ -92,6 +95,7 @@ public class GUI extends JFrame {
 		toptopPanel.add(parametres);
 		parametres.add(menuParametres);
 		parametres.add(orderByParametres);
+		parametres.add(menuSnapchotParametres);
 
 		JRadioButtonMenuItem itemorBOOL = new JRadioButtonMenuItem("reverse");
 		JRadioButtonMenuItem item1or = new JRadioButtonMenuItem("Name");
@@ -110,6 +114,9 @@ public class GUI extends JFrame {
 		JRadioButtonMenuItem item9 = new JRadioButtonMenuItem("Date");
 		JRadioButtonMenuItem item10 = new JRadioButtonMenuItem("MaxSize");
 		JRadioButtonMenuItem item11 = new JRadioButtonMenuItem("MinSize");
+
+		menuSnapchotParametres.add(snapchotSave);
+		menuSnapchotParametres.add(snapchotCompare);
 
 		orderByParametres.add(order);
 		orderByParametres.add(itemorBOOL);

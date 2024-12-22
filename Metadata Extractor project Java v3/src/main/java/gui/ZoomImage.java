@@ -31,9 +31,11 @@ public class ZoomImage extends JFrame {
 
             image_zoom = ImageIO.read(new File(ImagePath));
             imgLabel = new JLabel(new ImageIcon(image_zoom));
+            JScrollPane scrollPane = new JScrollPane(imgLabel);
+            popup.add(BorderLayout.CENTER, scrollPane);
 
             popup.setSize(720, 480);
-            popup.add(BorderLayout.CENTER, imgLabel);
+            scrollPane.updateUI();
             imgLabel.updateUI();
             popup.setLocationRelativeTo(null);
             popup.setVisible(true);
