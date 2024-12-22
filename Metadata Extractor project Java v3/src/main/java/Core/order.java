@@ -45,7 +45,9 @@ public class order {
      * @return La liste des images triée par nom.
      */
     public ArrayList<Image> orderByName() {
+        try {
         Collections.sort(ImageList, Comparator.comparing(Image::getName));
+        } catch (Exception e) {}
         return ImageList;
     }
 
@@ -55,7 +57,9 @@ public class order {
      * @return La liste des images triée par taille.
      */
     public ArrayList<Image> orderBySize() {
+        try{
         Collections.sort(ImageList, Comparator.comparingInt(image -> Integer.parseInt(image.getSize())));
+        } catch (Exception e) {}
         return ImageList;
     }
 
@@ -65,7 +69,9 @@ public class order {
      * @return La liste des images triée par date de modification.
      */
     public ArrayList<Image> orderByDate() {
+        try{
         Collections.sort(ImageList, Comparator.comparing(Image::getMdateOtherFormat));
+        } catch (Exception e) {}
         return ImageList;
     }
 
@@ -75,7 +81,9 @@ public class order {
      * @return La liste des images triée par hauteur.
      */
     public ArrayList<Image> orderByHeight() {
+        try{
         Collections.sort(ImageList, Comparator.comparingInt(image -> Integer.parseInt(image.getHeight())));
+        } catch (Exception e) {}
         return ImageList;
     }
 
@@ -85,7 +93,9 @@ public class order {
      * @return La liste des images triée par largeur.
      */
     public ArrayList<Image> orderByWidth() {
-        Collections.sort(ImageList, Comparator.comparingInt(image -> Integer.parseInt(image.getWidth())));
+        try {
+            Collections.sort(ImageList, Comparator.comparingInt(image -> Integer.parseInt(image.getWidth())));
+        } catch (Exception e) {}
         return ImageList;
     }
 
@@ -104,6 +114,7 @@ public class order {
             case "name":
                 for (Image tmp : orderByName()) {
                     tmporder.add(new File(tmp.getPath()));
+
                 }
                 break;
             case "height":

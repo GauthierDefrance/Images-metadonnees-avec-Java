@@ -136,7 +136,7 @@ public class Folder {
                     if (fichier.isDirectory()) {
                         // Si c'est un sous-dossier, on appelle récursivement la méthode
                         collectImages(fichier, result);
-                    } else if (fichier.isFile()) {
+                    } else if (fichier.isFile()&&(fichier.getName().endsWith(".jpg") || fichier.getName().endsWith(".png") || fichier.getName().endsWith(".webp") || fichier.getName().endsWith(".gif"))) {
                         try {
                             Path cheminFichier = fichier.toPath();
                             String typeMime = Files.probeContentType(cheminFichier);
@@ -167,7 +167,7 @@ public class Folder {
             if (contenu != null) {
                 for (File fichier : contenu) {
                     // Vérifier si c'est un fichier
-                    if (fichier.isFile()) {
+                    if (fichier.isFile()&&(fichier.getName().endsWith(".jpg") || fichier.getName().endsWith(".png") || fichier.getName().endsWith(".webp") || fichier.getName().endsWith(".gif"))) {
                         try {
                             Path cheminFichier = fichier.toPath();
                             String typeMime = Files.probeContentType(cheminFichier); //Peut ne pas fonctionner
@@ -235,10 +235,9 @@ public class Folder {
     @JsonIgnore
     public String getInfo() {
         return String.format("""
-            === %s ===
             Last Modification : %s
             Absolut Path : %s
-            """, Opath.getFileName(), convertTimestampToReadableDate(folder.lastModified()), Opath.toAbsolutePath().toString());
+            """, convertTimestampToReadableDate(folder.lastModified()), Opath.toAbsolutePath().toString());
     }
 
     /**
@@ -283,14 +282,13 @@ public class Folder {
             if(image.getName().endsWith(".webp")) webpCompteur++;
         }
         return String.format("""
-            === %s ===
             Number of elements : %d
             Number of folders : %d
             Number of images : %d
             PNG: %d
             JPG: %d
             WEBP: %d
-            """, Opath.getFileName(), nbElemsTotaux, nbSousDossier, nbImages, pngCompteur, jpgCompteur, webpCompteur);
+            """,  nbElemsTotaux, nbSousDossier, nbImages, pngCompteur, jpgCompteur, webpCompteur);
     }
 
     /**

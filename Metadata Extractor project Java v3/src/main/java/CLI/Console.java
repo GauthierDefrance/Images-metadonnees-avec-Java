@@ -172,12 +172,11 @@ public class Console {
      * @return Une chaîne de texte avec les résultats des actions effectuées sur le fichier.
      */
     private String executeFileMode() {
+        StringBuffer output = new StringBuffer();
         try {
             Image fichier = new Image(cmd.getOptionValue("f"));
 
             fichier.initMetadata();
-
-            StringBuilder output = new StringBuilder("Mode fichier activé.\n");
 
             if (info) {
                 output.append(fichier.getInfo()).append("\n");
@@ -207,12 +206,10 @@ public class Console {
         if (cmd == null) {
             return "Erreur : les options n'ont pas été initialisées correctement."; // Message d'erreur si cmd est nul
         }
-
+        StringBuffer output = new StringBuffer();
         // Création d'un objet Folder en utilisant l'option "d" passée en ligne de commande
         Folder folder = new Folder(cmd.getOptionValue("d"));
 
-        // Utilisation de StringBuilder pour accumuler les résultats à afficher
-        StringBuilder output = new StringBuilder("Mode répertoire activé.\n");
 
         // Si l'option 'info' est activée, on ajoute les informations du dossier à la sortie
         if (info) {
@@ -226,7 +223,6 @@ public class Console {
 
         // Si l'option 'list' est activée, on effectue un listing des éléments du dossier
         if (list) {
-            output.append("Listage des éléments activée.\n");
             // Si l'option 'order' est activée, on indique que l'ordre est également activé
             if(order){
                 order Order = new order(folder.getAllImages());
@@ -249,7 +245,6 @@ public class Console {
         // Si l'option 'search' est activée, on effectue une recherche dans le dossier
         if (search) {
             SearchFolder search = new SearchFolder(folder); // Création d'un objet de recherche pour le dossier
-            output.append("Recherche activée.\n");
 
             // Si l'option 'by' est activée, on effectue la recherche en fonction des critères spécifiés
             if (by) {
@@ -298,7 +293,6 @@ public class Console {
                         break;
                 }
                 if(order){
-                    System.out.println("ordering !");
                     order Order = new order(images);
                     for (File elem : Order.OrderFile(cmd.getOptionValue("o"),r)){
                         output.append(elem.getAbsolutePath()).append("\n");
@@ -325,13 +319,11 @@ public class Console {
 
             // Si l'option 'snapshotsave' est activée, on effectue une sauvegarde du snapshot
             if (snapshotsave) {
-                output.append("Sauvegarde du snapshot activée.\n");
                 snap.snapshotSave(this.cmd.getOptionValue("ss"));
             }
 
             // Si l'option 'snapshotcompare' est activée, on effectue une comparaison des snapshots
             if (snapshotcompare) {
-                output.append("=== Comparaison des snapshots activée ===\n");
                 output.append(snap.snapshotCompare(this.cmd.getOptionValue("sc")));
             }
 
@@ -404,6 +396,7 @@ public class Console {
                         -d, -f, -w, -b, -ss, -sc : All take parameters. The programs won't start if you don't give any parameters to them.
                         -l, -w, -b -sc, -ss : Can only be used with -d.
                         -b : Need to be used with -w
+                        -d . : fonctionne pour la majorité des fonctionnalités, mais il ne marche pas avec snapshot.
                    ¤ Autors: Ammad Kennan & Defrance Gauthier.
                    \s""");
     }

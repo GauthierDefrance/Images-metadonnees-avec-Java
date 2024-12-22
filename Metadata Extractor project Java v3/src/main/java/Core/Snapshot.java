@@ -118,7 +118,7 @@ public class Snapshot {
                         if (myfolder.getAbsolutePath().equals(dossier.getAbsolutePath())) {
                             resulttmp.append("\n" + this.comparaisonFolder(folder, myfolder));
                             list.remove(folder);
-                            if (!resulttmp.toString().equals("Chemin : " + folder.getAbsolutePath() + "\n")) {
+                            if (!resulttmp.toString().equals("| Chemin : " + folder.getAbsolutePath() + "\n")) {
                                 result.append(resulttmp.toString());
                             }
                         }
@@ -143,19 +143,19 @@ public class Snapshot {
     public StringBuffer comparaisonFolder(FolderDeserialized folder, Folder myfolder) {
         StringBuffer result = new StringBuffer();
         if (!folder.getLastModified().equals(myfolder.getLastModification())) {
-            result.append("\n     ¤ Date de mofidiciation changée :" + myfolder.getLastModification() + "->" + folder.getLastModified());
+            result.append("\n     ¤ Date de mofidiciation changée :" + myfolder.getLastModification() + "<-" + folder.getLastModified()+"\n");
         }
         if (!folder.getParent().equals(myfolder.getParent())) {
-            result.append("\n     ¤ Parent modifié :" + folder.getParent() + " -> " + myfolder.getParent());
+            result.append("\n     ¤ Parent modifié :" + folder.getParent() + "<-" + myfolder.getParent()+"\n");
         }
         if (!(folder.getNumberOfElements().equals("" + myfolder.getnbElemsTotaux()))) {
-            result.append("\n     ¤ Le nombre d'éléments a changé :" + myfolder.getnbElemsTotaux() + "->" + folder.getNumberOfElements());
+            result.append("\n     ¤ Le nombre d'éléments a changé :" + myfolder.getnbElemsTotaux() + "<-" + folder.getNumberOfElements()+"\n");
         }
         if (!(folder.getNumberOfImages().equals("" + myfolder.getnbImages()))) {
-            result.append("\n     ¤ Nombre d'images changé :" + myfolder.getnbImages() + "->" + folder.getNumberOfImages());
+            result.append("\n     ¤ Nombre d'images changé :" + myfolder.getnbImages() + "<-" + folder.getNumberOfImages()+"\n");
         }
         if (!(folder.getNumberOfFolders().equals("" + myfolder.getnbSousDossier()))) {
-            result.append("\n     ¤ Nombre de sous-dossiers changé :" + myfolder.getnbSousDossier() + "->" + folder.getNumberOfFolders());
+            result.append("\n     ¤ Nombre de sous-dossiers changé :" + myfolder.getnbSousDossier() + "<-" + folder.getNumberOfFolders()+"\n");
         }
 
         ArrayList<String> folders = new ArrayList<>();

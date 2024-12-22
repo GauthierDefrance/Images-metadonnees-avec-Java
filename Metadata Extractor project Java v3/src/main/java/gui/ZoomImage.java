@@ -1,4 +1,11 @@
 package gui;
 
-public class ZoomImage {
+import javax.swing.*;
+
+public class ZoomImage extends JFrame {
+    private float zoom;
+
+
+
+
 }

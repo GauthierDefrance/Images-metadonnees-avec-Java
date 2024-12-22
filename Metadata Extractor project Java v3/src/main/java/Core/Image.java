@@ -74,7 +74,9 @@ public class Image {
     public Image(String path) throws ImageProcessingException, IOException {
         this.path = path;
         imageFile = new File(path);
-        metadata = ImageMetadataReader.readMetadata(imageFile);
+        try {
+            metadata = ImageMetadataReader.readMetadata(imageFile);
+        } catch (Exception e) {System.out.println("Erreur lors de la lecture de :" + path);}
         metadataMap = new HashMap<String,String>();
     }
 
@@ -222,6 +224,7 @@ public class Image {
      * @return La date de modification si définie, sinon une tentative est effectuée pour la récupérer
      *         depuis la métadonnée "File Modified Date". Sia ucun n'est disponible, retourne une chaîne vide.
      */
+    @JsonIgnore
     public String getMdateOtherFormat() {
         Path filePath = Paths.get(getPath());
         try {
@@ -453,7 +456,7 @@ public class Image {
         }
         // Si des propriétés XMP ont été trouvées, on les retourne, sinon on retourne une chaîne vide
         if (!result.isEmpty()) {
-            return "=== Xmp ===\n" + result;
+            return "\n" + result;
         }
         return ""; // Retourne une chaîne vide si aucune propriété XMP n'est trouvée
     }
@@ -468,7 +471,6 @@ public class Image {
     @JsonIgnore
     public String getInfo() {
         return String.format("""
-        === Image Info ===
         File Name        : %s
         Image Height     : %s
         Image Width      : %s
@@ -492,7 +494,6 @@ public class Image {
     @JsonIgnore
     public String getStat() {
         return String.format("""
-        === File Statistics ===
         File Name                  : %s
         File Size                  : %s bytes
         Detected MIME Type         : %s
