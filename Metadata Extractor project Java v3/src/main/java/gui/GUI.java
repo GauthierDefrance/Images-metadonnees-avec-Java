@@ -31,8 +31,8 @@ public class GUI extends JFrame {
 
 	private JTextField pathT = new JTextField(50);
 	private JTextField searchT = new JTextField(50);
-	private JTextField snapchotSave = new JTextField(50);
-	private JTextField snapchotCompare = new JTextField(50);
+	private JTextField snapchotSaveT = new JTextField(50);
+	private JTextField snapchotCompareT = new JTextField(50);
 
 
 	public GUI(String title) {
@@ -102,9 +102,9 @@ public class GUI extends JFrame {
 		parametres.add(menuSnapchotParametres);
 
 		menuSnapchotParametres.add(snapchotSaveButton);
-		menuSnapchotParametres.add(snapchotSave);
+		menuSnapchotParametres.add(snapchotSaveT);
 		menuSnapchotParametres.add(snapchotCompareButton);
-		menuSnapchotParametres.add(snapchotCompare);
+		menuSnapchotParametres.add(snapchotCompareT);
 		parametres.addSeparator();
 		parametres.add(quitButton);
 
@@ -189,6 +189,8 @@ public class GUI extends JFrame {
 		pathParent.addActionListener(new pathremonter());
 		search.addActionListener(new searchf());
 		order.addActionListener(new orderf());
+		snapchotSaveButton.addActionListener(new snapchotSaveD());
+		snapchotCompareButton.addActionListener(new snapchotCompareD());
 		help.addActionListener(new helpPopup());
 
 		String path =System.getProperty("user.dir"); //Renvoit l'endroit depuis ou est lancé le répertoire
@@ -479,6 +481,19 @@ public class GUI extends JFrame {
 				page++;
 				updateTb();
 				centerPanel.updateUI();
+			}
+		}
+
+	}
+
+	private class snapchotSaveD implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			String path = snapchotSaveT.getText();
+			File file = new File(path);
+			if (file.exists() && file.isDirectory()) {
+				Folder folder = new Folder(path);
 			}
 		}
 
