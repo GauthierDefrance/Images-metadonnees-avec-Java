@@ -37,14 +37,8 @@ public class GUI extends JFrame {
 	private JButton up = new JButton("↑");
 	private JButton down = new JButton("↓");
 
-	private JFrame popup2 = new JFrame("popup2");
-
 	private JButton[][] tb = new JButton[4][8];
 	private JPanel centerPanel = new JPanel();
-
-	// Crée un JPopupMenu pour afficher le menu contextuel
-	private JMenuItem option1 = new JMenuItem("Option 1");
-	private JMenuItem option2 = new JMenuItem("Option 2");
 
 	private JMenu parametres = new JMenu("Parametres");
 	private JTextField pathT = new JTextField(50);
@@ -188,6 +182,7 @@ public class GUI extends JFrame {
 		pathB2.addActionListener(new pathremonter());
 		search.addActionListener(new searchf());
 		order.addActionListener(new orderf());
+		help.addActionListener(new helpPopup());
 
 		String path =System.getProperty("user.dir"); //Renvoit l'endroit depuis ou est lancé le répertoire
 		pathT.setText(path);
@@ -411,6 +406,7 @@ public class GUI extends JFrame {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			orderSelector = this.order;
+
 		}
 
 	}
@@ -480,17 +476,72 @@ public class GUI extends JFrame {
 
 	}
 
-	// Classe privée pour gérer le clic droit et afficher le JPopupMenu
-	private class ClicDroitListener extends MouseAdapter {
-		private JPopupMenu menu;
+	private class stats implements ActionListener {
 		private String path;
 
-		public ClicDroitListener(String path) {
-			this.menu = new JPopupMenu();
+		public stats(String path) {
+			this.path = path;
+		}
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			try {
+				String affiche = "";
+				File file = new File(path);
+				if (file.exists() && file.isDirectory()) {
+					Folder folder = new Folder(path);
+					affiche=folder.getStat();
+				} else {
+					Core.Image image = new Core.Image(path);
+					image.initMetadata();
+					affiche = image.getStat();
+				}
+				JOptionPane.showMessageDialog(new JFrame("popup"), affiche);
+			} catch (Exception error) {
+				System.out.println(error);
+			}
+		}
+	}
 
+	private class info implements ActionListener {
+		private String path;
+
+		public info(String path) {
+			this.path = path;
+		}
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			try {
+				String affiche = "";
+				File file = new File(path);
+				if (file.exists() && file.isDirectory()) {
+					Folder folder = new Folder(path);
+					affiche=folder.getInfo();
+				} else {
+					Core.Image image = new Core.Image(path);
+					image.initMetadata();
+					affiche = image.getAllMetadata();
+				}
+				new MetaDataImage(affiche);
+			} catch (Exception error) {
+				System.out.println(error);
+			}
+		}
+	}
+
+	// Classe privée pour gérer le clic droit et afficher le JPopupMenu
+	private class ClicDroitListener extends MouseAdapter {
+		private String path;
+		private JPopupMenu menu = new JPopupMenu();
+		private JMenuItem option1 = new JMenuItem("stats");
+		private	JMenuItem option2 = new JMenuItem("info");
+
+		public ClicDroitListener(String path) {
 			this.path = path;
 			this.menu.add(option1);
 			this.menu.add(option2);
+			option1.addActionListener(new stats(path));
+			option2.addActionListener(new info(path));
+
 		}
 
 		@Override
@@ -541,6 +592,18 @@ public class GUI extends JFrame {
 		}
 	}
 
+	private class helpPopup implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+
+			new MetaDataImage("""
+					Ceci est le texte d'aide
+					Merci d'avoir lu l'aide
+					Par Kennan & Gauthier
+					"""
+					);
+		}
+
+	}
 
 	private class QuitAction implements ActionListener {
 		//Window to be closed.

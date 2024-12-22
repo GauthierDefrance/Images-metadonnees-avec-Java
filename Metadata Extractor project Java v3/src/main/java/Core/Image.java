@@ -417,14 +417,13 @@ public class Image {
             String text = "";
             // Parcours de toutes les directories (groupes de métadonnées)
             for (Directory directory : metadata.getDirectories()) {
-                // Ajout du nom de la directory au texte
-                text += "\n### Directory : " + directory.getName() + " ###";
                 // Parcours de tous les tags de la directory
                 for (Tag tag : directory.getTags()) {
                     // Ajout du nom et de la description de chaque tag au texte
                     text += "\n" + tag.getTagName() + " : " + tag.getDescription();
                 }
             }
+            text += getXmp();
             return text; // Retourne toutes les métadonnées extraites
         } catch (Exception e) {
             // Si une exception est lancée pendant l'extraction, l'erreur est affichée
