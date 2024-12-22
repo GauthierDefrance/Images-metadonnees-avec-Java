@@ -22,8 +22,6 @@ public class GUI extends JFrame {
 
 	private JPanel rPanel = new JPanel();
 
-	private  BufferedImage image_zoom;
-	private double zoomFactor = 1.0; // Facteur de zoom initial
 	private int page = 0;
 	private int searchSelector= 0;
 	private String orderSelector = "name";
@@ -40,7 +38,6 @@ public class GUI extends JFrame {
 	private JButton down = new JButton("↓");
 
 	private JFrame popup2 = new JFrame("popup2");
-	private JLabel imgLabel;
 
 	private JButton[][] tb = new JButton[4][8];
 	private JPanel centerPanel = new JPanel();
@@ -486,48 +483,6 @@ public class GUI extends JFrame {
 
 	}
 
-	// Méthode pour effectuer un zoom avant
-	private class zoom_In implements ActionListener {
-
-		public void actionPerformed(ActionEvent e) {
-			zoomFactor += 0.1;
-			if (zoomFactor > 3.0) {
-				zoomFactor = 6.0; // Limiter le zoom maximum
-			}
-			// Met à jour l'image en fonction du facteur de zoom
-			int newWidth = (int) (image_zoom.getWidth() * zoomFactor);
-			int newHeight = (int) (image_zoom.getHeight() * zoomFactor);
-
-			// Redimensionner l'image selon le zoom
-			Image resizedImage =image_zoom.getScaledInstance(newWidth,newHeight,image_zoom.SCALE_SMOOTH);
-
-			// Mettre à jour l'ImageIcon du JLabel avec la nouvelle image redimensionnée
-			imgLabel.setIcon(new ImageIcon(resizedImage));
-			imgLabel.updateUI();
-		}
-	}
-
-	// Méthode pour effectuer un zoom arrière
-	private class zoom_Out implements ActionListener {
-
-		public void actionPerformed(ActionEvent e) {
-			zoomFactor -= 0.1;
-			if (zoomFactor < 0.2) {
-				zoomFactor = 0.1; // Limiter le zoom minimum
-			}
-			// Met à jour l'image en fonction du facteur de zoom
-			int newWidth = (int) (image_zoom.getWidth() * zoomFactor);
-			int newHeight = (int) (image_zoom.getHeight() * zoomFactor);
-
-			// Redimensionner l'image selon le zoom
-			Image resizedImage =image_zoom.getScaledInstance(newWidth,newHeight,image_zoom.SCALE_SMOOTH);
-
-			// Mettre à jour l'ImageIcon du JLabel avec la nouvelle image redimensionnée
-			imgLabel.setIcon(new ImageIcon(resizedImage));
-			imgLabel.updateUI();
-		}
-	}
-
 	// Classe privée pour gérer le clic droit et afficher le JPopupMenu
 	private class ClicDroitListener extends MouseAdapter {
 		private final JPopupMenu menu;
@@ -574,40 +529,16 @@ public class GUI extends JFrame {
 		@Override
 		public void mousePressed(MouseEvent e) {
 			if (e.getClickCount() == 2) {  // Double-clic détecté
-				popupImg(path);
+				try {
+					new ZoomImage(path);
+				} catch (Exception ex) {
+					System.out.println(ex);
+				}
 
 			}
 		}
 	}
 
-
-	private void popupImg(String path){
-		try {
-			JButton zoomIn = new JButton("+");
-			JButton zoomOut = new JButton("-");
-			zoomIn.addActionListener(new zoom_In());
-			zoomOut.addActionListener(new zoom_Out());
-			JFrame popup = new JFrame("popup");
-			JPanel rightPanelpopup = new JPanel();
-			popup.setLayout(new BorderLayout());
-			popup.add(BorderLayout.EAST,rightPanelpopup);
-			rightPanelpopup.setLayout(new GridLayout(2, 1));
-			rightPanelpopup.add(zoomIn);
-			rightPanelpopup.add(zoomOut);
-
-			image_zoom = ImageIO.read(new File(path));
-			imgLabel = new JLabel(new ImageIcon(image_zoom));
-
-			popup.setSize(720, 480);
-			popup.add(BorderLayout.CENTER, imgLabel);
-			imgLabel.updateUI();
-			popup.setLocationRelativeTo(null);
-			popup.setVisible(true);
-		} catch (Exception ex) {
-			System.out.println(ex);
-			}
-
-	}
 
 	private class QuitAction implements ActionListener {
 		//Window to be closed.
