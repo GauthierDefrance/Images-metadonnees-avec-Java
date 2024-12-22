@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.example</groupId>
-    <artifactId>Metadata_Extractor_project_Javav3</artifactId>
+    <artifactId>Eagle-Extractor</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>
@@ -16,9 +16,20 @@
 
     <dependencies>
         <dependency>
+            <groupId>com.twelvemonkeys.imageio</groupId>
+            <artifactId>imageio-webp</artifactId>
+            <version>3.12.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+            <version>2.15.2</version>
+        </dependency>
+
+        <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.15.2</version>
+            <version>2.15.2</version> <!-- Remplacez par la dernière version -->
         </dependency>
 
         <dependency>
