@@ -8,9 +8,7 @@ public class MetaDataImage {
 
     public MetaDataImage(String TexteAfficher) {
         JFrame popup = new JFrame("popup");
-        JPanel CenterPanelpopup = new JPanel();
-        popup.setLayout(new BorderLayout());
-        CenterPanelpopup.add(new JLabel(TexteAfficher), BorderLayout.CENTER);
+        popup.add(new JLabel(TexteAfficher));
     }
 
 }

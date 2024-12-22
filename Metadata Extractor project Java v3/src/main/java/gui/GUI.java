@@ -43,7 +43,6 @@ public class GUI extends JFrame {
 	private JPanel centerPanel = new JPanel();
 
 	// Crée un JPopupMenu pour afficher le menu contextuel
-	private JPopupMenu menu = new JPopupMenu();
 	private JMenuItem option1 = new JMenuItem("Option 1");
 	private JMenuItem option2 = new JMenuItem("Option 2");
 
@@ -162,8 +161,6 @@ public class GUI extends JFrame {
 		topbottomPanel.add(pathB2);
 		topbottomPanel.add(pathB);
 		topbottomPanel.add(pathT);
-		menu.add(option1);
-		menu.add(option2);
 		rightPanel.add(up);
 		rightPanel.add(down);
 
@@ -256,7 +253,7 @@ public class GUI extends JFrame {
 						tb[i][j].addMouseListener(new DoubleClicListenerF(lst.get(p)));
 					}
 					// Ajouter un MouseListener pour détecter le double-clic et le clic droit
-					tb[i][j].addMouseListener(new ClicDroitListener(menu));
+					tb[i][j].addMouseListener(new ClicDroitListener(lst.get(p)));
 
 					tb[i][j].setBackground(new Color(128, 128, 128));
 
@@ -485,10 +482,15 @@ public class GUI extends JFrame {
 
 	// Classe privée pour gérer le clic droit et afficher le JPopupMenu
 	private class ClicDroitListener extends MouseAdapter {
-		private final JPopupMenu menu;
+		private JPopupMenu menu;
+		private String path;
 
-		public ClicDroitListener(JPopupMenu menu) {
-			this.menu = menu;
+		public ClicDroitListener(String path) {
+			this.menu = new JPopupMenu();
+
+			this.path = path;
+			this.menu.add(option1);
+			this.menu.add(option2);
 		}
 
 		@Override
