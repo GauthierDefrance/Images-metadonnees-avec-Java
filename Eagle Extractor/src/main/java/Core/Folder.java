@@ -22,7 +22,7 @@ import java.util.ArrayList;
  * Classe représentant un répertoire sur le système de fichiers.
  * Cette classe permet de gérer un répertoire, d'obtenir ses sous-dossiers,
  * d'examiner ses fichiers (notamment les images) et d'extraire des informations détaillées.
- * @author @Gauthier Defrance @kenan ammad
+ * @author @Gauthier Defrance @Kenan Ammad
  * @version 1.3 [20/12/2024]
  */
 @JsonPropertyOrder({"absolutePath", "Last Modification", "parent", "Number of elements", "Numbers of folders", "Numbers of images", "folders", "images"})
@@ -275,11 +275,12 @@ public class Folder {
         int nbElemsTotaux = folder.listFiles().length;
         int nbSousDossier = this.getFolders().size();
         int nbImages = this.getImages().size();
-        int pngCompteur=0, jpgCompteur=0, webpCompteur = 0;
+        int pngCompteur=0, jpgCompteur=0, webpCompteur = 0, gifCompteur=0;
         for(File image :this.getImages()){
             if(image.getName().endsWith(".png"))pngCompteur++;
             if(image.getName().endsWith(".jpg"))jpgCompteur++;
             if(image.getName().endsWith(".webp")) webpCompteur++;
+            if(image.getName().endsWith(".gif")) gifCompteur++;
         }
         return String.format("""
             Number of elements : %d
@@ -288,7 +289,8 @@ public class Folder {
             PNG: %d
             JPG: %d
             WEBP: %d
-            """,  nbElemsTotaux, nbSousDossier, nbImages, pngCompteur, jpgCompteur, webpCompteur);
+            GIF: %d
+            """,  nbElemsTotaux, nbSousDossier, nbImages, pngCompteur, jpgCompteur, webpCompteur, gifCompteur);
     }
 
     /**

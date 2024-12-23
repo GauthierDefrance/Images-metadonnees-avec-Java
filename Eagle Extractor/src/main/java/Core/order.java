@@ -12,7 +12,7 @@ import java.util.Comparator;
  * selon différents critères comme le nom, la taille, la date, la hauteur ou la largeur de l'image.
  * Elle fournit aussi une méthode pour afficher le classement des images sous forme de chaîne de caractères,
  * avec la possibilité d'afficher l'ordre inversé.
- * @author @Gauthier Defrance @kenan ammad
+ * @author @Gauthier Defrance @Kenan Ammad
  * @version 1.4 [21/12/2024]
  */
 public class order {

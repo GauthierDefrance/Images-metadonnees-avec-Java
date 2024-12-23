@@ -19,7 +19,7 @@ import java.io.IOException;
  * Cette classe gère l'exécution des commandes en ligne de commande pour manipuler des fichiers et répertoires, effectuer des recherches,
  * sauvegarder des états de répertoires et comparer des états sauvegardés.
  *
- * @author @Gauthier Defrance @kenan ammad
+ * @author @Gauthier Defrance @Kenan Ammad
  * @version 1.3 [20/12/2024]
  */
 public class Console {

@@ -21,7 +21,8 @@ public class ZoomImage extends JFrame {
             zoomIn.addActionListener(new zoom_In());
             zoomOut.addActionListener(new zoom_Out());
 
-            JFrame popup = new JFrame("popup");
+            JFrame popup = new JFrame("Image Eagle Reader");
+            popup.setIconImage(new ImageIcon(getClass().getResource("/icons/icon.png")).getImage());
             JPanel rightPanelpopup = new JPanel();
             popup.setLayout(new BorderLayout());
             popup.add(BorderLayout.EAST,rightPanelpopup);

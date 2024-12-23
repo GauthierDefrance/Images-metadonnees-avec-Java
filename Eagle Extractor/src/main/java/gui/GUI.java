@@ -661,14 +661,98 @@ public class GUI extends JFrame {
 		public void actionPerformed(ActionEvent e) {
 
 			new MetaDataImage("""
-					¤ Help Menu
+			------¤ Help Menu ¤------
 					
-					Bienvenue sur l'Interface Graphique "Eagle Extractor",
-					programme conçu pour la visualisation des images au format : {PNG, JPG, WEBP & GIF}
 					
-					Merci d'avoir lu l'aide
-					Par Kennan & Gauthier
-					"""
+			> Description du projet <
+					
+					
+	Bienvenue sur l'Interface Graphique "Eagle Extractor", programme conçu pour
+	la visualisation des images au format : {PNG, JPG, WEBP & GIF} et l'accès à leurs
+	métadonnées.
+	Le programme permet également la surveillance de données, via snapshot, qui permet
+	la comparaison d'une sauvegarde de l'état d'un dossiers, ses sous dossiers et images
+	avec un dossier actuel. Cela permet donc de vérifier si des fichiers ont été modifiés
+	déplacé ou supprimé <<définitivement>>.
+	On peut également accéder aux métadonnées personnel des images, afin d'avoir des
+	renseignements à leur sujet tel que : la position GPS, la date de prise de la photo
+	ou encore l'appareil utilisé, et bien plus encore.
+	Il y a également une fonctionnalité permettant de chercher par différents
+	paramètres les images respectant ce paramètre.
+	On peut aussi trier les données selon des critères données tel que l'ordre alphabétique
+	la taille, les dates.
+					
+			> Utilisation du projet <
+					
+					
+			¤ Fonctionnement du Path :
+					
+	Dans votre interface graphique, vous remarquerez la présence de deux bars de recherches.
+	La deuxième correspond à l'endroit ou vous vous trouvez sur votre machine. Il est possible
+	de renseigner l'addresse que vous voulez observer (si elle existe). Il faut pour cela
+	renseigner un Path valide et ensuite cliquer sur le bouton "Path:".
+					
+					
+			¤ Fonctionnement de l'interface :
+					
+	> Vous avez dû remarquer lors du démarage de votre application, que des dossiers 
+	était présent, il vous est possible d'ouvrir ses dossiers en double cliquant (clique gauche)
+	sur le dossier voulu. Il est possible également de remonter l'arborescence avec la petite
+	flèche (←) à gauche du bouton "Path:" vu précedemment.
+	Certains élements sur votre écran, ne sont pas des dossiers. Mais des images avec un nom.
+	En effectuant un double clique gauche sur l'image vous pourrez observer l'image avec grande
+	précision, grâce aux fonctionnalités de Zoom intuitive implémentés.
+	Sur vos dossiers et images vous pouvez faire un clique droit, cela vous ouvrira alors
+	une petite interface vous permettant de faire un choix entre "Stats" et "Info".
+	Stats vous ouvrira une petite fênetre avec les statistique de votre image et celle
+	de votre dossier. Tandis que Info vous fournira les métadonnées sur une image et des 
+	informations pertinentes pour un dossiers.
+	Le bouton "Help ?" affiche ce menu.
+					
+	Dans votre interface graphique, vous remarquerez également la présence d'une case
+	"Paramètres". Dans cette case vous pouvez y trouver 3 menus et un bouton.
+	Le bouton "Quit" arrête le programme Eagle Extractor.
+					
+	> Le menu "SearchBy" ouvre un autre menu d'options. Parmis elles se trouvent :
+	 {Name, Height, Max Height, Min Height, Width, Max Width, Min Width, Desc, Date, 
+	Max Size, Min Size}. Une fois une des cases cochés, vous pourrez renseigner
+	l'information que vous cherchez dans la barre de recherche du haut, à droite
+	du bouton "Search:". Afin de lancer la recherche il vous faudra appuyer sur
+	le bouton "Search:".
+	Attention, Date doit être utilisé avec le format yyyy-MM-DD (format ISO-8601).
+	 Il est possible d'écrire uniquement yyyy-MM ou MM-DD également. De plus, 
+	toutes recherches en rapport à des nombres : width, height... ne doit pas contenir
+	de caractères dans la barre de recherche mais uniquement des nombres.
+					
+	> Le menu "OrderBy" ouvre un autre menu d'options. Parmis elles se trouvent :
+	 {Reverse, Name, Height, Width, Date, Size}. On remarque également la présence d'un bouton.
+	De plus, Reverse est séparé des autres options. OrderBy peut être utilisé seul, mais 
+	également avec SearchBy afin de faciliter la recherche. Pour utiliser OrderBy,
+	il vous faudra selectionner l'option que vous desirez parmis celles en desous de reverse.
+	Reverse permet d'inverser le résultat pour trier dans le sens inverse.
+	Appuyer sur le bouton Order démarre le tri et actualise l'interface.
+					
+	> Le menu "Snapshot" ouvre un autre menu d'options. On y voit deux zones de texte et
+	deux boutons. Le bouton "Snapshot Save:" permet de sauvegarder l'état du dossier et
+	ses sous dossiers ou vous vous trouvez actuellement à un endroit précis si il existe.
+	(Un message vous avertira si l'opération c'est déroulé normalement). Il vous faudra
+	écrire votre fichier sous la forme : path\\to\\myfile\\name.json (le format DOIT
+	être un ".json"). Vous écrirez donc ce chemin dans la barre de recherche en dessous
+	du bouton. Puis appuyerez sur le bouton pour éxécuter l'opération.
+	Un autre bouton nommé "Snapshot Compare:" est présent, il permet donc d'effectuer une
+	comparaison entre le dossier où on se trouve actuellement et ses sous dossiers avec
+	une sauvegarde compatible au format ".json". Il vous faudra donc renseigner le chemin
+	vers votre fichier ".json" comme précédemment.
+					
+					
+	Le programme est conçu pour un nombre de format limité, mais le nombre de format peut être
+	facilement augmenter grâce à la flexibilité du code.
+					
+					
+.					
+	Merci d'avoir lu l'aide,
+	Par Kenan & Gauthier | Groupe C4 | L2 Informatique CY Université.
+				"""
 			);
 		}
 
