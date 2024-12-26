@@ -1040,7 +1040,7 @@ public class GUI extends JFrame {
 	/**
 	 * Méthode principale pour exécuter le GUI
 	 */
-	public static void main() {
+	public static void main(String args[]) {
 		new GUI("Eagle Extractor");
 
 	}
