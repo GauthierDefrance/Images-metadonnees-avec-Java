@@ -11,8 +11,7 @@ Ceci est un projet fait par des L2 de la faculté d'informatique de Cergy-Pointo
 ayant pour objectif la création d'un CLI et d'un GUI permettant de répondre au cahier des charges données par les professeurs.
 Le CLI et le GUI sont indépendant mais ont en communs un package qu'on appelle le Core.
 
-CLI : Command-line interface
-GUI : Graphical User Interface
+*CLI : Command-line interface* ; *GUI : Graphical User Interface*
 
 Le CLI a de nombreuses fonctions :
 * --help qui permet de lister les commandes existentes et leur utilisations.
