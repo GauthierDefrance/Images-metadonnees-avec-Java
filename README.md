@@ -25,4 +25,5 @@ Le GUI a également de nombreuses fonctions :
 * Une interface original et intuitive
 
 Nous avons également fait notre propre logo pour l'application, inspiré de "Paper please".
+
 ![Image du logo](https://github.com/GauthierDefrance/Images-metadonnees-avec-Java/blob/main/sources/icon.png)
