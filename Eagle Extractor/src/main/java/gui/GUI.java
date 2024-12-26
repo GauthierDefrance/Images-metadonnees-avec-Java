@@ -15,28 +15,91 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
+/**
+ * Classe principale pour exécuter l'interface graphique.
+ * Cette classe est utilisée pour initialiser et exécuter des opérations graphiques selon les cliques de l'utilisateur.
+ * @author @Kenan Ammad @Gauthier Defrance
+ * @version 1.1 [26/12/2024]
+ */
 public class GUI extends JFrame {
 
+	/**
+	 * Panneau utilisé pour afficher un autre composant ou une interface secondaire dans l'application.
+	 */
 	private JPanel rPanel = new JPanel();
 
+	/**
+	 * Page actuelle, utilisée pour la gestion de la pagination des fichiers affichés.
+	 */
 	private int page = 0;
-	private int searchSelector= 0;
+
+	/**
+	 * Sélecteur de recherche, utilisé pour déterminer le critère de recherche actif.
+	 */
+	private int searchSelector = 0;
+
+	/**
+	 * Sélecteur de tri, utilisé pour déterminer le critère de tri des fichiers (par défaut, trié par nom).
+	 */
 	private String orderSelector = "name";
+
+	/**
+	 * Booléen qui détermine l'ordre de tri (vrai pour un ordre inverse, faux pour l'ordre standard).
+	 */
 	private Boolean orderBool = false;
 
+	/**
+	 * Liste des chemins de dossiers à afficher.
+	 */
 	private ArrayList<String> lstd = new ArrayList<String>();
+
+	/**
+	 * Liste des chemins d'images à afficher.
+	 */
 	private ArrayList<String> lstf = new ArrayList<String>();
+
+	/**
+	 * Liste combinée des chemins des dossiers et des images à afficher.
+	 */
 	private ArrayList<String> lst = new ArrayList<String>();
 
+	/**
+	 * Tableau de boutons représentant les éléments dans la grille d'affichage.
+	 */
 	private JButton[][] tb = new JButton[4][8];
+
+	/**
+	 * Panneau central de l'interface utilisateur où les boutons sont ajoutés.
+	 */
 	private JPanel centerPanel = new JPanel();
 
+	/**
+	 * Champ de texte pour afficher et modifier le chemin du répertoire actuel.
+	 */
 	private JTextField pathT = new JTextField(50);
+
+	/**
+	 * Champ de texte pour entrer une requête de recherche.
+	 */
 	private JTextField searchT = new JTextField(50);
+
+	/**
+	 * Champ de texte pour entrer le chemin de sauvegarde du fichier de snapshot.
+	 */
 	private JTextField snapchotSaveT = new JTextField(50);
+
+	/**
+	 * Champ de texte pour entrer le chemin du fichier de comparaison de snapshot.
+	 */
 	private JTextField snapchotCompareT = new JTextField(50);
 
 
+	/**
+	 * Constructeur de la classe GUI qui initialise l'interface graphique avec le titre spécifié.
+	 * Il charge également l'icône de l'application à partir du fichier ressources "/icons/icon.png".
+	 *
+	 * @param title Titre de la fenêtre de l'application.
+	 */
 	public GUI(String title) {
 		super(title);
 		init();
@@ -45,6 +108,19 @@ public class GUI extends JFrame {
 		this.setIconImage(icon.getImage());
 	}
 
+	/**
+	 * Initialise l'interface graphique en configurant les différents panneaux, boutons,
+	 * menus, et autres composants de l'application.
+	 * Cette méthode crée et organise les éléments suivants :
+	 *
+	 *   Les panneaux de la fenêtre, y compris les panneaux gauche, droit, supérieur et inférieur.
+	 *   La barre de menu avec des options pour la recherche, l'ordre des fichiers et les snapshots.
+	 *   Les boutons d'interaction avec l'utilisateur tels que la recherche, la navigation, et la gestion des snapshots.
+	 *   Les listeners d'événements pour les actions des boutons et des éléments de menu.
+	 *   La gestion du répertoire de travail, en affichant les dossiers et fichiers dans le panneau central.
+	 *
+	 * Cette méthode est appelée lors de l'initialisation de la fenêtre principale.
+	 */
 	private void init() {
 		BorderLayout border = new BorderLayout();
 		JPanel rightPanel = new JPanel();
@@ -235,128 +311,189 @@ public class GUI extends JFrame {
 
 
 
+	/**
+	 * Met à jour le tableau de boutons dans le panneau central, affichant les fichiers sous forme de boutons.
+	 * Chaque bouton représente soit un dossier, soit une image, avec des icônes et des noms associés.
+	 * La méthode gère le placement des boutons en fonction de la page actuelle et initialise les actions de double-clic
+	 * et de clic droit pour chaque élément.
+	 *
+	 * @throws IOException Si une erreur survient lors du chargement des icônes ou des images.
+	 */
 	private void updateTb() throws IOException {
-			centerPanel.removeAll();
-			centerPanel.setLayout(new GridLayout(4, 8, 5, 5));
-			int p = page * 32;
-			for (int i = 0; i < 4; i++) {
-				for (int j = 0; j < 8; j++) {
-					if (lst.size() > p) {
-						// Récupérer le nom du fichier depuis le chemin
-						String fileName = Paths.get(lst.get(p)).getFileName().toString();
-						tb[i][j] = new JButton(fileName); // Nom des boutons
+		centerPanel.removeAll();
+		centerPanel.setLayout(new GridLayout(4, 8, 5, 5));
+		int p = page * 32;
+		for (int i = 0; i < 4; i++) {
+			for (int j = 0; j < 8; j++) {
+				if (lst.size() > p) {
+					// Récupérer le nom du fichier depuis le chemin
+					String fileName = Paths.get(lst.get(p)).getFileName().toString();
+					tb[i][j] = new JButton(fileName); // Nom des boutons
 
-						tb[i][j].setHorizontalTextPosition(SwingConstants.CENTER); // Texte centré horizontalement
-						tb[i][j].setVerticalTextPosition(SwingConstants.BOTTOM);  // Texte en bas
+					tb[i][j].setHorizontalTextPosition(SwingConstants.CENTER); // Texte centré horizontalement
+					tb[i][j].setVerticalTextPosition(SwingConstants.BOTTOM);  // Texte en bas
 
-						if (!(lstd.size() <= p)) {
-							ImageIcon icon1 = new ImageIcon(getClass().getResource("/icons/icon.png"));
-							Image img = icon1.getImage();
-							Image scaledImg = img.getScaledInstance(150, 150, Image.SCALE_SMOOTH);
-							tb[i][j].setIcon(new ImageIcon(scaledImg));
-							tb[i][j].addMouseListener(new DoubleClicListenerD(lst.get(p))); // Ajouter le même ActionListener à chaque
-						} else {
-							ImageIcon icon2;
-							icon2 = new ImageIcon(ImageIO.read(new File(lst.get(p))));
-							Image img = icon2.getImage();
-							Image scaledImg = img.getScaledInstance(150, 150, Image.SCALE_SMOOTH);
-							tb[i][j].setIcon(new ImageIcon(scaledImg));
-							tb[i][j].addMouseListener(new DoubleClicListenerF(lst.get(p)));
-						}
-						// Ajouter un MouseListener pour détecter le double-clic et le clic droit
-						tb[i][j].addMouseListener(new ClicDroitListener(lst.get(p)));
-
-						tb[i][j].setBackground(new Color(128, 128, 128));
-
-						centerPanel.add(tb[i][j]); // Ajouter chaque bouton au panel
+					if (!(lstd.size() <= p)) {
+						ImageIcon icon1 = new ImageIcon(getClass().getResource("/icons/icon.png"));
+						Image img = icon1.getImage();
+						Image scaledImg = img.getScaledInstance(150, 150, Image.SCALE_FAST);
+						tb[i][j].setIcon(new ImageIcon(scaledImg));
+						tb[i][j].addMouseListener(new DoubleClicListenerD(lst.get(p))); // Ajouter le même ActionListener à chaque
+					} else {
+						ImageIcon icon2;
+						icon2 = new ImageIcon(ImageIO.read(new File(lst.get(p))));
+						Image img = icon2.getImage();
+						Image scaledImg = img.getScaledInstance(150, 150, Image.SCALE_FAST);
+						tb[i][j].setIcon(new ImageIcon(scaledImg));
+						tb[i][j].addMouseListener(new DoubleClicListenerF(lst.get(p)));
 					}
-					p++;
+					// Ajouter un MouseListener pour détecter le double-clic et le clic droit
+					tb[i][j].addMouseListener(new ClicDroitListener(lst.get(p)));
+
+					tb[i][j].setBackground(new Color(128, 128, 128));
+
+					centerPanel.add(tb[i][j]); // Ajouter chaque bouton au panel
 				}
+				p++;
 			}
+		}
 	}
 
+	/**
+	 * Met à jour les listes de fichiers et de dossiers en fonction du chemin spécifié.
+	 * Cette méthode réinitialise les listes existantes, puis parcourt le dossier indiqué
+	 * pour ajouter les sous-dossiers et les images à leurs listes respectives.
+	 * Elle met ensuite à jour l'affichage du contenu
+	 * avec lance la méthode updateTb().
+	 */
 	private void pathupdate() {
 
 		String path = pathT.getText();
-		//On réinitialise les listes c
+		// Réinitialise les listes
 		lstd.clear();
 		lstf.clear();
 		lst.clear();
-		//Création de l'objet folder à l'endroit indiqué
+
+		// Création de l'objet folder à l'endroit indiqué
 		File file = new File(path);
 		if (file.exists() && file.isDirectory()) {
 			Folder folder = new Folder(path);
 
+			// Ajoute les sous-dossiers à la liste lstd
 			for (File f : folder.getFolders()) {
 				lstd.add(f.getAbsolutePath());
 			}
 
+			// Ajoute les images à la liste lstf
 			for (File f : folder.getImages()) {
 				lstf.add(f.getAbsolutePath());
 			}
+
+			// Combine les listes de dossiers et d'images
 			lst.addAll(lstd);
 			lst.addAll(lstf);
+
 			try {
 				updateTb();
-			} catch (Exception e) {System.out.println(e);}
+			} catch (Exception e) {
+				System.out.println(e);
+			}
 		}
 		centerPanel.updateUI();
 	}
 
+	/**
+	 * Classe qui réinitialise la page à 0 et met à jour l'interface selon le contenu du dossier au chemin spécifié
+	 * avec lance la méthode pathupdate().
+	 */
 	private class ppathupdate implements ActionListener {
 
+		/**
+		 * Réinitialise la page à 0 et met à jour le contenu du chemin.
+		 * L'affichage est ensuite mis à jour
+		 * avec lance la méthode pathupdate().
+		 *
+		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			page = 0;
 			pathupdate();
 			centerPanel.updateUI();
 		}
-
 	}
-
+	/**
+	 * Classe qui permet de remonter d'un niveau dans l'arborescence des répertoires en affichant le chemin du répertoire parent.
+	 */
 	private class pathremonter implements ActionListener {
 
+		/**
+		 * Remonte d'un niveau dans l'arborescence des répertoires en mettant à jour le chemin affiché.
+		 * La page est réinitialisée et l'affichage est mis à jour après la modification du chemin
+		 * avec lance la méthode pathupdate().
+		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			String path = pathT.getText();//donne le path actuel
+			String path = pathT.getText(); // Donne le path actuel
 			File file = new File(path);
-			if (file.exists()&&file.isDirectory()) {
+			if (file.exists() && file.isDirectory()) {
 				try {
-					String parent = Paths.get(pathT.getText()).getParent().toString(); //Donne le parent
+					// Donne le chemin du répertoire parent
+					String parent = Paths.get(pathT.getText()).getParent().toString();
 					pathT.setText(parent);
 					page = 0;
 					pathupdate();
-				} catch (Exception ex) {}
+				} catch (Exception ex) {
+					// Gère l'exception
+				}
 			}
 			centerPanel.updateUI();
 		}
 	}
-
+	/**
+	 * Classe qui définit le critère de sélection de la recherche lorsqu'une action est déclenchée.
+	 */
 	private class searchSelectorB implements ActionListener {
 		private int selector;
 
+		/**
+		 * Constructeur qui initialise le critère de sélection de la recherche.
+		 *
+		 * @param selector int contenant Le critère de sélection de la recherche.
+		 */
 		public searchSelectorB(int selector) {
 			this.selector = selector;
 		}
 
+		/**
+		 * Définit le critère de sélection de la recherche lorsqu'une action est déclenchée.
+		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			searchSelector = this.selector;
 		}
-
 	}
 
+	/**
+	 * Classe qui effectue une recherche dans un dossier en fonction du critère sélectionné et met à jour l'affichage avec les résultats
+	 * avec lance la méthode updateTb().
+	 */
 	private class searchf implements ActionListener {
 
+		/**
+		 * Effectue une recherche dans le dossier spécifié en fonction du critère de recherche sélectionné.
+		 * Les résultats de la recherche sont ajoutés à la liste lst et l'affichage est mis à jour
+		 * avec la méthode updateTb().
+		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			String path = pathT.getText();//donne le path actuel
+			String path = pathT.getText(); // Donne le path actuel
 			File file = new File(path);
 			if (file.exists() && file.isDirectory()) {
 				Folder folder = new Folder(path);
 				SearchFolder chercheur = new SearchFolder(folder);
 				ArrayList<File> images = new ArrayList<File>();
 				try {
+					// Effectue la recherche en fonction du critère sélectionné
 					switch (searchSelector) {
 						case 1:
 							images = chercheur.searchByName(searchT.getText());
@@ -395,6 +532,7 @@ public class GUI extends JFrame {
 							images = chercheur.searchByName(searchT.getText());
 							break;
 					}
+					// Mise à jour de la liste des fichiers
 					lst.clear();
 					lstf.clear();
 					lstd.clear();
@@ -404,30 +542,49 @@ public class GUI extends JFrame {
 					}
 					lstf.addAll(lst);
 					updateTb();
-				} catch (Exception ex) {System.out.println(ex);}
+				} catch (Exception ex) {
+					System.out.println(ex);
+				}
 				centerPanel.updateUI();
 			}
-
 		}
 	}
 
+	/**
+	 * Classe qui définit le critère de sélection de l'ordre lorsque l'action est déclenchée.
+	 */
 	private class orderSelectorB implements ActionListener {
 		private String order;
 
+		/**
+		 * Constructeur qui initialise le critère de sélection de l'ordre.
+		 *
+		 * @param order String contenant Le critère de sélection de l'ordre.
+		 */
 		public orderSelectorB(String order) {
 			this.order = order;
 		}
 
+		/**
+		 * Définit le critère de sélection de l'ordre lorsque l'action est déclenchée.
+		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			orderSelector = this.order;
-
 		}
-
 	}
 
+	/**
+	 * Classe qui trie une liste de fichiers en fonction d'un ordre spécifié et met à jour l'affichage
+	 * avec lance la méthode updateTb().
+	 */
 	private class orderf implements ActionListener {
 
+		/**
+		 * Trie les fichiers en fonction du critère de sélection d'ordre et de l'état de l'ordre.
+		 * La liste de fichiers est mise à jour et l'affichage est rafraîchi après le tri
+		 * avec la méthode updateTb().
+		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			try {
@@ -444,57 +601,86 @@ public class GUI extends JFrame {
 				}
 				updateTb();
 				centerPanel.updateUI();
-			} catch (Exception ex) {System.out.println(ex);}
-
+			} catch (Exception ex) {
+				System.out.println(ex);
+			}
 		}
 	}
 
+	/**
+	 * Classe qui inverse l'état de la variable orderBool lorsqu'une action est déclenchée.
+	 */
 	private class orderReverse implements ActionListener {
 
+		/**
+		 * Inverse la valeur de orderBool à chaque fois que l'action est déclenchée.
+		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if (orderBool) {
 				orderBool = false;
-			}
-			else {
+			} else {
 				orderBool = true;
 			}
 		}
-
 	}
 
+	/**
+	 * Classe qui gère l'action de navigation vers la page précédente dans une liste.
+	 */
 	private class upAction implements ActionListener {
 
+		/**
+		 * Change de page vers la précédente si la page actuelle est supérieure à 0,
+		 * et lance la méthode updateTb().
+		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if (page > 0) {
 				page--;
 				try {
-				updateTb();
-				} catch (IOException ex) {System.out.println(ex);}
+					updateTb();
+				} catch (IOException ex) {
+					System.out.println(ex);
+				}
 				centerPanel.updateUI();
 			}
 		}
-
 	}
 
+	/**
+	 * Classe qui gère l'action de navigation vers la page suivante dans une liste.
+	 */
 	private class downAction implements ActionListener {
 
+		/**
+		 * Change de page si des éléments supplémentaires sont disponibles,
+		 * et lance la méthode updateTb().
+		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			if(lst.size()>(page+1) * 32){
+			if(lst.size() > (page + 1) * 32) {
 				page++;
-                try {
-                    updateTb();
-                } catch (IOException ex) {System.out.println(ex);}
-                centerPanel.updateUI();
+				try {
+					updateTb();
+				} catch (IOException ex) {
+					System.out.println(ex);
+				}
+				centerPanel.updateUI();
 			}
 		}
-
 	}
 
+	/**
+	 * Classe interne enregistre une snapshot du répertoire actuel dans un fichier JSON.
+	 */
 	private class snapchotSaveD implements ActionListener {
 
+		/**
+		 * Sauvegarde une snapshot du répertoire actuel dans le fichier spécifié
+		 * lorsque l'action est déclenchée. Si les conditions sont remplies,
+		 * la snapshot est enregistrée et un message de confirmation est affiché.
+		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			try {
@@ -505,7 +691,7 @@ public class GUI extends JFrame {
 				File file2 = new File(givenPath);
 				File parentFile2 = file2.getParentFile();
 
-				if (givenPath.endsWith(".json") && file.exists() && file.isDirectory() && parentFile2.exists() && parentFile2.isDirectory() ) {
+				if (givenPath.endsWith(".json") && file.exists() && file.isDirectory() && parentFile2.exists() && parentFile2.isDirectory()) {
 					Folder folder = new Folder(currentPath);
 					Snapshot snap = new Snapshot(folder);
 					snap.snapshotSave(givenPath);
@@ -518,8 +704,16 @@ public class GUI extends JFrame {
 		}
 	}
 
+	/**
+	 * Classe interne qui compare un répertoire actuel avec un fichier snapshot et affiche le résultat.
+	 */
 	private class snapchotCompareD implements ActionListener {
 
+		/**
+		 * Effectue la comparaison entre le répertoire actuel et le fichier snapshot
+		 * lorsque l'action est déclenchée. Si le fichier snapshot est valide,
+		 * les différences sont affichées dans une fenêtre.
+		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			try {
@@ -541,20 +735,34 @@ public class GUI extends JFrame {
 		}
 	}
 
+	/**
+	 * Classe qui sert à afficher les statistiques d'un fichier ou d'un dossier donné.
+	 */
 	private class stats implements ActionListener {
+
+		/**
+		 * Chemin du fichier ou du dossier.
+		 */
 		private String path;
 
+		/**
+		 * Initialise la classe avec le chemin spécifié.
+		 * @param path String contenant Chemin du fichier ou du dossier.
+		 */
 		public stats(String path) {
 			this.path = path;
 		}
+
+		/**
+		 * Affiche les statistiques du fichier ou du dossier dans une boîte de dialogue.
+		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			try {
 				String affiche = "";
 				File file = new File(path);
 				if (file.exists() && file.isDirectory()) {
-					Folder folder = new Folder(path);
-					affiche=folder.getStat();
+					affiche = new Folder(path).getStat();
 				} else {
 					Core.Image image = new Core.Image(path);
 					image.initMetadata();
@@ -567,65 +775,101 @@ public class GUI extends JFrame {
 		}
 	}
 
+	/**
+	 * Classe interne représentant un gestionnaire d'événements pour afficher les métadonnées
+	 * d'un fichier ou d'un dossier en fonction du chemin fourni.
+	 */
 	private class info implements ActionListener {
+
 		private String path;
 
+		/**
+		 * Constructeur de la classe info.
+		 * @param path String contenant le chemin du fichier ou du dossier pour lequel les métadonnées doivent être affichées.
+		 */
 		public info(String path) {
 			this.path = path;
 		}
+
+		/**
+		 * Méthode appelée lorsqu'une action est déclenchée.
+		 * Elle traite le chemin donné pour afficher les informations ou métadonnées.
+		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			try {
 				String affiche = "";
 				File file = new File(path);
+
+				// Vérifie si le chemin correspond à un dossier existant.
 				if (file.exists() && file.isDirectory()) {
 					Folder folder = new Folder(path);
-					affiche=folder.getInfo();
+					affiche = folder.getInfo();
 				} else {
+					// Sinon, traite le fichier en tant qu'image.
 					Core.Image image = new Core.Image(path);
 					image.initMetadata();
 					affiche = image.getAllMetadata();
 				}
+
+				// Affiche les métadonnées dans une nouvelle fenêtre.
 				new MetaDataImage(affiche);
 			} catch (Exception error) {
+				// Gère les exceptions en les affichant dans la console.
 				System.out.println(error);
 			}
 		}
 	}
 
-	// Classe privée pour gérer le clic droit et afficher le JPopupMenu
+	/**
+	 * Classe qui gère l'affichage d'un menu contextuel
+	 * lors d'un clic droit de la souris. Le menu propose deux options : "stats" et "info".
+	 */
 	private class ClicDroitListener extends MouseAdapter {
-		private String path;
 		private JPopupMenu menu = new JPopupMenu();
 		private JMenuItem option1 = new JMenuItem("stats");
-		private	JMenuItem option2 = new JMenuItem("info");
-
+		private JMenuItem option2 = new JMenuItem("info");
+		/**
+		 * Constructeur qui initialise le menu contextuel avec ses options.
+		 * @param path String contenant Chemin d'une image ou d'un dossier, utilisé par les actions des options.
+		 */
 		public ClicDroitListener(String path) {
-			this.path = path;
 			this.menu.add(option1);
 			this.menu.add(option2);
 			option1.addActionListener(new stats(path));
 			option2.addActionListener(new info(path));
-
 		}
 
+		/**
+		 * Affiche le menu contextuel lorsqu'un clic droit est détecté.
+		 */
 		@Override
 		public void mouseClicked(MouseEvent e) {
 			if (e.getButton() == MouseEvent.BUTTON3) {  // Clic droit
 				menu.show(e.getComponent(), e.getX(), e.getY());
-
 			}
 		}
 	}
 
-	// Classe privée pour gérer le double-clic
+	/**
+	 * Classe interne qui gère les événements de double-clic
+	 * sur un composant pour mettre à jour le chemin et réinitialiser l'affichage.
+	 */
 	private class DoubleClicListenerD extends MouseAdapter {
 		private String path;
-
+		/**
+		 * Constructeur qui initialise le chemin associé à ce listener.
+		 *
+		 * @param path String contenant Chemin du répertoire.
+		 */
 		public DoubleClicListenerD(String path) {
 			this.path = path;
 		}
 
+		/**
+		 * Détecte un double-clic de la souris et met à jour le chemin, la page
+		 * et lance la méthode pathupdate().
+		 */
 		@Override
 		public void mousePressed(MouseEvent e) {
 			if (e.getClickCount() == 2) {  // Double-clic détecté
@@ -637,13 +881,25 @@ public class GUI extends JFrame {
 		}
 	}
 
+	/**
+	 * Classe qui gère les événements de double-clic
+	 * sur une image pour afficher celle-ci avec la classe ZoomImage.
+	 */
 	private class DoubleClicListenerF extends MouseAdapter {
 		private String path;
-
+		/**
+		 * Constructeur qui initialise le chemin de l'image associée à ce listener.
+		 *
+		 * @param path String contenant Chemin de l'image.
+		 */
 		public DoubleClicListenerF(String path) {
 			this.path = path;
 		}
 
+		/**
+		 * Détecte un double-clic de la souris sur une image et ouvre la vue zoomée
+		 * en appelant ZoomImage.
+		 */
 		@Override
 		public void mousePressed(MouseEvent e) {
 			if (e.getClickCount() == 2) {  // Double-clic détecté
@@ -652,11 +908,13 @@ public class GUI extends JFrame {
 				} catch (Exception ex) {
 					System.out.println(ex);
 				}
-
 			}
 		}
 	}
 
+	/**
+	 * Classe actionneur qui affiche un popup avec un message d'aide en cas d'activation.
+	 */
 	private class helpPopup implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 
@@ -758,10 +1016,15 @@ public class GUI extends JFrame {
 
 	}
 
+	/**
+	 * Classe actionneur qui arrête le programme en cas d'activation.
+	 */
 	private class QuitAction implements ActionListener {
 		//Window to be closed.
 		private JFrame window;
-
+		/**
+		 * @param window Objet JFrame
+		 */
 		public QuitAction(JFrame window) {
 			this.window = window;
 		}
@@ -773,7 +1036,11 @@ public class GUI extends JFrame {
 
 	}
 
-	public static void main(String[] args) {
+
+	/**
+	 * Méthode principale pour exécuter le GUI
+	 */
+	public static void main() {
 		new GUI("Eagle Extractor");
 
 	}
