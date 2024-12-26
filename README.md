@@ -11,6 +11,9 @@ Ceci est un projet fait par des L2 de la faculté d'informatique de Cergy-Pointo
 ayant pour objectif la création d'un CLI et d'un GUI permettant de répondre au cahier des charges données par les professeurs.
 Le CLI et le GUI sont indépendant mais ont en communs un package qu'on appelle le Core.
 
+CLI : Command-line interface
+GUI : Graphical User Interface
+
 Le CLI a de nombreuses fonctions :
 * --help qui permet de lister les commandes existentes et leur utilisations.
 * --list qui permet de lister toutes les images aux bons formats sur les sous dossiers.
@@ -28,3 +31,9 @@ Le GUI a également de nombreuses fonctions :
 Nous avons également fait notre propre logo pour l'application, inspiré de "Paper please".
 
 ![Image du logo](https://github.com/GauthierDefrance/Images-metadonnees-avec-Java/blob/main/sources/icon.png)
+
+
+
+
+
+Librairies utilisés:
