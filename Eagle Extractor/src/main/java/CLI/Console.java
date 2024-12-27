@@ -20,7 +20,7 @@ import java.io.IOException;
  * sauvegarder des états de répertoires et comparer des états sauvegardés.
  *
  * @author @Gauthier Defrance @Kenan Ammad
- * @version 1.3 [20/12/2024]
+ * @version 1.4 [20/12/2024]
  */
 public class Console {
 
@@ -33,7 +33,7 @@ public class Console {
     private boolean snapshotsave;
     private boolean snapshotcompare;
     private boolean search;
-    private boolean order;
+    private boolean orderB;
     private boolean list;
     private boolean by;
     private boolean error;
@@ -82,7 +82,7 @@ public class Console {
             this.snapshotsave = cmd.hasOption("ss");
             this.snapshotcompare = cmd.hasOption("sc");
             this.search = cmd.hasOption("w");
-            this.order = cmd.hasOption("o");
+            this.orderB = cmd.hasOption("o");
             this.list = cmd.hasOption("l");
             this.by = cmd.hasOption("b");
             this.r = cmd.hasOption("r");
@@ -113,7 +113,7 @@ public class Console {
 
             // Règles pour -f
             if (file) {
-                if (list || order || snapshotsave || snapshotcompare) {
+                if (list || orderB || snapshotsave || snapshotcompare) {
                     throw new IllegalArgumentException("Erreur : Les options -list, -order, -snapshotsave et -snapshotcompare ne peuvent pas être utilisées avec -f.");
                 }
             }
@@ -123,7 +123,7 @@ public class Console {
                 if (search) {
                     throw new IllegalArgumentException("Erreur : L'option -search ne peut pas être utilisée avec -f.");
                 }
-                if (order && !list) {
+                if (orderB && !list) {
                     throw new IllegalArgumentException("Erreur : L'option -order nécessite l'option -l (--list).");
                 }
             }
@@ -224,7 +224,7 @@ public class Console {
         // Si l'option 'list' est activée, on effectue un listing des éléments du dossier
         if (list) {
             // Si l'option 'order' est activée, on indique que l'ordre est également activé
-            if(order){
+            if(orderB){
                 order Order = new order(folder.getAllImages());
                 for(File elem : Order.OrderFile(cmd.getOptionValue("o"),r)){
                     output.append(elem.getAbsolutePath()).append("\n");
@@ -292,7 +292,7 @@ public class Console {
                         images = new ArrayList<>();
                         break;
                 }
-                if(order){
+                if(orderB){
                     order Order = new order(images);
                     for (File elem : Order.OrderFile(cmd.getOptionValue("o"),r)){
                         output.append(elem.getAbsolutePath()).append("\n");
@@ -306,10 +306,19 @@ public class Console {
                 }
 
                 } else {
+                if (orderB) {
+                    String searchText = this.cmd.getOptionValue("w");
+                    ArrayList<File> images= search.searchByName(searchText);
+                    order Order = new order(images);
+                    for (File elem : Order.OrderFile(cmd.getOptionValue("o"), r)) {
+                        output.append(elem.getAbsolutePath()).append("\n");
+                    }
+                } else {
                     // Si l'option 'by' n'est pas activée, on effectue une recherche par nom
                     ArrayList<File> images = search.searchByName(this.cmd.getOptionValue("w"));
                     for (File image : images) {
                         output.append(image.getAbsolutePath()).append("\n");
+                        }
                     }
                 }
             }
