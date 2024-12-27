@@ -24,11 +24,6 @@ import java.util.ArrayList;
 public class GUI extends JFrame {
 
 	/**
-	 * Panneau utilisé pour afficher un autre composant ou une interface secondaire dans l'application.
-	 */
-	private JPanel rPanel = new JPanel();
-
-	/**
 	 * Page actuelle, utilisée pour la gestion de la pagination des fichiers affichés.
 	 */
 	private int page = 0;

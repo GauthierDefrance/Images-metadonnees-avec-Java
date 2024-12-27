@@ -14,11 +14,6 @@ import java.awt.*;
 public class MetaDataImage {
 
     /**
-     * Texte à afficher dans la zone de texte
-      */
-    String text;
-
-    /**
      * Constructeur de la classe MetaDataImage.
      * Crée une fenêtre contenant un JTextArea avec le texte spécifié par le paramètre.
      * Ce texte est affiché dans une zone déroulante qui permet à l'utilisateur de le faire défiler.
