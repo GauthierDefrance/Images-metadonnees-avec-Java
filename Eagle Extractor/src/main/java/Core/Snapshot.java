@@ -252,13 +252,13 @@ public class Snapshot {
                 }
 
             } else {
-                result.append("\n    ¤ Image supprimée ou déplacée : " + savedImagePath);
+                result.append("\n    ¤ Image supprimée ou déplacée : " + savedImagePath+"\n");
             }
         }
 
         for (String currentImagePath : currentImagePaths) {
             if (!savedImagePaths.contains(currentImagePath)) {
-                result.append("    ¤ Nouvelle image ajoutée : " + currentImagePath);
+                result.append("\n    ¤ Nouvelle image ajoutée : " + currentImagePath+"\n");
             }
         }
 
